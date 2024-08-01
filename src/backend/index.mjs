@@ -1,10 +1,9 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
-const path = require('path');
-const db = require("./tools/database");
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import path from 'path';
+import db from "./tools/database.mjs";
+import { fileURLToPath } from 'url';
 
-if (require('electron-squirrel-startup')) {
-  app.quit();
-}
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let mainWindow;
 
@@ -36,7 +35,7 @@ function createWindow() {
   
   mainWindow.show();
 
-  mainWindow.loadURL(path.join(__dirname, '../renderer/dist/index.html'));
+  mainWindow.loadURL(path.join(__dirname, '../frontend/dist/index.html'));
 
   mainWindow.on('closed', () => {
     mainWindow = null;

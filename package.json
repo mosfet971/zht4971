@@ -2,7 +2,7 @@
   "name": "zht4971",
   "version": "0.0.1",
   "description": "",
-  "main": "./src/main/index.js",
+  "main": "./src/backend/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mosfet971/zht4444.git"
+    "url": "git+https://github.com/mosfet971/zht4971.git"
   },
   "author": "mosfet971",
   "license": "MIT",
