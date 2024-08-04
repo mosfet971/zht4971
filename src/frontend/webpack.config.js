@@ -1,10 +1,10 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/frontend/index.jsx',
+  entry: path.resolve(__dirname, './index.jsx'),
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, 'src/frontend/dist'),
+    path: path.resolve(__dirname, './dist'),
   },
   mode: 'production',
   module: {

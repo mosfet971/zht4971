@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build": "webpack && tsc -p ./src/backend/",
+    "build": "webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
