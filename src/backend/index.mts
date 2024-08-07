@@ -48,7 +48,7 @@ function createWindow() {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
-    app.quit();
+    app.quit(); 
   });
 
   let zhtToolkit: ZhtToolkit;

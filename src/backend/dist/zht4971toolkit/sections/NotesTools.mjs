@@ -14,11 +14,12 @@ class NotesTools {
             aliasesList: [],
             isPrimary: false,
             tagsNotesListIds: [],
+            lastGetTime: Date.now(),
             creationTime: Date.now(),
             editionTime: Date.now(),
-            hasHistoricalTime: false,
-            historicalTime: 0,
-            historicalTimeAccuracyLevel_1_2_3: 0,
+            hasHistoricalDate: false,
+            historicalDateNumber: 19700101, // 1970 01 01
+            historicalDateAccuracyLevel_1_2_3: 0,
             sourceText: "Текст новой записи",
             taggedNotesIds: [],
             associatedNotesIds: []
@@ -32,19 +33,66 @@ class NotesTools {
         }
         for (const i of noteObject.aliasesList) {
             if (!this.isNameFreeForNoteWithId(i, noteObject.id)) {
-                throw new Error("Note name is not free");
+                throw new Error("Note alias is not free");
             }
         }
         if (noteObject.tagsNotesListIds.includes(noteObject.id)) {
-            throw new Error("Invalid tag");
+            throw new Error("Invalid tag (recursion)");
         }
-        if (noteObject.hasHistoricalTime) {
-            if (!(noteObject.name.replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "date_marker").includes("date_marker"))) {
-                throw new Error("Name not includes historical date in (dd.mm.yyyy) format");
-            }
-            let historicalTimeAccuracyLevels = [1, 2, 3];
-            if (!(historicalTimeAccuracyLevels.includes(noteObject.historicalTimeAccuracyLevel_1_2_3))) {
+        if (noteObject.hasHistoricalDate) {
+            let historicalDateAccuracyLevels = [1, 2, 3];
+            if (!(historicalDateAccuracyLevels.includes(noteObject.historicalDateAccuracyLevel_1_2_3))) {
                 throw new Error("Invalid historical time accuracy level (must be 1, 2 or 3)");
+            }
+            if (!(noteObject.name
+                .replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "date_marker")
+                .replaceAll(/\([0-9]{2}\.[0-9]{4}\)/g, "date_marker")
+                .replaceAll(/\([0-9]{4}\)/g, "date_marker")
+                .includes("date_marker"))) {
+                throw new Error("Name not includes historical date in (yyyy), (mm.yyyy) or (dd.mm.yyyy) format");
+            }
+            let historicalDateNumberCheckPas = false;
+            try {
+                if ((noteObject
+                    .name
+                    .match(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g))[0]
+                    .replaceAll("(", "").replaceAll(")", "")
+                    .split(".").reverse().join(".")
+                    .replaceAll(".", "")
+                    == noteObject.historicalDateNumber.toString().split("").slice(0, 8).join("")) {
+                    historicalDateNumberCheckPas = true;
+                }
+            }
+            catch (error) {
+            }
+            try {
+                if ((noteObject
+                    .name
+                    .match(/\([0-9]{2}\.[0-9]{4}\)/g))[0]
+                    .replaceAll("(", "").replaceAll(")", "")
+                    .split(".").reverse().join(".")
+                    .replaceAll(".", "")
+                    == noteObject.historicalDateNumber.toString().split("").slice(0, 6).join("")) {
+                    historicalDateNumberCheckPas = true;
+                }
+            }
+            catch (error) {
+            }
+            try {
+                if ((noteObject
+                    .name
+                    .match(/\([0-9]{4}\)/g))[0]
+                    .replaceAll("(", "").replaceAll(")", "")
+                    .split(".").reverse().join(".")
+                    .replaceAll(".", "")
+                    == noteObject.historicalDateNumber.toString().split("").slice(0, 4).join("")) {
+                    historicalDateNumberCheckPas = true;
+                }
+            }
+            catch (error) {
+            }
+            if (!historicalDateNumberCheckPas) {
+                throw new Error("Name includes invalid historical date");
             }
         }
         noteObject.editionTime = Date.now();
@@ -61,16 +109,17 @@ class NotesTools {
     };
     /**
      * {
-            id: database.newId(),
-            name: "Новая запись " + Date.now().toString(),
+            id: id,
+            name: "Новая запись " + id,
             aliasesList: [],
             isPrimary: false,
             tagsNotesListIds: [],
+            lastGetTime: Date.now(),
             creationTime: Date.now(),
             editionTime: Date.now(),
-            hasHistoricalTime: false,
-            historicalTime: 0,
-            historicalTimeAccuracyLevel_1_2_3: 0,
+            hasHistoricalDate: false,
+            historicalDateNumber: 19700101, // 1970 01 01
+            historicalDateAccuracyLevel_1_2_3: 0,
             sourceText: "Текст новой записи",
             taggedNotesIds: [],
             associatedNotesIds: []
@@ -83,6 +132,9 @@ class NotesTools {
     };
     get = (id) => {
         let noteObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
+        let noteObject2 = { ...noteObject };
+        noteObject2.lastGetTime = Date.now();
+        database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, noteObject2.id, noteObject2);
         return noteObject;
     };
     getNoteIdByNameOrAlias = (name) => {
