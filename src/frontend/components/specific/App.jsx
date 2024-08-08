@@ -9,11 +9,12 @@ import styled from "styled-components";
 import { modalWindowsManagerStore } from "../../stores/ModalWindowsManagerStore.js";
 import { loginStore } from "../../stores/LoginStore.js"
 
+import { Colors } from "@blueprintjs/core";
+
 let Background = styled.div`
   width: 100vw;
   height: 100vh;
   position: fixed;
-  background-color: #ececec;
 `;
 
 let WindowDragArea = styled.div`
@@ -26,21 +27,21 @@ let WindowDragArea = styled.div`
 `;
 
 let App = observer(() => {
-    let markup = [];
+    let content = [];
     
-    markup.push(<WindowDragArea></WindowDragArea>);
+    content.push(<WindowDragArea></WindowDragArea>);
 
     if (loginStore.isLogined) {
-      markup.push(<MainPage/>);
+      content.push(<MainPage/>);
     } else {
-      markup.push(<LoginPage/>);
+      content.push(<LoginPage/>);
     }
 
     if (modalWindowsManagerStore.isOpened) {
-      markup.push(<ModalWindowWrapper/>);
+      content.push(<ModalWindowWrapper/>);
     }
 
-    return <Background>{markup}</Background>;
+    return <Background style={{ color: Colors.WHITE, background: Colors.BLACK }} className="bp5-dark">{content}</Background>;
   });
 
 export default App;

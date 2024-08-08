@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 let TabButton = (props) => {
     return (
-        <button style={{userSelect: "none"}} role="tab" aria-controls={props.target} aria-selected={props.isDefaultSelected.toString()}>{props.children}</button>
+        <li className="bp5-tab" style={{userSelect: "none"}} role="tab" aria-controls={props.target} aria-selected={props.isDefaultSelected.toString()}>{props.children}</li>
     );
 };
 

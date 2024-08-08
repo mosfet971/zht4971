@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-let TabPanelMainArticle = styled.article`
+let TabPanelMainArticle = styled.div`
   width: 100vw;
   height: calc(100vh - (1.5em + 2em));
   overflow-y: auto !important;
@@ -11,11 +11,11 @@ let TabPanelMainArticle = styled.article`
 let TabPanel = (props) => {
     if (props.isDefaultHidden) {
         return (
-            <TabPanelMainArticle style={props.style} role="tabpanel" className="has-scrollbar" id={props.id} hidden>{props.children}</TabPanelMainArticle>
+            <TabPanelMainArticle style={props.style} role="tabpanel" className="bp5-tab-panel has-scrollbar" id={props.id} hidden>{props.children}</TabPanelMainArticle>
         );
     } else {
         return (
-            <TabPanelMainArticle style={props.style} role="tabpanel" className="has-scrollbar" id={props.id}>{props.children}</TabPanelMainArticle>
+            <TabPanelMainArticle style={props.style} role="tabpanel" className="bp5-tab-panel has-scrollbar" id={props.id}>{props.children}</TabPanelMainArticle>
         );
     }
 };

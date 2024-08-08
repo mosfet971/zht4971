@@ -6,8 +6,8 @@ class TabsManagerStore {
     }
 
     openTab = async (tabSectionId, tabId) => {
-        let buttons = document.querySelectorAll("#" + tabSectionId + ">menu>button");
-        let panels = document.querySelectorAll("#" + tabSectionId + ">article");
+        let buttons = document.querySelectorAll("#" + tabSectionId + ">ul>li");
+        let panels = document.querySelectorAll("#" + tabSectionId + ">div");
 
         buttons.forEach((i)=>{
             if (i.getAttribute("aria-controls") == tabId) {

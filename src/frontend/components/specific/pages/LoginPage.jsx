@@ -4,14 +4,10 @@ import styled from "styled-components";
 import { loginStore } from "../../../stores/LoginStore";
 
 let LoginForm = styled.div`
-  width: 35vw;
-  position: fixed;
-  top: calc(50vh - 20vh);
-  left: calc(50vw - 17.5vw);
+  max-width: 35em;
+  height: auto;
   display: block;
-  background-color: #cacaca;
   padding: 2em;
-  box-shadow: 0.25em 0.25em 0.5em 0 rgba(34, 60, 80, 0.2);
 
 
   &>div>h2 {
@@ -39,7 +35,7 @@ let LoginForm = styled.div`
   }
 
   &>div>.line{
-    border-top: 0.05em solid #505050;
+    border-top: 0.05em solid #838383;
     height: 0;
     margin-bottom: 2.5em;
     margin-top: 0.5em;
@@ -63,28 +59,42 @@ let LoginForm = styled.div`
 
 `;
 
+let Container = styled.div`
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 
 let LoginPage = observer(() => {
-  return (<LoginForm>
-    <div>
-      <h2><b>
-        Введите пароль
-        </b>
-        </h2>
-        <p>
-        Если база данных ещё не созданна, она будет инициализированна с указанным паролем.
-        </p>
-      
-      <div className="line"></div>
-      <input
-        type="password"
-        onInput={(e) => loginStore.updatePassword(e.target.value)}
-        placeholder="Пароль"
-        onKeyDown={(e)=>{e.key == "Enter" ? loginStore.login() : false}}
-      />
-      <button onClick={() => loginStore.login()}>Ввод</button>
-    </div>
-  </LoginForm>);
+  return (
+    <Container>
+      <LoginForm className="bp5-card bp5-elevation-4">
+        <div>
+          <h2><b>
+            Введите пароль
+          </b>
+          </h2>
+          <p>
+            Если база данных ещё не созданна, она будет инициализированна с указанным паролем.
+          </p>
+
+          <div className="line"></div>
+          <input
+            className="bp5-input"
+            type="password"
+            onInput={(e) => loginStore.updatePassword(e.target.value)}
+            placeholder="Пароль"
+            onKeyDown={(e) => { e.key == "Enter" ? loginStore.login() : false }}
+          />
+          <button className="bp5-button bp5-intent-warning" onClick={() => loginStore.login()}>Войти</button>
+        </div>
+      </LoginForm>
+    </Container>);
 });
 
 export default LoginPage;

@@ -5,8 +5,8 @@ import { useEffect } from "react";
 
 let TabSection = (props) => {
     useEffect(() => {
-        let buttons = document.querySelectorAll("#" + props.id + ">menu>button");
-        let panels = document.querySelectorAll("#" + props.id + ">article");
+        let buttons = document.querySelectorAll("#" + props.id + ">ul>li");
+        let panels = document.querySelectorAll("#" + props.id + ">div");
 
         let buttonsAndHandlers = [];
 
@@ -39,7 +39,7 @@ let TabSection = (props) => {
     }, []);
 
     return (
-        <section class="tabs" id={props.id} style={{marginTop: "1.5em", zIndex: 10}}>{props.children}</section>
+        <section class="tabs bp5-tabs" id={props.id} style={{marginTop: "1.5em", zIndex: 10}}>{props.children}</section>
     );
 };
 

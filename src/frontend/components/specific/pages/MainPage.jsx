@@ -13,7 +13,7 @@ import TabPanel from "../../universal/TabPanel.jsx";
 
 let MainPage = observer(() => {
   return (<>
-    <TabSection id="mainTabs">
+    <TabSection id="mainTabs" className="bp5-large">
       <TabMenu>
         <TabButton target="menu" isDefaultSelected={true}>Меню</TabButton>
         <TabButton target="favs" isDefaultSelected={false}>Избранное</TabButton>
