@@ -9,7 +9,7 @@ import styled from "styled-components";
 import { modalWindowsManagerStore } from "../../stores/ModalWindowsManagerStore.js";
 import { loginStore } from "../../stores/LoginStore.js"
 
-import { Colors } from "@blueprintjs/core";
+import { Colors, OverlaysProvider } from "@blueprintjs/core";
 
 let Background = styled.div`
   width: 100vw;
@@ -27,21 +27,27 @@ let WindowDragArea = styled.div`
 `;
 
 let App = observer(() => {
-    let content = [];
-    
-    content.push(<WindowDragArea></WindowDragArea>);
+  let content = [];
 
-    if (loginStore.isLogined) {
-      content.push(<MainPage/>);
-    } else {
-      content.push(<LoginPage/>);
-    }
+  content.push(<WindowDragArea></WindowDragArea>);
 
-    if (modalWindowsManagerStore.isOpened) {
-      content.push(<ModalWindowWrapper/>);
-    }
+  if (loginStore.isLogined) {
+    content.push(<MainPage />);
+  } else {
+    content.push(<LoginPage />);
+  }
 
-    return <Background style={{ color: Colors.WHITE, background: Colors.BLACK }} className="bp5-dark">{content}</Background>;
-  });
+  if (modalWindowsManagerStore.isOpened) {
+    content.push(<ModalWindowWrapper />);
+  }
+
+  return (
+    <Background style={{ color: Colors.WHITE, background: Colors.DARK_GRAY2 }} className="bp5-dark">
+      <OverlaysProvider>
+        {content}
+      </OverlaysProvider>
+    </Background>
+  );
+});
 
 export default App;

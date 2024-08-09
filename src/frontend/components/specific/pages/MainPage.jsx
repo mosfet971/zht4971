@@ -22,6 +22,7 @@ let MainPage = observer(() => {
         <TabButton target="search" isDefaultSelected={false}>Поиск</TabButton>
         <TabButton target="readAndWrite" isDefaultSelected={false}>Просмотр и изменение</TabButton>
       </TabMenu>
+      <hr/>
       <TabPanel isDefaultHidden={false} id="menu"><MenuTab/></TabPanel>
       <TabPanel isDefaultHidden={true} id="favs">Tab B1 is active</TabPanel>
       <TabPanel isDefaultHidden={true} id="graph">Tab B2 is active</TabPanel>

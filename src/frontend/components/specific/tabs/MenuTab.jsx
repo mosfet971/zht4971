@@ -28,41 +28,41 @@ let MenuTab = observer(() => {
     return (
         <MenuCardsContainer>
             <MenuCard handler={noteTabStore.createNewNoteAndOpenForWriting}>
-                <IconFilePlus/><br/>
+                <IconFilePlus/>
                 Создать новую запись
             </MenuCard>
             <MenuCard handler={()=>{
                 modalWindowsManagerStore.open("WindowOpenNoteById");
             }}>
-                <IconFileSymlink/><br/>
+                <IconFileSymlink/>
                 Открыть запись по id
             </MenuCard>
             <MenuCard handler={alert}>
-                <IconHelp/><br/>
+                <IconHelp/>
                 Справочник
             </MenuCard>
             <MenuCard handler={alert}>
-                <IconLock/><br/>
+                <IconLock/>
                 Смена пароля
             </MenuCard>
             <MenuCard handler={alert}>
-                <IconReportAnalytics/><br/>
+                <IconReportAnalytics/>
                 Статус базы данных
             </MenuCard>
             <MenuCard handler={alert}>
-                <IconSettingsSearch/><br/>
+                <IconSettingsSearch/>
                 Управление шаблонами поиска
             </MenuCard>
             <MenuCard handler={alert}>
-                <IconSettingsCode/><br/>
+                <IconSettingsCode/>
                 Управление HTML вставками
             </MenuCard>
             <MenuCard handler={alert}>
-                <IconArrowMerge/><br/>
+                <IconArrowMerge/>
                 Слияние баз данных
             </MenuCard>
             <MenuCard handler={alert}>
-                <IconZoomScan /><br/>
+                <IconZoomScan />
                 Управление параметрами и тегами
             </MenuCard>
         </MenuCardsContainer>

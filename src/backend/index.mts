@@ -22,7 +22,7 @@ function createWindow() {
     icon: __dirname + '/media/logo.ico',
     titleBarStyle: 'hidden',
     titleBarOverlay: {
-      color: 'rgb(17, 20, 24)',
+      color: 'rgba(37, 42, 49, 0)',
       symbolColor: 'rgb(45, 114, 210)',
       height: 25
     },
