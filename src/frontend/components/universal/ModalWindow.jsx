@@ -1,15 +1,16 @@
 import React from "react";
 import Draggable from 'react-draggable';
-import { Dialog, DialogBody } from "@blueprintjs/core";
+import { Dialog, DialogBody, DialogFooter, Button } from "@blueprintjs/core";
 
 
 
 let ModalWindow = (props) => {
     return (
-        <Dialog style={{userSelect: "none"}} className="bp5-dark" isOpen={true} onClose={props.onClose} title={props.title}>
+        <Dialog transitionDuration={0} style={{userSelect: "none"}} className="bp5-dark" isOpen={true} onClose={props.onClose} title={props.title}>
             <DialogBody>
                 {props.children}
             </DialogBody>
+            <DialogFooter actions={<Button intent="primary" text="Закрыть" onClick={props.onClose} />} />
         </Dialog>
     );
 };
