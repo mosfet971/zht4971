@@ -36,9 +36,7 @@ let MenuTab = observer(() => {
                 <IconFilePlus/>
                 Создать новую запись
             </MenuCard>
-            <MenuCard handler={()=>{
-                modalWindowsManagerStore.open("WindowOpenNoteById");
-            }}>
+            <MenuCard handler={()=>{modalWindowsManagerStore.open("WindowOpenNoteById");}}>
                 <IconFileSymlink/>
                 Открыть запись по id
             </MenuCard>
@@ -54,7 +52,7 @@ let MenuTab = observer(() => {
                 <IconReportAnalytics/>
                 Статус базы данных
             </MenuCard>
-            <MenuCard handler={alert}>
+            <MenuCard handler={()=>{modalWindowsManagerStore.open("WindowGC")}}>
                 <IconRecycle/>
                 Cборка мусора
             </MenuCard>

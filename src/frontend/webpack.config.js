@@ -1,4 +1,5 @@
 const path = require('path');
+const { EsbuildPlugin } = require('esbuild-loader');
 
 module.exports = {
   entry: path.resolve(__dirname, './index.jsx'),
@@ -10,18 +11,13 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(?:jsx|mjs|cjs)$/,
+        test: /\.(?:jsx|mjs|js|cjs)$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env', { targets: 'defaults' }],
-              ['@babel/preset-react'],
-            ],
-            plugins: ["babel-plugin-styled-components"],
-          },
-        },
+        loader: 'esbuild-loader',
+        options: {
+          // JavaScript version to compile to
+          target: 'es2015'
+        }
       },
       {
         test: /\.css$/i,
@@ -29,4 +25,11 @@ module.exports = {
       },
     ],
   },
+  optimization: {
+    minimizer: [
+      new EsbuildPlugin({
+        target: 'es2015'  // Syntax to transpile to (see options below for possible values)
+      })
+    ]
+  }
 };

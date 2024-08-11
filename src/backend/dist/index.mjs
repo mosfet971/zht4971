@@ -43,7 +43,17 @@ function createWindow() {
     let zhtToolkit;
     ipcMain.handle("login", async (e, password) => {
         try {
-            zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../"), password);
+            if (__dirname.includes("asar")) {
+                zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../"), password);
+            }
+            else {
+                zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../"), password);
+            }
+            /*
+            for (let i = 0; i < 100; i++) {
+              zhtToolkit.filesTools.createFileObjectAndSave("saadad", Buffer.from("aas"), "text/plain")
+            }
+            */
             return true;
         }
         catch (error) {
@@ -64,6 +74,9 @@ function createWindow() {
     });
     ipcMain.handle("createNewNoteAndGetId", async (e) => {
         return (zhtToolkit.notesTools.createBlankNoteObjectAndSave().id);
+    });
+    ipcMain.handle("collectGarbage", async (e) => {
+        await zhtToolkit.utils.collectGarbage();
     });
 }
 ;

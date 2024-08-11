@@ -9,7 +9,7 @@ let ModalWindowWithFooter = (props) => {
             <DialogBody>
                 {props.children}
             </DialogBody>
-            <DialogFooter actions={<Button intent="none" text="Закрыть" onClick={props.onClose} />} />
+            <DialogFooter actions={<Button intent="primary" text="Закрыть" onClick={props.onClose} />} />
         </Dialog>
     );
 };
