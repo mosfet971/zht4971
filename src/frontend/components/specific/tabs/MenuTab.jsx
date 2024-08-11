@@ -14,7 +14,8 @@ import {
     IconSettingsCode,
     IconArrowMerge,
     IconZoomScan,
-    IconFileSymlink
+    IconFileSymlink,
+    IconRecycle
 } from '@tabler/icons-react';
 import { noteTabStore } from "../../../stores/NoteTabStore.js";
 
@@ -22,6 +23,10 @@ let MenuCardsContainer = styled.div`
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
+    
+    & > * {
+        margin: 1em;
+    }
 `;
 
 let MenuTab = observer(() => {
@@ -50,20 +55,8 @@ let MenuTab = observer(() => {
                 Статус базы данных
             </MenuCard>
             <MenuCard handler={alert}>
-                <IconSettingsSearch/>
-                Управление шаблонами поиска
-            </MenuCard>
-            <MenuCard handler={alert}>
-                <IconSettingsCode/>
-                Управление HTML вставками
-            </MenuCard>
-            <MenuCard handler={alert}>
-                <IconArrowMerge/>
-                Слияние баз данных
-            </MenuCard>
-            <MenuCard handler={alert}>
-                <IconZoomScan />
-                Управление параметрами и тегами
+                <IconRecycle/>
+                Cборка мусора
             </MenuCard>
         </MenuCardsContainer>
     );

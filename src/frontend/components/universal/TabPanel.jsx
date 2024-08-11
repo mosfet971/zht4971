@@ -3,9 +3,10 @@ import styled from "styled-components";
 
 let TabPanelMainArticle = styled.div`
   width: 100vw;
-  height: calc(100vh - (1.5em + 2em));
+  height: calc(100vh - (2em + 2em));
   overflow-y: auto !important;
   padding: 0;
+  margin-top: 0;
 `;
 
 let TabPanel = (props) => {

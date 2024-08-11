@@ -39,7 +39,7 @@ let TabSection = (props) => {
     }, []);
 
     return (
-        <section class="tabs bp5-tabs" id={props.id} style={{marginTop: "1.5em", zIndex: 10}}>{props.children}</section>
+        <section class="tabs bp5-tabs" id={props.id} style={{marginTop: "0", zIndex: 10}}>{props.children}</section>
     );
 };
 
