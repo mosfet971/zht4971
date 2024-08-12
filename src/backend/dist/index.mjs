@@ -49,9 +49,11 @@ function createWindow() {
             else {
                 zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../"), password);
             }
+            /*
             for (let i = 0; i < 100; i++) {
-                zhtToolkit.filesTools.createFileObjectAndSave("saadad", Buffer.from("aas"), "text/plain");
+              zhtToolkit.filesTools.createFileObjectAndSave("saadad", Buffer.from("aas"), "text/plain")
             }
+            */
             return true;
         }
         catch (error) {
@@ -78,6 +80,17 @@ function createWindow() {
     });
     ipcMain.handle("getDbStatus", async (e) => {
         return await zhtToolkit.utils.getDatabaseStatus();
+    });
+    ipcMain.handle("changePassword", async (e, args) => {
+        let isOk = false;
+        try {
+            await zhtToolkit.utils.changePassword(args.oldPassword, args.newPassword);
+            isOk = true;
+        }
+        catch (error) {
+            isOk = false;
+        }
+        return isOk;
     });
 }
 ;
