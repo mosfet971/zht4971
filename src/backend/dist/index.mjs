@@ -49,11 +49,9 @@ function createWindow() {
             else {
                 zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../"), password);
             }
-            /*
             for (let i = 0; i < 100; i++) {
-              zhtToolkit.filesTools.createFileObjectAndSave("saadad", Buffer.from("aas"), "text/plain")
+                zhtToolkit.filesTools.createFileObjectAndSave("saadad", Buffer.from("aas"), "text/plain");
             }
-            */
             return true;
         }
         catch (error) {
@@ -76,7 +74,10 @@ function createWindow() {
         return (zhtToolkit.notesTools.createBlankNoteObjectAndSave().id);
     });
     ipcMain.handle("collectGarbage", async (e) => {
-        await zhtToolkit.utils.collectGarbage();
+        return await zhtToolkit.utils.collectGarbage();
+    });
+    ipcMain.handle("getDbStatus", async (e) => {
+        return await zhtToolkit.utils.getDatabaseStatus();
     });
 }
 ;

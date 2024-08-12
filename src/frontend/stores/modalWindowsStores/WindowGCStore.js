@@ -1,6 +1,4 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { modalWindowsManagerStore } from "../ModalWindowsManagerStore";
-import { noteTabStore } from "../NoteTabStore";
 
 class WindowGCStore {
     constructor() {

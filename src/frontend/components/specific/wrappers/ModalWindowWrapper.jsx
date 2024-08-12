@@ -5,30 +5,35 @@ import WindowLoginError from "../modalWindows/WindowLoginError.jsx";
 import WindowOpenNoteById from "../modalWindows/WindowOpenNoteById.jsx";
 import WindowNoteNotExistError from "../modalWindows/WindowNoteNotExistError.jsx";
 import WindowGC from "../modalWindows/WindowGC.jsx";
+import WindowDBStatus from "../modalWindows/WindowDBStatus.jsx";
 
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
+
 
 let ModalWindowWrapper = observer(() => {
     let jsx = [];
 
     switch (modalWindowsManagerStore.type) {
         case "WindowLoginError":
-            jsx.push(<WindowLoginError/>);
+            jsx.push(<WindowLoginError />);
             break;
         case "WindowOpenNoteById":
-            jsx.push(<WindowOpenNoteById/>);
+            jsx.push(<WindowOpenNoteById />);
             break;
         case "WindowNoteNotExistError":
-            jsx.push(<WindowNoteNotExistError/>);
+            jsx.push(<WindowNoteNotExistError />);
             break;
         case "WindowGC":
-            jsx.push(<WindowGC/>);
+            jsx.push(<WindowGC />);
+            break;
+        case "WindowDBStatus":
+            jsx.push(<WindowDBStatus />);
             break;
         default:
             jsx.push(<></>);
     }
 
     return jsx;
-  });
+});
 
 export default ModalWindowWrapper;

@@ -48,7 +48,7 @@ let MenuTab = observer(() => {
                 <IconLock/>
                 Смена пароля
             </MenuCard>
-            <MenuCard handler={alert}>
+            <MenuCard handler={()=>{modalWindowsManagerStore.open("WindowDBStatus")}}>
                 <IconReportAnalytics/>
                 Статус базы данных
             </MenuCard>
