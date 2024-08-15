@@ -7,6 +7,7 @@ import WindowNoteNotExistError from "../modalWindows/WindowNoteNotExistError.jsx
 import WindowGC from "../modalWindows/WindowGC.jsx";
 import WindowDBStatus from "../modalWindows/WindowDBStatus.jsx";
 import WindowChangePassword from "../modalWindows/WindowChangePassword.jsx";
+import WindowInfo from "../modalWindows/WindowInfo.jsx";
 
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
 
@@ -34,6 +35,8 @@ let ModalWindowWrapper = observer(() => {
         case "WindowChangePassword":
             jsx.push(<WindowChangePassword />);
             break;
+        case "WindowInfo":
+            jsx.push(<WindowInfo/>)
         default:
             jsx.push(<></>);
     }

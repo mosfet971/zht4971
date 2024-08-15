@@ -40,9 +40,9 @@ let MenuTab = observer(() => {
                 <IconFileSymlink/>
                 Открыть запись по id
             </MenuCard>
-            <MenuCard handler={alert}>
+            <MenuCard handler={()=>{modalWindowsManagerStore.open("WindowInfo")}}>
                 <IconHelp/>
-                Справочник
+                О программе
             </MenuCard>
             <MenuCard handler={()=>{modalWindowsManagerStore.open("WindowChangePassword")}}>
                 <IconLock/>
