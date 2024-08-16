@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { modalWindowsManagerStore } from "../ModalWindowsManagerStore";
-import { noteTabStore } from "../NoteTabStore";
+import { noteTabStore } from "../tabsStores/NoteTabStore";
 
 class WindowOpenNoteByIdStore {
     constructor() {

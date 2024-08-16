@@ -17,7 +17,7 @@ import {
     IconFileSymlink,
     IconRecycle
 } from '@tabler/icons-react';
-import { noteTabStore } from "../../../stores/NoteTabStore.js";
+import { noteTabStore } from "../../../stores/tabsStores/NoteTabStore.js";
 
 let MenuCardsContainer = styled.div`
     display: flex;
@@ -25,7 +25,7 @@ let MenuCardsContainer = styled.div`
     flex-wrap: wrap;
     
     & > * {
-        margin: 1em;
+        margin: 0.5em;
     }
 `;
 

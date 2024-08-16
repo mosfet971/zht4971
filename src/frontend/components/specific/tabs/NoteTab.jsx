@@ -2,6 +2,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import styled from "styled-components";
+import { ButtonGroup, Button, ProgressBar } from "@blueprintjs/core";
 
 import NoteEditMode from "../noteModes/NoteEditMode.jsx";
 import NoteViewMode from "../noteModes/NoteViewMode.jsx";
@@ -15,7 +16,7 @@ import {
     IconDeviceFloppy
 } from '@tabler/icons-react';
 
-import { noteTabStore } from "../../../stores/NoteTabStore.js";
+import { noteTabStore } from "../../../stores/tabsStores/NoteTabStore.js";
 
 let ControlsContainer = styled.div`
     display: flex;
@@ -64,42 +65,59 @@ let ControlButton = styled.div`
     }
 `;
 
+let ButtonGroupContainer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    flex-flow: column;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    border-bottom: 0.05em solid white;
+`;
+
 let NoteTab = observer(() => {
     let markup = [];
 
-    switch (noteTabStore.mode) {
+    switch (noteTabStore.status) {
         case "no":
             markup.push(<h2 style={{ margin: "1em" }}>Нет открытой записи</h2>);
+            break;
+        case "loading":
+            markup.push(<ProgressBar intent="primary"/>);
             break;
         case "view":
             markup.push(
                 <>
-                    <ControlsContainer>
-                        <ControlButton onClick={noteTabStore.delOpenedNote}>
-                            <ButtonContentContainer>
-                                <IconTrash />
-                                Удалить запись
-                            </ButtonContentContainer>
-                        </ControlButton>
-                        <ControlButton onClick={noteTabStore.closeOpenedNote}>
-                            <ButtonContentContainer>
-                                <IconLogout />
-                                Закрыть запись
-                            </ButtonContentContainer>
-                        </ControlButton>
-                        <ControlButton onClick={noteTabStore.copyOpenedNoteId}>
-                            <ButtonContentContainer>
-                                <IconCopy />
-                                Копировать идентификатор
-                            </ButtonContentContainer>
-                        </ControlButton>
-                        <ControlButton onClick={noteTabStore.startOpenedNoteWriting}>
-                            <ButtonContentContainer>
-                                <IconEdit />
-                                Изменить запись
-                            </ButtonContentContainer>
-                        </ControlButton>
-                    </ControlsContainer>
+                    <ButtonGroupContainer>
+                        <ButtonGroup large={true} alignText="center">
+                            <Button intent="warning" onClick={noteTabStore.delOpenedNote}>
+                                <ButtonContentContainer>
+                                    <IconTrash />
+                                    Удалить запись
+                                </ButtonContentContainer>
+                            </Button>
+                            <Button intent="warning" onClick={noteTabStore.closeOpenedNote}>
+                                <ButtonContentContainer>
+                                    <IconLogout />
+                                    Закрыть запись
+                                </ButtonContentContainer>
+                            </Button>
+                            <Button intent="warning" onClick={noteTabStore.copyOpenedNoteId}>
+                                <ButtonContentContainer>
+                                    <IconCopy />
+                                    Копировать идентификатор
+                                </ButtonContentContainer>
+                            </Button>
+                            <Button intent="warning" onClick={noteTabStore.startOpenedNoteWriting}>
+                                <ButtonContentContainer>
+                                    <IconEdit />
+                                    Изменить запись
+                                </ButtonContentContainer>
+                            </Button>
+                        </ButtonGroup>
+                    </ButtonGroupContainer>
                     <NoteViewMode />
                 </>
             );
@@ -107,38 +125,40 @@ let NoteTab = observer(() => {
         case "edit":
             markup.push(
                 <>
-                    <ControlsContainer>
-                        <ControlButton onClick={noteTabStore.delOpenedNote}>
-                            <ButtonContentContainer>
-                                <IconTrash />
-                                Удалить запись
-                            </ButtonContentContainer>
-                        </ControlButton>
-                        <ControlButton onClick={noteTabStore.closeOpenedNote}>
-                            <ButtonContentContainer>
-                                <IconLogout />
-                                Закрыть запись
-                            </ButtonContentContainer>
-                        </ControlButton>
-                        <ControlButton onClick={noteTabStore.copyOpenedNoteId}>
-                            <ButtonContentContainer>
-                                <IconCopy />
-                                Копировать идентификатор
-                            </ButtonContentContainer>
-                        </ControlButton>
-                        <ControlButton onClick={noteTabStore.stopOpenedNoteWriting}>
-                            <ButtonContentContainer>
-                                <IconEditOff />
-                                Прекратить изменение записи
-                            </ButtonContentContainer>
-                        </ControlButton>
-                        <ControlButton onClick={noteTabStore.save}>
-                            <ButtonContentContainer>
-                                <IconDeviceFloppy />
-                                Сохранить запись
-                            </ButtonContentContainer>
-                        </ControlButton>
-                    </ControlsContainer>
+                    <ButtonGroupContainer>
+                        <ButtonGroup large={true} alignText="center">
+                            <Button intent="warning" onClick={noteTabStore.delOpenedNote}>
+                                <ButtonContentContainer>
+                                    <IconTrash />
+                                    Удалить запись
+                                </ButtonContentContainer>
+                            </Button>
+                            <Button intent="warning" onClick={noteTabStore.closeOpenedNote}>
+                                <ButtonContentContainer>
+                                    <IconLogout />
+                                    Закрыть запись
+                                </ButtonContentContainer>
+                            </Button>
+                            <Button intent="warning" onClick={noteTabStore.copyOpenedNoteId}>
+                                <ButtonContentContainer>
+                                    <IconCopy />
+                                    Копировать идентификатор
+                                </ButtonContentContainer>
+                            </Button>
+                            <Button intent="warning" onClick={noteTabStore.stopOpenedNoteWriting}>
+                                <ButtonContentContainer>
+                                    <IconEditOff />
+                                    Прекратить изменение записи
+                                </ButtonContentContainer>
+                            </Button>
+                            <Button intent="warning" onClick={noteTabStore.save}>
+                                <ButtonContentContainer>
+                                    <IconDeviceFloppy />
+                                    Сохранить запись
+                                </ButtonContentContainer>
+                            </Button>
+                        </ButtonGroup>
+                    </ButtonGroupContainer>
                     <NoteEditMode />
                 </>
             );
