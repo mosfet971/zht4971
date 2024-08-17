@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import styled from "styled-components";
-import { ButtonGroup, Button, ProgressBar } from "@blueprintjs/core";
+import { ButtonGroup, Button, Spinner } from "@blueprintjs/core";
 
 import NoteEditMode from "../noteModes/NoteEditMode.jsx";
 import NoteViewMode from "../noteModes/NoteViewMode.jsx";
@@ -82,10 +82,16 @@ let NoteTab = observer(() => {
 
     switch (noteTabStore.status) {
         case "no":
-            markup.push(<h2 style={{ margin: "1em" }}>Нет открытой записи</h2>);
+            markup.push(<ButtonGroupContainer>
+                <h2 style={{ margin: "1em" }}>Нет открытой записи</h2>
+            </ButtonGroupContainer>);
             break;
         case "loading":
-            markup.push(<ProgressBar intent="primary"/>);
+            markup.push(
+                <ButtonGroupContainer>
+                    <Spinner intent="primary"/>
+                </ButtonGroupContainer>
+            );
             break;
         case "view":
             markup.push(

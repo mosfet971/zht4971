@@ -3,18 +3,20 @@ import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { noteTabStore } from "../../../stores/tabsStores/NoteTabStore.js";
-import { noteTextViewerStore } from "../../../stores/noteComponentsStores/noteTextViewerStore.js";
+import { noteTextViewerStore } from "../../../stores/noteComponentsStores/NoteTextViewerStore.js";
 import { ProgressBar } from "@blueprintjs/core";
 
 let NoteTextViewer = observer(() => {
     useEffect(() => {
         noteTextViewerStore.reset();
-    }, []);
+    }, [noteTabStore.openedNoteId]);
 
     switch (noteTextViewerStore.status) {
         case "loading":
             return (<>
-                <ProgressBar intent="primary" />
+                <br />
+                <p>Загрузка...</p>
+                <br />
             </>);
             break;
         case "ready":
@@ -23,9 +25,7 @@ let NoteTextViewer = observer(() => {
             </>);
             break;
         default:
-            return (<>
-                <p>Ошибка</p>
-            </>);
+            return (<></>);
             break;
     }
 

@@ -125,6 +125,36 @@ function createWindow() {
     return true;
   }); 
 
+  ipcMain.handle("saveTemplate", async(e, args)=> {
+    let templatesIds = await zhtToolkit.templatesTools.getListOfIds();
+    let templatesNames = [];
+    for (const i of templatesIds) {
+      templatesNames.push((await zhtToolkit.templatesTools.get(i)).name);
+    }
+
+    if (templatesNames.includes(args.templateName)) {
+      return false;
+    } else {
+      let templateObject = await zhtToolkit.templatesTools.createTemplateObject(args.templateText, args.templateName);
+      zhtToolkit.templatesTools.save(templateObject);
+      
+      return true;
+    }
+  }); 
+
+  ipcMain.handle("getTemplates", async(e, args)=> {
+    let templatesIds = await zhtToolkit.templatesTools.getListOfIds();
+    let templates = [];
+    for (const i of templatesIds) {
+      templates.push(await zhtToolkit.templatesTools.get(i));
+    }
+    return templates;
+  }); 
+
+  ipcMain.handle("deleteTemplate", async(e, id)=> {
+    await zhtToolkit.templatesTools.delete(id); 
+  }); 
+
 };
 
 app.on('ready', createWindow);

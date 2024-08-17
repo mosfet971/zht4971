@@ -7,8 +7,8 @@ import NoteTextEditor from "../noteComponents/NoteTextEditor.jsx";
 
 let NoteEditMode = observer(() => {
     return (<>
-        <p>{noteTabStore.openedNoteId + " edite"}</p>
         <NoteTextEditor/>
+        <br /><br /><br />
     </>);
 });
 

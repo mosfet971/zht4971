@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { modalWindowsManagerStore } from "../ModalWindowsManagerStore";
 import { tabsManagerStore } from "../TabsManagerStore";
-import { noteTextEditorStore } from "../noteComponentsStores/noteTextEditorStore";
+import { noteTextEditorStore } from "../noteComponentsStores/NoteTextEditorStore";
 
 class NoteTabStore {
     constructor() {
@@ -12,6 +12,7 @@ class NoteTabStore {
     openedNoteId = "-";
 
     openNote = async (noteId) => {
+        runInAction(()=>{this.status = "loading";});
         if (await ipcRenderer.invoke("checkNoteExist", noteId)) {
             this.openedNoteId = noteId;
             this.status = "view";

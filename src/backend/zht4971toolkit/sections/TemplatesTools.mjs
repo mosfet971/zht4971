@@ -24,7 +24,7 @@ class TemplatesTools {
     };
 
     /**
-     * { text: templateText, id: templateId }
+     * { id: id, name: name, text: templateText}
      */
     get = (templateId) => {
         return database.getEntity(this.dbDirPath, this.mk, this.entityTypeForTemplates, templateId);

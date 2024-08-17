@@ -7,8 +7,8 @@ import NoteTextViewer from "../noteComponents/NoteTextViewer.jsx";
 
 let NoteViewMode = observer(() => {
     return (<>
-        <p>{noteTabStore.openedNoteId + " read"}</p>
         <NoteTextViewer />
+        <br /><br /><br />
     </>);
 });
 
