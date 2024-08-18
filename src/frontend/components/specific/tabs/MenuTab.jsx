@@ -4,20 +4,19 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import MenuCard from "../../universal/MenuCard.jsx";
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
+import { noteTabStore } from "../../../stores/tabsStores/NoteTabStore.js";
+import { tabsManagerStore } from "../../../stores/TabsManagerStore.js";
 
-import { 
-    IconFilePlus, 
+import {
+    IconFilePlus,
     IconHelp,
     IconLock,
     IconReportAnalytics,
-    IconSettingsSearch,
-    IconSettingsCode,
-    IconArrowMerge,
-    IconZoomScan,
     IconFileSymlink,
     IconRecycle
 } from '@tabler/icons-react';
-import { noteTabStore } from "../../../stores/tabsStores/NoteTabStore.js";
+
+
 
 let MenuCardsContainer = styled.div`
     display: flex;
@@ -32,28 +31,31 @@ let MenuCardsContainer = styled.div`
 let MenuTab = observer(() => {
     return (
         <MenuCardsContainer>
-            <MenuCard handler={noteTabStore.createNewNoteAndOpenForWriting}>
-                <IconFilePlus/>
+            <MenuCard handler={async () => {
+                await tabsManagerStore.openTab("mainTabs", "readAndWrite");
+                noteTabStore.createNewNoteAndOpenForWriting()
+            }}>
+                <IconFilePlus />
                 Создать новую запись
             </MenuCard>
-            <MenuCard handler={()=>{modalWindowsManagerStore.open("WindowOpenNoteById");}}>
-                <IconFileSymlink/>
+            <MenuCard handler={() => { modalWindowsManagerStore.open("WindowOpenNoteById"); }}>
+                <IconFileSymlink />
                 Открыть запись по id
             </MenuCard>
-            <MenuCard handler={()=>{modalWindowsManagerStore.open("WindowInfo")}}>
-                <IconHelp/>
+            <MenuCard handler={() => { modalWindowsManagerStore.open("WindowInfo") }}>
+                <IconHelp />
                 О программе
             </MenuCard>
-            <MenuCard handler={()=>{modalWindowsManagerStore.open("WindowChangePassword")}}>
-                <IconLock/>
+            <MenuCard handler={() => { modalWindowsManagerStore.open("WindowChangePassword") }}>
+                <IconLock />
                 Смена пароля
             </MenuCard>
-            <MenuCard handler={()=>{modalWindowsManagerStore.open("WindowDBStatus")}}>
-                <IconReportAnalytics/>
+            <MenuCard handler={() => { modalWindowsManagerStore.open("WindowDBStatus") }}>
+                <IconReportAnalytics />
                 Статус базы данных
             </MenuCard>
-            <MenuCard handler={()=>{modalWindowsManagerStore.open("WindowGC")}}>
-                <IconRecycle/>
+            <MenuCard handler={() => { modalWindowsManagerStore.open("WindowGC") }}>
+                <IconRecycle />
                 Cборка мусора
             </MenuCard>
         </MenuCardsContainer>

@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { noteTextEditorStore } from "../noteComponentsStores/NoteTextEditorStore";
+import { noteTabStore } from "../tabsStores/NoteTabStore";
 
 class WindowSaveTemplateStore {
     constructor() {
@@ -23,7 +23,7 @@ class WindowSaveTemplateStore {
         runInAction(()=>{this.status = "loading";});
         if(await ipcRenderer.invoke("saveTemplate", {
             templateName: this.templateName,
-            templateText: noteTextEditorStore.noteText
+            templateText: noteTabStore.noteObject.sourceText
         })) {
             runInAction(()=>{this.status = "finished";});
         } else {

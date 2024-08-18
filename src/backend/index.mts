@@ -116,13 +116,15 @@ function createWindow() {
 
   ipcMain.handle("getNoteObject", async(e, id)=> {
     return await zhtToolkit.notesTools.get(id);
-  }); 
+  });
 
-  ipcMain.handle("setNoteSourceText", async(e, args)=> {
-    let noteObject = await zhtToolkit.notesTools.get(args.id);
-    noteObject.sourceText = args.sourceText;
-    await zhtToolkit.notesTools.save(noteObject);
-    return true;
+  ipcMain.handle("saveNoteObject", async(e, noteObject)=> {
+    try {
+      await zhtToolkit.notesTools.save(noteObject);
+      return {isOk:true, error: null};
+    } catch (error) {
+      return {isOk:false, error: error};
+    }
   }); 
 
   ipcMain.handle("saveTemplate", async(e, args)=> {

@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { modalWindowsManagerStore } from "../ModalWindowsManagerStore";
 import { noteTabStore } from "../tabsStores/NoteTabStore";
+import { tabsManagerStore } from "../TabsManagerStore";
 
 class WindowOpenNoteByIdStore {
     constructor() {
@@ -16,6 +17,7 @@ class WindowOpenNoteByIdStore {
 
     submit = async () => {
         modalWindowsManagerStore.close();
+        await tabsManagerStore.openTab("mainTabs", "readAndWrite");
         noteTabStore.openNote(this.noteId);
     };
     

@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { noteTextEditorStore } from "../noteComponentsStores/NoteTextEditorStore";
+import { noteTabStore } from "../tabsStores/NoteTabStore";
 
 class WindowLoadTemplateStore {
     constructor() {
@@ -23,7 +23,7 @@ class WindowLoadTemplateStore {
                 selectedTemplate = i;
             }
         }
-        noteTextEditorStore.noteText = selectedTemplate.text;
+        noteTabStore.noteObject.sourceText = selectedTemplate.text;
         runInAction(()=>{this.status = "finished";});
     };
 

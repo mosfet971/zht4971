@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import { ButtonGroup, Button, Spinner } from "@blueprintjs/core";
 
-import NoteEditMode from "../noteModes/NoteEditMode.jsx";
-import NoteViewMode from "../noteModes/NoteViewMode.jsx";
+import NoteEditMode from "../noteTabModes/NoteEditMode.jsx";
+import NoteViewMode from "../noteTabModes/NoteViewMode.jsx";
 
 import {
     IconTrash,
@@ -157,7 +157,7 @@ let NoteTab = observer(() => {
                                     Прекратить изменение записи
                                 </ButtonContentContainer>
                             </Button>
-                            <Button intent="warning" onClick={noteTabStore.save}>
+                            <Button intent="warning" onClick={noteTabStore.saveOpenedNote}>
                                 <ButtonContentContainer>
                                     <IconDeviceFloppy />
                                     Сохранить запись

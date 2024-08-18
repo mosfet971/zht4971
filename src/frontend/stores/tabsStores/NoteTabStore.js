@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { modalWindowsManagerStore } from "../ModalWindowsManagerStore";
 import { tabsManagerStore } from "../TabsManagerStore";
-import { noteTextEditorStore } from "../noteComponentsStores/NoteTextEditorStore";
 
 class NoteTabStore {
     constructor() {
@@ -9,34 +8,56 @@ class NoteTabStore {
     }
 
     status = "no"; // "no", "view", "edit", "loading"
-    openedNoteId = "-";
+    noteObject = {}; /*
+    {
+        id: id,
+        name: "Новая запись " + id,
+        aliasesList: [],
+        isPrimary: false,
+        tagsNotesListIds: [],
+        lastGetTime: Date.now(),
+        creationTime: Date.now(),
+        editionTime: Date.now(),
+        hasHistoricalDate: false,
+        historicalDateNumber: 19700101, // 1970 01 01
+        historicalDateAccuracyLevel_1_2_3: 0,
+        sourceText: "Текст новой записи",
+        taggedNotesIds: [],
+        associatedNotesIds: []
+    }
+    */
+    noteHtml = "";
+
+    reset = async () => {
+        this.noteObject = {};
+        this.noteHtml = "";
+        this.status = "no";
+    };
 
     openNote = async (noteId) => {
         runInAction(()=>{this.status = "loading";});
         if (await ipcRenderer.invoke("checkNoteExist", noteId)) {
-            this.openedNoteId = noteId;
+            this.noteObject = await ipcRenderer.invoke("getNoteObject", noteId);
+            this.noteHtml = JSON.stringify(this.noteObject);
             this.status = "view";
-            await tabsManagerStore.openTab("mainTabs", "readAndWrite");
         } else {
             modalWindowsManagerStore.open("WindowNoteNotExistError");
         }
     };
 
     delOpenedNote = async () => {
-        await ipcRenderer.invoke("deleteNote", this.openedNoteId);
-        this.openedNoteId = "-";
-        this.status = "no";
+        await ipcRenderer.invoke("deleteNote", this.noteObject.id);
+        this.reset();
     };
 
     createNewNoteAndOpenForWriting = async () => {
-        await tabsManagerStore.openTab("mainTabs", "readAndWrite");
-        this.openedNoteId = await ipcRenderer.invoke("createNewNoteAndGetId");
-        this.status = "edit";
+        let id = await ipcRenderer.invoke("createNewNoteAndGetId");
+        await this.openNote(id);
+        await this.startOpenedNoteWriting();
     };
 
     closeOpenedNote = async () => {
-        this.openedNoteId = "-";
-        this.status = "no";
+        this.reset();
     };
 
     startOpenedNoteWriting = async () => {
@@ -48,16 +69,23 @@ class NoteTabStore {
     };
 
     copyOpenedNoteId = async () => {
-        await navigator.clipboard.writeText(this.openedNoteId);
+        await navigator.clipboard.writeText(this.noteObject.id);
     };
 
-    save = async () => {
+    saveOpenedNote = async () => {
         runInAction(()=>{this.status = "loading";});
-        await new Promise((resolve, reject) => {
-            setTimeout(resolve, 3000);
-        });
-        await noteTextEditorStore.save();
-        runInAction(()=>{this.status = "view";});
+        
+        let saveTryResult = await ipcRenderer.invoke("saveNoteObject", JSON.parse(JSON.stringify(this.noteObject)));
+        if(saveTryResult.isOk == true) {
+            this.openNote(this.noteObject.id);
+        } else {
+            alert(saveTryResult.error);
+        }
+        
+    };
+
+    noteTextInputEventHandler = async (e) => {
+        this.noteObject.sourceText = e.target.value;
     };
 
 }
