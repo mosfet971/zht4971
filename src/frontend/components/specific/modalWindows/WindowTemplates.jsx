@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import ModalWindowWithFooter from "../../universal/ModalWindowWithFooter.jsx"
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
-import { Button, ProgressBar } from "@blueprintjs/core";
+import { Button, ButtonGroup, Card, CardList, ProgressBar } from "@blueprintjs/core";
 import { useEffect } from "react";
 import { windowTemplatesStore } from "../../../stores/modalWindowsStores/WindowTemplatesStore.js";
 
@@ -15,30 +15,34 @@ let WindowTemplates = observer(() => {
 
     if (windowTemplatesStore.status == "loading") {
         return (
-            <ModalWindowWithFooter title="Использование шаблона" onClose={modalWindowsManagerStore.close}>
+            <ModalWindowWithFooter title="Шаблоны" onClose={modalWindowsManagerStore.close}>
                 <p>Идет загрузка данных, пожалуйста подождите</p>
-                <ProgressBar intent="primary"/>
+                <ProgressBar intent="primary" />
             </ModalWindowWithFooter>
         );
     } else if (windowTemplatesStore.status == "ready") {
         let templatesJsx = [];
 
         for (const i of windowTemplatesStore.templates) {
-            templatesJsx.push(<>
-                <p>{i.name}</p>
-                <button onClick={()=>{windowTemplatesStore.submit(i.id)}}>Выбрать</button>
-                <button onClick={()=>{windowTemplatesStore.deleteTemplate(i.id)}}>Удалить</button>
-            </>);
+            templatesJsx.push(<Card style={{display: "block"}}>
+                <p style={{ wordBreak: "break-all" }}>{i.name}</p>
+                <ButtonGroup>
+                    <Button icon="confirm" onClick={() => { windowTemplatesStore.submit(i.id) }}></Button>
+                    <Button icon="trash" onClick={() => { windowTemplatesStore.deleteTemplate(i.id) }}></Button>
+                </ButtonGroup>
+            </Card>);
         }
 
         return (
-            <ModalWindowWithFooter title="Использование шаблона" onClose={modalWindowsManagerStore.close}>
-                {templatesJsx}
+            <ModalWindowWithFooter title="Шаблоны" onClose={modalWindowsManagerStore.close}>
+                <CardList>
+                    {templatesJsx}
+                </CardList>
             </ModalWindowWithFooter>
         );
     } else if (windowTemplatesStore.status == "finished") {
         return (
-            <ModalWindowWithFooter title="Использование шаблона" onClose={modalWindowsManagerStore.close}>
+            <ModalWindowWithFooter title="Шаблоны" onClose={modalWindowsManagerStore.close}>
                 <p>Шаблон успешно применен</p>
             </ModalWindowWithFooter>
         );
