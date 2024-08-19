@@ -9,7 +9,7 @@ import WindowDBStatus from "../modalWindows/WindowDBStatus.jsx";
 import WindowChangePassword from "../modalWindows/WindowChangePassword.jsx";
 import WindowInfo from "../modalWindows/WindowInfo.jsx";
 import WindowSaveTemplate from "../modalWindows/WindowSaveTemplate.jsx";
-import WindowLoadTemplate from "../modalWindows/WindowLoadTemplate.jsx";
+import WindowTemplates from "../modalWindows/WindowTemplates.jsx";
 
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
 
@@ -42,8 +42,8 @@ let ModalWindowWrapper = observer(() => {
         case "WindowSaveTemplate":
             jsx.push(<WindowSaveTemplate />);
             break;
-        case "WindowLoadTemplate":
-            jsx.push(<WindowLoadTemplate />);
+        case "WindowTemplates":
+            jsx.push(<WindowTemplates />);
             break;
         default:
             jsx.push(<></>);

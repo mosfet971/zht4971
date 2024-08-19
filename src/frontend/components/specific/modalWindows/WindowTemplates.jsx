@@ -4,30 +4,30 @@ import ModalWindowWithFooter from "../../universal/ModalWindowWithFooter.jsx"
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
 import { Button, ProgressBar } from "@blueprintjs/core";
 import { useEffect } from "react";
-import { windowLoadTemplateStore } from "../../../stores/modalWindowsStores/WindowLoadTemplateStore.js";
+import { windowTemplatesStore } from "../../../stores/modalWindowsStores/WindowTemplatesStore.js";
 
 
-let WindowLoadTemplate = observer(() => {
+let WindowTemplates = observer(() => {
     useEffect(() => {
-        windowLoadTemplateStore.reset();
+        windowTemplatesStore.reset();
     }, []);
 
 
-    if (windowLoadTemplateStore.status == "loading") {
+    if (windowTemplatesStore.status == "loading") {
         return (
             <ModalWindowWithFooter title="Использование шаблона" onClose={modalWindowsManagerStore.close}>
                 <p>Идет загрузка данных, пожалуйста подождите</p>
                 <ProgressBar intent="primary"/>
             </ModalWindowWithFooter>
         );
-    } else if (windowLoadTemplateStore.status == "ready") {
+    } else if (windowTemplatesStore.status == "ready") {
         let templatesJsx = [];
 
-        for (const i of windowLoadTemplateStore.templates) {
+        for (const i of windowTemplatesStore.templates) {
             templatesJsx.push(<>
                 <p>{i.name}</p>
-                <button onClick={()=>{windowLoadTemplateStore.submit(i.id)}}>Выбрать</button>
-                <button onClick={()=>{windowLoadTemplateStore.deleteTemplate(i.id)}}>Удалить</button>
+                <button onClick={()=>{windowTemplatesStore.submit(i.id)}}>Выбрать</button>
+                <button onClick={()=>{windowTemplatesStore.deleteTemplate(i.id)}}>Удалить</button>
             </>);
         }
 
@@ -36,7 +36,7 @@ let WindowLoadTemplate = observer(() => {
                 {templatesJsx}
             </ModalWindowWithFooter>
         );
-    } else if (windowLoadTemplateStore.status == "finished") {
+    } else if (windowTemplatesStore.status == "finished") {
         return (
             <ModalWindowWithFooter title="Использование шаблона" onClose={modalWindowsManagerStore.close}>
                 <p>Шаблон успешно применен</p>
@@ -45,4 +45,4 @@ let WindowLoadTemplate = observer(() => {
     }
 });
 
-export default WindowLoadTemplate;
+export default WindowTemplates;

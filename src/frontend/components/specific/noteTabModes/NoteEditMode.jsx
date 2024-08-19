@@ -21,7 +21,7 @@ let NoteEditMode = observer(() => {
         <SourceTextEditorContainer>
             <ButtonGroup large={true} alignText="center">
                 <Button icon="document-share" onClick={() => { modalWindowsManagerStore.open("WindowSaveTemplate") }}>Сохранить как шаблон</Button>
-                <Button icon="document" onClick={() => { modalWindowsManagerStore.open("WindowLoadTemplate") }}>Шаблоны</Button>
+                <Button icon="document" onClick={() => { modalWindowsManagerStore.open("WindowTemplates") }}>Шаблоны</Button>
             </ButtonGroup>
             <TextArea
                 autoResize={true}

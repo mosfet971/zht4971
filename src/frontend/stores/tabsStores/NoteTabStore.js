@@ -65,7 +65,7 @@ class NoteTabStore {
     };
 
     stopOpenedNoteWriting = async () => {
-        this.status = "view";
+        this.openNote(this.noteObject.id);
     };
 
     copyOpenedNoteId = async () => {

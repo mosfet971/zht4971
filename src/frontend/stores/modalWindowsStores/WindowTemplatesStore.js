@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { noteTabStore } from "../tabsStores/NoteTabStore";
 
-class WindowLoadTemplateStore {
+class WindowTemplatesStore {
     constructor() {
         makeAutoObservable(this);
     }
@@ -41,4 +41,4 @@ class WindowLoadTemplateStore {
     
 }
 
-export const windowLoadTemplateStore = new WindowLoadTemplateStore();
+export const windowTemplatesStore = new WindowTemplatesStore();
