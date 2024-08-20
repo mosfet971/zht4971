@@ -23,7 +23,7 @@ class WindowTemplatesStore {
                 selectedTemplate = i;
             }
         }
-        noteTabStore.noteObject.sourceText = selectedTemplate.text;
+        noteTabStore.setNoteSourceText(selectedTemplate.text);
         runInAction(()=>{this.status = "finished";});
     };
 

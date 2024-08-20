@@ -27,8 +27,8 @@ let WindowTemplates = observer(() => {
             templatesJsx.push(<Card style={{display: "block"}}>
                 <p style={{ wordBreak: "break-all" }}>{i.name}</p>
                 <ButtonGroup>
-                    <Button icon="confirm" onClick={() => { windowTemplatesStore.submit(i.id) }}></Button>
-                    <Button icon="trash" onClick={() => { windowTemplatesStore.deleteTemplate(i.id) }}></Button>
+                    <Button intent="primary" icon="tick" onClick={() => { windowTemplatesStore.submit(i.id) }}>Выбрать</Button>
+                    <Button intent="danger" icon="trash" onClick={() => { windowTemplatesStore.deleteTemplate(i.id) }}>Удалить</Button>
                 </ButtonGroup>
             </Card>);
         }

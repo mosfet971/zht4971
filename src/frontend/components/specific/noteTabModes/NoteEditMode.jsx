@@ -12,26 +12,28 @@ let SourceTextEditorContainer = styled.div`
     & > textarea {
         min-width: 100% !important;
         width: 100% !important;
-        min-height: 30em;
+        min-height: 700em;
     }
 `;
 
 let NoteEditMode = observer(() => {
-    return (<>
+    return (<> 
         <SourceTextEditorContainer>
             <ButtonGroup large={true} alignText="center">
                 <Button icon="document-share" onClick={() => { modalWindowsManagerStore.open("WindowSaveTemplate") }}>Сохранить как шаблон</Button>
                 <Button icon="document" onClick={() => { modalWindowsManagerStore.open("WindowTemplates") }}>Шаблоны</Button>
             </ButtonGroup>
             <TextArea
-                autoResize={true}
+                autoResize={false}
                 large={true}
                 value={noteTabStore.noteObject.sourceText}
                 onInput={noteTabStore.noteTextInputEventHandler}
+                onKeyDown={noteTabStore.noteTextOnKeyDownEventHandler}
             >
+
             </TextArea>
         </SourceTextEditorContainer>
-        <br /><br /><br />
+        <br />
     </>);
 });
 

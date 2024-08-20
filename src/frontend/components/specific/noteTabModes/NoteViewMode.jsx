@@ -7,7 +7,7 @@ import { noteTabStore } from "../../../stores/tabsStores/NoteTabStore";
 let NoteViewMode = observer(() => {
     return (<>
         <div dangerouslySetInnerHTML={{__html: noteTabStore.noteHtml}}></div>
-        <br /><br /><br />
+        <br />
     </>);
 });
 

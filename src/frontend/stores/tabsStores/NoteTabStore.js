@@ -35,7 +35,7 @@ class NoteTabStore {
     };
 
     openNote = async (noteId) => {
-        runInAction(()=>{this.status = "loading";});
+        runInAction(() => { this.status = "loading"; });
         if (await ipcRenderer.invoke("checkNoteExist", noteId)) {
             this.noteObject = await ipcRenderer.invoke("getNoteObject", noteId);
             this.noteHtml = JSON.stringify(this.noteObject);
@@ -73,19 +73,37 @@ class NoteTabStore {
     };
 
     saveOpenedNote = async () => {
-        runInAction(()=>{this.status = "loading";});
-        
+        runInAction(() => { this.status = "loading"; });
+
         let saveTryResult = await ipcRenderer.invoke("saveNoteObject", JSON.parse(JSON.stringify(this.noteObject)));
-        if(saveTryResult.isOk == true) {
+        if (saveTryResult.isOk == true) {
             this.openNote(this.noteObject.id);
         } else {
             alert(saveTryResult.error);
         }
-        
+
+    };
+
+    tabScrollPos = {left: 0, top: 0};
+
+    noteTextOnKeyDownEventHandler = (e) => {
+        let tabElement = document.getElementById("readAndWrite");
+
+        this.tabScrollPos.left = tabElement.scrollLeft;
+        this.tabScrollPos.top = tabElement.scrollTop;
     };
 
     noteTextInputEventHandler = async (e) => {
+        e.preventDefault();
+
         this.noteObject.sourceText = e.target.value;
+
+        let tabElement = document.getElementById("readAndWrite");
+        tabElement.scrollTo(this.tabScrollPos.left, this.tabScrollPos.top);
+    };
+
+    setNoteSourceText = async (text) => {
+        this.noteObject.sourceText = text;
     };
 
 }
