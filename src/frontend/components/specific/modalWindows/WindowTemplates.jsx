@@ -33,6 +33,10 @@ let WindowTemplates = observer(() => {
             </Card>);
         }
 
+        if(windowTemplatesStore.templates.length == 0) {
+            templatesJsx.push(<Card><p>Сохраненных шаблонов нет</p></Card>);
+        }
+
         return (
             <ModalWindowWithFooter title="Шаблоны" onClose={modalWindowsManagerStore.close}>
                 <CardList>

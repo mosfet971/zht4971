@@ -41,13 +41,14 @@ class NoteTabStore {
             this.noteHtml = JSON.stringify(this.noteObject);
             this.status = "view";
         } else {
-            modalWindowsManagerStore.open("WindowNoteNotExistError");
+            await modalWindowsManagerStore.open("WindowNoteNotExistError");
+            await this.reset();
         }
     };
 
     delOpenedNote = async () => {
         await ipcRenderer.invoke("deleteNote", this.noteObject.id);
-        this.reset();
+        await this.reset();
     };
 
     createNewNoteAndOpenForWriting = async () => {
@@ -57,7 +58,7 @@ class NoteTabStore {
     };
 
     closeOpenedNote = async () => {
-        this.reset();
+        await this.reset();
     };
 
     startOpenedNoteWriting = async () => {
@@ -65,7 +66,7 @@ class NoteTabStore {
     };
 
     stopOpenedNoteWriting = async () => {
-        this.openNote(this.noteObject.id);
+        await this.openNote(this.noteObject.id);
     };
 
     copyOpenedNoteId = async () => {
@@ -77,9 +78,11 @@ class NoteTabStore {
 
         let saveTryResult = await ipcRenderer.invoke("saveNoteObject", JSON.parse(JSON.stringify(this.noteObject)));
         if (saveTryResult.isOk == true) {
-            this.openNote(this.noteObject.id);
+            await this.openNote(this.noteObject.id);
         } else {
             alert(saveTryResult.error);
+            await this.openNote(this.noteObject.id);
+            await this.startOpenedNoteWriting();
         }
 
     };
