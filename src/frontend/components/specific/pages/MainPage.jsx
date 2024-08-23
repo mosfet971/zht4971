@@ -20,7 +20,7 @@ let MainPage = observer(() => {
         <TabButton target="graph" isDefaultSelected={false}>Граф</TabButton>
         <TabButton target="recent" isDefaultSelected={false}>Недавнее</TabButton>
         <TabButton target="search" isDefaultSelected={false}>Поиск</TabButton>
-        <TabButton target="readAndWrite" isDefaultSelected={false}>Просмотр и изменение</TabButton>
+        <TabButton target="readAndWrite" isDefaultSelected={false}>Просмотр и изменение записи</TabButton>
       </TabMenu>
       <hr style={{margin: 0}}/>
       <TabPanel isDefaultHidden={false} id="menu"><MenuTab/></TabPanel>

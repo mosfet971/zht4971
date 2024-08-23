@@ -13,7 +13,8 @@ import {
     IconCopy,
     IconEdit,
     IconEditOff,
-    IconDeviceFloppy
+    IconDeviceFloppy,
+    IconPlayerSkipBackFilled
 } from '@tabler/icons-react';
 
 import { noteTabStore } from "../../../stores/tabsStores/NoteTabStore.js";
@@ -101,13 +102,19 @@ let NoteTab = observer(() => {
                             <Button intent="warning" onClick={noteTabStore.delOpenedNote}>
                                 <ButtonContentContainer>
                                     <IconTrash />
-                                    Удалить запись
+                                    Удалить
                                 </ButtonContentContainer>
                             </Button>
-                            <Button intent="warning" onClick={noteTabStore.closeOpenedNote}>
+                            <Button intent="warning" onClick={noteTabStore.openPrevNote}>
+                                <ButtonContentContainer>
+                                    <IconPlayerSkipBackFilled />
+                                    Назад
+                                </ButtonContentContainer>
+                            </Button>
+                            <Button intent="warning" onClick={noteTabStore.closeNote}>
                                 <ButtonContentContainer>
                                     <IconLogout />
-                                    Закрыть запись
+                                    Закрыть
                                 </ButtonContentContainer>
                             </Button>
                             <Button intent="warning" onClick={noteTabStore.copyOpenedNoteId}>
@@ -119,7 +126,7 @@ let NoteTab = observer(() => {
                             <Button intent="warning" onClick={noteTabStore.startOpenedNoteWriting}>
                                 <ButtonContentContainer>
                                     <IconEdit />
-                                    Изменить запись
+                                    Редактировать
                                 </ButtonContentContainer>
                             </Button>
                         </ButtonGroup>
@@ -136,13 +143,13 @@ let NoteTab = observer(() => {
                             <Button intent="warning" onClick={noteTabStore.delOpenedNote}>
                                 <ButtonContentContainer>
                                     <IconTrash />
-                                    Удалить запись
+                                    Удалить
                                 </ButtonContentContainer>
                             </Button>
-                            <Button intent="warning" onClick={noteTabStore.closeOpenedNote}>
+                            <Button intent="warning" onClick={noteTabStore.closeNote}>
                                 <ButtonContentContainer>
                                     <IconLogout />
-                                    Закрыть запись
+                                    Закрыть
                                 </ButtonContentContainer>
                             </Button>
                             <Button intent="warning" onClick={noteTabStore.copyOpenedNoteId}>
@@ -154,13 +161,13 @@ let NoteTab = observer(() => {
                             <Button intent="warning" onClick={noteTabStore.stopOpenedNoteWriting}>
                                 <ButtonContentContainer>
                                     <IconEditOff />
-                                    Прекратить изменение записи
+                                    Прекратить редактирование
                                 </ButtonContentContainer>
                             </Button>
                             <Button intent="warning" onClick={noteTabStore.saveOpenedNote}>
                                 <ButtonContentContainer>
                                     <IconDeviceFloppy />
-                                    Сохранить запись
+                                    Сохранить
                                 </ButtonContentContainer>
                             </Button>
                         </ButtonGroup>

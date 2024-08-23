@@ -28,10 +28,13 @@ class NoteTabStore {
     */
     noteHtml = "";
 
-    reset = async () => {
+    historyStack = [];
+
+    closeNote = async () => {
         this.noteObject = {};
         this.noteHtml = "";
         this.status = "no";
+        this.historyStack = [];
     };
 
     openNote = async (noteId) => {
@@ -40,25 +43,37 @@ class NoteTabStore {
             this.noteObject = await ipcRenderer.invoke("getNoteObject", noteId);
             this.noteHtml = JSON.stringify(this.noteObject);
             this.status = "view";
+
+            if(this.historyStack[this.historyStack.length - 1] !== noteId) {
+                this.historyStack.push(noteId);
+            }
         } else {
             await modalWindowsManagerStore.open("WindowNoteNotExistError");
-            await this.reset();
+            await this.closeNote();
+        }
+
+        //console.log(this.historyStack);
+    };
+
+    openPrevNote = async () => {
+        if (this.historyStack.length < 2) {
+            return;
+        } else {
+            this.historyStack.pop();
+            await this.openNote(this.historyStack[this.historyStack.length-1]);
+            return;
         }
     };
 
     delOpenedNote = async () => {
         await ipcRenderer.invoke("deleteNote", this.noteObject.id);
-        await this.reset();
+        await this.closeNote();
     };
 
     createNewNoteAndOpenForWriting = async () => {
         let id = await ipcRenderer.invoke("createNewNoteAndGetId");
         await this.openNote(id);
         await this.startOpenedNoteWriting();
-    };
-
-    closeOpenedNote = async () => {
-        await this.reset();
     };
 
     startOpenedNoteWriting = async () => {
