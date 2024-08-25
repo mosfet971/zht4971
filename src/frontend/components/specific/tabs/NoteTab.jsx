@@ -78,20 +78,31 @@ let ButtonGroupContainer = styled.div`
     border-bottom: 0.05em solid white;
 `;
 
+let ButtonGroupContainerWithoutBorder = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    flex-flow: column;
+    padding-top: 1em;
+    padding-bottom: 1em;
+`;
+
 let NoteTab = observer(() => {
     let markup = [];
 
     switch (noteTabStore.status) {
         case "no":
-            markup.push(<ButtonGroupContainer>
+            markup.push(<ButtonGroupContainerWithoutBorder>
                 <h2 style={{ margin: "1em" }}>Нет открытой записи</h2>
-            </ButtonGroupContainer>);
+            </ButtonGroupContainerWithoutBorder>);
             break;
         case "loading":
             markup.push(
-                <ButtonGroupContainer>
+                <ButtonGroupContainerWithoutBorder>
                     <Spinner intent="primary"/>
-                </ButtonGroupContainer>
+                </ButtonGroupContainerWithoutBorder>
             );
             break;
         case "view":
