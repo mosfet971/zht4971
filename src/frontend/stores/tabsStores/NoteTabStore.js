@@ -112,7 +112,7 @@ class NoteTabStore {
     };
 
     noteTextInputEventHandler = async (e) => {
-        e.preventDefault();
+        //e.preventDefault();
 
         this.noteObject.sourceText = e.target.value;
 
@@ -123,6 +123,14 @@ class NoteTabStore {
     setNoteSourceText = async (text) => {
         this.noteObject.sourceText = text;
     };
+
+    noteNameInputEventHandler = async (e) => {
+        this.noteObject.name = e.target.value;
+    }
+
+    noteIsPrimaryChangeEventHandler = async (e) => {
+        this.noteObject.isPrimary = !this.noteObject.isPrimary;
+    }
 
 }
 //86b1f541-c454-4478-a185-a25031a8a1d2-1915d40dedf
