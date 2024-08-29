@@ -9,7 +9,8 @@ import {
          TextArea,
          Text,
          InputGroup,
-         Checkbox
+         Checkbox,
+         TagInput
         } from "@blueprintjs/core";
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
 
@@ -53,6 +54,8 @@ let NoteEditMode = observer(() => {
                 <Text>Название записи:</Text>
                 <InputGroup placeholder="Название записи" value={noteTabStore.noteObject.name} onInput={noteTabStore.noteNameInputEventHandler}></InputGroup>
                 <Checkbox checked={noteTabStore.noteObject.isPrimary} label="Добавить в избранные записи" onChange={noteTabStore.noteIsPrimaryChangeEventHandler} />
+                <Text>Псевдонимы записи: (нажимайте клавишу "ввод" для сохранения каждого псведонима)</Text>
+                <TagInput placeholder="Псевдонимы записи" intent="primary" fill={true} values={noteTabStore.noteObject.aliasesList} onChange={noteTabStore.noteAliasesListChangeEventHandler}/>
             </ContainerForInputs>
             <br/>
 

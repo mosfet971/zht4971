@@ -43,7 +43,7 @@ class NoteTabStore {
             this.noteObject = await ipcRenderer.invoke("getNoteObject", noteId);
             this.noteHtml = JSON.stringify(this.noteObject);
             this.status = "view";
-
+ 
             if(this.historyStack[this.historyStack.length - 1] !== noteId) {
                 this.historyStack.push(noteId);
             }
@@ -96,7 +96,7 @@ class NoteTabStore {
             await this.openNote(this.noteObject.id);
         } else {
             alert(saveTryResult.error);
-            await this.openNote(this.noteObject.id);
+            //await this.openNote(this.noteObject.id);
             await this.startOpenedNoteWriting();
         }
 
@@ -131,6 +131,10 @@ class NoteTabStore {
     noteIsPrimaryChangeEventHandler = async (e) => {
         this.noteObject.isPrimary = !this.noteObject.isPrimary;
     }
+
+    noteAliasesListChangeEventHandler = async (newList) => {
+        this.noteObject.aliasesList = newList;
+    };
 
 }
 //86b1f541-c454-4478-a185-a25031a8a1d2-1915d40dedf
