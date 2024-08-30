@@ -43,8 +43,8 @@ class NoteTabStore {
             this.noteObject = await ipcRenderer.invoke("getNoteObject", noteId);
             this.noteHtml = JSON.stringify(this.noteObject);
             this.status = "view";
- 
-            if(this.historyStack[this.historyStack.length - 1] !== noteId) {
+
+            if (this.historyStack[this.historyStack.length - 1] !== noteId) {
                 this.historyStack.push(noteId);
             }
         } else {
@@ -60,7 +60,7 @@ class NoteTabStore {
             return;
         } else {
             this.historyStack.pop();
-            await this.openNote(this.historyStack[this.historyStack.length-1]);
+            await this.openNote(this.historyStack[this.historyStack.length - 1]);
             return;
         }
     };
@@ -102,7 +102,7 @@ class NoteTabStore {
 
     };
 
-    tabScrollPos = {left: 0, top: 0};
+    tabScrollPos = { left: 0, top: 0 };
 
     noteTextOnKeyDownEventHandler = (e) => {
         let tabElement = document.getElementById("readAndWrite");
@@ -126,16 +126,52 @@ class NoteTabStore {
 
     noteNameInputEventHandler = async (e) => {
         this.noteObject.name = e.target.value;
-    }
+    };
 
     noteIsPrimaryChangeEventHandler = async (e) => {
         this.noteObject.isPrimary = !this.noteObject.isPrimary;
-    }
+    };
 
     noteAliasesListChangeEventHandler = async (newList) => {
         this.noteObject.aliasesList = newList;
     };
 
+    noteHasHistoricalDateChangeEventHandler = async (e) => {
+        this.noteObject.hasHistoricalDate = !this.noteObject.hasHistoricalDate;
+    };
+
+    noteHistoricalDateAccuracyLevelChangeEventHandler = async (newNum) => {
+        this.noteObject.historicalDateAccuracyLevel_1_2_3 = newNum;
+    };
+
+    get currentNoteHistoricalDate() {
+        let str = this.noteObject.historicalDateNumber.toString();
+        return {
+            year: parseInt(str.substring(0, str.length - 4)),
+            month: parseInt(str.substring(str.length - 4, str.length - 2)),
+            day: parseInt(str.substring(str.length - 2, str.length)),
+        };
+    }
+
+    setNoteHistoricalDatePart = async (newValue, partName) => {
+        let str = this.noteObject.historicalDateNumber.toString();
+
+        switch (partName) {
+            case "year":
+                this.noteObject.historicalDateNumber = parseInt(str.replaceAll(this.currentNoteHistoricalDate.year.toString(), newValue.toString()));
+                break;
+            case "month":
+                this.noteObject.historicalDateNumber = parseInt(str.substring(0, str.length - 4) + newValue.toString().padStart(2, "0") + str.substring(str.length - 2, str.length));
+                break;
+            case "day":
+                this.noteObject.historicalDateNumber = parseInt(str.substring(0, str.length - 2) + newValue.toString().padStart(2, "0"));
+                break;
+
+            default:
+                break;
+        }
+        return;
+    };
 }
 //86b1f541-c454-4478-a185-a25031a8a1d2-1915d40dedf
 export const noteTabStore = new NoteTabStore();
