@@ -10,8 +10,10 @@ import WindowChangePassword from "../modalWindows/WindowChangePassword.jsx";
 import WindowInfo from "../modalWindows/WindowInfo.jsx";
 import WindowSaveTemplate from "../modalWindows/WindowSaveTemplate.jsx";
 import WindowTemplates from "../modalWindows/WindowTemplates.jsx";
+import WindowError from "../modalWindows/WindowError.jsx";
 
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
+
 
 
 let ModalWindowWrapper = observer(() => {
@@ -44,6 +46,9 @@ let ModalWindowWrapper = observer(() => {
             break;
         case "WindowTemplates":
             jsx.push(<WindowTemplates />);
+            break;
+        case "WindowError":
+            jsx.push(<WindowError />);
             break;
         default:
             jsx.push(<></>);

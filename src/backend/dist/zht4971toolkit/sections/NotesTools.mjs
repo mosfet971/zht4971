@@ -19,7 +19,7 @@ class NotesTools {
             editionTime: Date.now(),
             hasHistoricalDate: false,
             historicalDateNumber: 19700101, // 1970 01 01
-            historicalDateAccuracyLevel_1_2_3: 1,
+            historicalDateAccuracyLevel_1_2_3: 3,
             sourceText: "Текст новой записи",
             taggedNotesIds: [],
             associatedNotesIds: []
@@ -29,27 +29,27 @@ class NotesTools {
     };
     save = (noteObject) => {
         if (!this.isNameFreeForNoteWithId(noteObject.name, noteObject.id)) {
-            throw new Error("Note name is not free");
+            throw new Error("Ошибка: указанное название уже занято другой записью");
         }
         for (const i of noteObject.aliasesList) {
             if (!this.isNameFreeForNoteWithId(i, noteObject.id)) {
-                throw new Error("Note alias is not free");
+                throw new Error("Ошибка: один из указанных псевдонимов уже занят другой записью");
             }
         }
         if (noteObject.tagsNotesListIds.includes(noteObject.id)) {
-            throw new Error("Invalid tag (recursion)");
+            throw new Error("Ошибка: указан недопустимый тег (самоссылка)");
         }
         if (noteObject.hasHistoricalDate) {
             let historicalDateAccuracyLevels = [1, 2, 3];
             if (!(historicalDateAccuracyLevels.includes(noteObject.historicalDateAccuracyLevel_1_2_3))) {
-                throw new Error("Invalid historical time accuracy level (must be 1, 2 or 3)");
+                throw new Error("Ошибка: недопустимый уровень точности даты (должен быть равен 1, 2 или 3)");
             }
             if (!(noteObject.name
                 .replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "date_marker")
                 .replaceAll(/\([0-9]{2}\.[0-9]{4}\)/g, "date_marker")
                 .replaceAll(/\([0-9]{4}\)/g, "date_marker")
                 .includes("date_marker"))) {
-                throw new Error("Name not includes historical date in (yyyy), (mm.yyyy) or (dd.mm.yyyy) format");
+                throw new Error("Ошибка: название записи не включает указанную дату в формате (дд.мм.гггг), (мм.гггг) или (гггг)");
             }
             let historicalDateNumberCheckPas = false;
             try {
@@ -92,7 +92,7 @@ class NotesTools {
             catch (error) {
             }
             if (!historicalDateNumberCheckPas) {
-                throw new Error("Name includes invalid historical date");
+                throw new Error("Ошибка: даты в названии и данных не совпадают");
             }
         }
         noteObject.editionTime = Date.now();
@@ -119,7 +119,7 @@ class NotesTools {
             editionTime: Date.now(),
             hasHistoricalDate: false,
             historicalDateNumber: 19700101, // 1970 01 01
-            historicalDateAccuracyLevel_1_2_3: 1,
+            historicalDateAccuracyLevel_1_2_3: 3,
             sourceText: "Текст новой записи",
             taggedNotesIds: [],
             associatedNotesIds: []

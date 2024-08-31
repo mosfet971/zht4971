@@ -20,7 +20,7 @@ class NoteTabStore {
         editionTime: Date.now(),
         hasHistoricalDate: false,
         historicalDateNumber: 19700101, // 1970 01 01
-        historicalDateAccuracyLevel_1_2_3: 1,
+        historicalDateAccuracyLevel_1_2_3: 3,
         sourceText: "Текст новой записи",
         taggedNotesIds: [],
         associatedNotesIds: []
@@ -95,7 +95,8 @@ class NoteTabStore {
         if (saveTryResult.isOk == true) {
             await this.openNote(this.noteObject.id);
         } else {
-            alert(saveTryResult.error);
+            let errorText = saveTryResult.error.toString().replace("Error: ", "");
+            modalWindowsManagerStore.open("WindowError", errorText);
             //await this.openNote(this.noteObject.id);
             await this.startOpenedNoteWriting();
         }
