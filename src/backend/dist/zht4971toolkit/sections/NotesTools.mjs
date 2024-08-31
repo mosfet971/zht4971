@@ -19,7 +19,7 @@ class NotesTools {
             editionTime: Date.now(),
             hasHistoricalDate: false,
             historicalDateNumber: 19700101, // 1970 01 01
-            historicalDateAccuracyLevel_1_2_3: 0,
+            historicalDateAccuracyLevel_1_2_3: 1,
             sourceText: "Текст новой записи",
             taggedNotesIds: [],
             associatedNotesIds: []
@@ -119,7 +119,7 @@ class NotesTools {
             editionTime: Date.now(),
             hasHistoricalDate: false,
             historicalDateNumber: 19700101, // 1970 01 01
-            historicalDateAccuracyLevel_1_2_3: 0,
+            historicalDateAccuracyLevel_1_2_3: 1,
             sourceText: "Текст новой записи",
             taggedNotesIds: [],
             associatedNotesIds: []

@@ -61,9 +61,9 @@ let NoteEditMode = observer(() => {
                 <Text>Псевдонимы записи: (нажимайте клавишу "ввод" для сохранения каждого псведонима)</Text>
                 <TagInput placeholder="Псевдонимы записи" intent="primary" fill={true} values={noteTabStore.noteObject.aliasesList} onChange={noteTabStore.noteAliasesListChangeEventHandler}/>
                 
-                <Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} />
+                <Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату (указанная дата также должна быть включенна в название записи в скобках, в формате (дд.мм.гггг), (мм.гггг) или (гггг)" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} />
                 <Text>Урровень точности даты: (1-3 включительно)</Text>
-                <NumericInput min={0} max={3} intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3} onValueChange={noteTabStore.noteHistoricalDateAccuracyLevelChangeEventHandler}/>
+                <NumericInput min={1} max={3} intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3} onValueChange={noteTabStore.noteHistoricalDateAccuracyLevelChangeEventHandler}/>
                 <Text>Год:</Text>
                 <NumericInput intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.currentNoteHistoricalDate.year} onValueChange={(v)=>{noteTabStore.setNoteHistoricalDatePart(v, "year")}}/>
                 <Text>Месяц:</Text>
