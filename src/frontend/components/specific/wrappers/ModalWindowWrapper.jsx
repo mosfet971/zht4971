@@ -11,10 +11,9 @@ import WindowInfo from "../modalWindows/WindowInfo.jsx";
 import WindowSaveTemplate from "../modalWindows/WindowSaveTemplate.jsx";
 import WindowTemplates from "../modalWindows/WindowTemplates.jsx";
 import WindowError from "../modalWindows/WindowError.jsx";
+import WindowAssocEditor from "../modalWindows/WindowAssocEditor.jsx";
 
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
-
-
 
 let ModalWindowWrapper = observer(() => {
     let jsx = [];
@@ -50,6 +49,8 @@ let ModalWindowWrapper = observer(() => {
         case "WindowError":
             jsx.push(<WindowError />);
             break;
+        case "WindowAssocEditor":
+            jsx.push(<WindowAssocEditor/>);
         default:
             jsx.push(<></>);
             break;

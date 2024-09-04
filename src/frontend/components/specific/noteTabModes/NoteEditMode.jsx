@@ -62,7 +62,7 @@ let NoteEditMode = observer(() => {
                 <TagInput placeholder="Псевдонимы записи" intent="primary" fill={true} values={noteTabStore.noteObject.aliasesList} onChange={noteTabStore.noteAliasesListChangeEventHandler}/>
                 
                 <Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату (указанная дата также должна быть включенна в название записи в скобках, в формате (дд.мм.гггг), (мм.гггг) или (гггг)" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} />
-                <Text>Урровень точности даты: (1-3 включительно)</Text>
+                <Text>Уровень точности даты: (1-3 включительно)</Text>
                 <NumericInput min={1} max={3} intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3} onValueChange={noteTabStore.noteHistoricalDateAccuracyLevelChangeEventHandler}/>
                 <Text>Год:</Text>
                 <NumericInput intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.currentNoteHistoricalDate.year} onValueChange={(v)=>{noteTabStore.setNoteHistoricalDatePart(v, "year")}}/>
@@ -70,7 +70,8 @@ let NoteEditMode = observer(() => {
                 <NumericInput min={1} max={12} intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.currentNoteHistoricalDate.month} onValueChange={(v)=>{noteTabStore.setNoteHistoricalDatePart(v, "month")}}/>
                 <Text>День:</Text>
                 <NumericInput min={1} max={31} intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.currentNoteHistoricalDate.day} onValueChange={(v)=>{noteTabStore.setNoteHistoricalDatePart(v, "day")}}/>
-            
+                
+                <Button intent="primary" onClick={()=>{modalWindowsManagerStore.open("WindowAssocEditor");}}>Открыть редактор ассоциаций</Button>
             </ContainerForInputs>
             <br/>
 
