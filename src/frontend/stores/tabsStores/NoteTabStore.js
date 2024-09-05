@@ -173,6 +173,11 @@ class NoteTabStore {
         }
         return;
     };
+
+    setNoteObjectAssocsList = async (newList) => {
+        this.noteObject.associatedNotesIds = newList;
+        return;
+    };
 }
 //86b1f541-c454-4478-a185-a25031a8a1d2-1915d40dedf
 export const noteTabStore = new NoteTabStore();
