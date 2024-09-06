@@ -71,6 +71,7 @@ let NoteEditMode = observer(() => {
                 <Text>День:</Text>
                 <NumericInput min={1} max={31} intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.currentNoteHistoricalDate.day} onValueChange={(v)=>{noteTabStore.setNoteHistoricalDatePart(v, "day")}}/>
                 
+                <br/>
                 <Button intent="primary" onClick={()=>{modalWindowsManagerStore.open("WindowAssocEditor");}}>Открыть редактор ассоциаций</Button>
             </ContainerForInputs>
             <br/>
