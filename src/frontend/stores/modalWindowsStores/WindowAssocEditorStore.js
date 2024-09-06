@@ -10,13 +10,13 @@ class WindowAssocEditorStore {
     status = "loading"; // loading, ready, finished
     isOpLoading = false;
     assocsNamesList = [];
-    name = "";
+    nameOfTargetNote = "";
 
     reset = async () => {
         runInAction(() => { this.status = "loading"; });
 
         this.isOpLoading = false;
-        this.name = "";
+        this.nameOfTargetNote = "";
 
         await this.fetchAssocs();
 
@@ -34,18 +34,22 @@ class WindowAssocEditorStore {
 
     add = async () => {
         runInAction(() => { this.isOpLoading = true; });
-        
-        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", this.name);
 
+        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", this.nameOfTargetNote);
+
+        let list = noteTabStore.noteObject.associatedNotesIds;
         if (resolvedId !== false) {
-            if(!noteTabStore.noteObject.associatedNotesIds.includes(resolvedId)) {
-                noteTabStore.noteObject.associatedNotesIds.push(resolvedId);
+            if (!list.includes(resolvedId)) {
+                list.push(resolvedId);
+                noteTabStore.setNoteObjectAssocsList(list);
+                let name = (await ipcRenderer.invoke("getNoteObject", resolvedId)).name;
+                this.assocsNamesList.push(name);
             }
         }
 
-        await this.fetchAssocs();
+        //await this.fetchAssocs();
 
-        this.name = "";
+        this.nameOfTargetNote = "";
         this.isOpLoading = false;
         document.getElementById("assocEditorInputName").focus();
     };
@@ -53,21 +57,23 @@ class WindowAssocEditorStore {
     remove = async () => {
         runInAction(() => { this.isOpLoading = true; });
 
-        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", this.name);
+        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", this.nameOfTargetNote);
 
         if (resolvedId !== false) {
-            noteTabStore.noteObject.associatedNotesIds = noteTabStore.noteObject.associatedNotesIds.filter((v)=>v!==resolvedId);
+            noteTabStore.setNoteObjectAssocsList(noteTabStore.noteObject.associatedNotesIds.filter((v) => v !== resolvedId));
+            let name = (await ipcRenderer.invoke("getNoteObject", resolvedId)).name;
+            this.assocsNamesList = this.assocsNamesList.filter((v) => v !== name);
         }
-        
-        await this.fetchAssocs();
 
-        this.name = "";
+        //await this.fetchAssocs();
+
+        this.nameOfTargetNote = "";
         this.isOpLoading = false;
         document.getElementById("assocEditorInputName").focus();
     };
 
     inputNameEventHandler = async (e) => {
-        this.name = e.target.value;
+        this.nameOfTargetNote = e.target.value;
     };
 }
 

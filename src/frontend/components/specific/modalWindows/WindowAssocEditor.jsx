@@ -39,7 +39,7 @@ let WindowAssocEditor = observer(() => {
           <InputGroup
             id="assocEditorInputName"
             disabled={windowAssocEditorStore.isOpLoading}
-            value={windowAssocEditorStore.name}
+            value={windowAssocEditorStore.nameOfTargetNote}
             type="text"
             onInput={windowAssocEditorStore.inputNameEventHandler}
             placeholder="Введите название или псевдоним целевой записи"
