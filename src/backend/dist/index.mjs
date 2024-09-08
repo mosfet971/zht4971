@@ -145,6 +145,9 @@ function createWindow() {
         let fileId = await zhtToolkit.filesTools.createFileObjectAndSave(fileName, fileBuffer, fileType);
         return fileId;
     });
+    ipcMain.handle("getFileZhtObject", async (e, params) => {
+        return await zhtToolkit.filesTools.get(params.id);
+    });
 }
 ;
 app.on('ready', createWindow);

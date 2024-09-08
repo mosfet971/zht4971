@@ -59,6 +59,10 @@ to style:
 
 
 export let processTextToShowFiles = async (textToProcess) => {
+  if (!window.objUrls) {
+    window.objUrls = [];
+  }
+
   if(!window.objUrls.length>0) {
     for (const i of window.objUrls) {
       URL.revokeObjectURL(i);

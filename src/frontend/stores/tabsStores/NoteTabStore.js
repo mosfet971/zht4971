@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { modalWindowsManagerStore } from "../ModalWindowsManagerStore";
 import { tabsManagerStore } from "../TabsManagerStore";
 import * as filesFrontendUtils from "../../utils/filesFrontendUtils";
+import * as noteObjectRenderer from "../../utils/noteObjectRenderer";
 
 class NoteTabStore {
     constructor() {
@@ -27,30 +28,31 @@ class NoteTabStore {
         associatedNotesIds: []
     }
     */
-    noteHtml = "";
     tabScrollPos = { left: 0, top: 0 };
     historyStack = [];
     isFileUploadLoading = false;
+    htmlOfCurrentNote = "";
 
     closeNote = async () => {
         this.noteObject = {};
-        this.noteHtml = "";
         this.status = "no";
         this.historyStack = [];
         this.tabScrollPos = { left: 0, top: 0 };
         this.isFileUploadLoading = false;
+        this.htmlOfCurrentNote = "";
     };
 
     openNote = async (noteId) => {
         runInAction(() => { this.status = "loading"; });
         if (await ipcRenderer.invoke("checkNoteExist", noteId)) {
             this.noteObject = await ipcRenderer.invoke("getNoteObject", noteId);
-            this.noteHtml = JSON.stringify(this.noteObject);
             this.status = "view";
 
             if (this.historyStack[this.historyStack.length - 1] !== noteId) {
                 this.historyStack.push(noteId);
             }
+
+            this.updateHtmlOfCurrentNote();
         } else {
             await modalWindowsManagerStore.open("WindowNoteNotExistError");
             await this.closeNote();
@@ -189,6 +191,10 @@ class NoteTabStore {
             this.noteObject.sourceText += "\n![[" + fileId + "]]\n";
         }
         runInAction(() => { this.isFileUploadLoading = false; });
+    }
+
+    updateHtmlOfCurrentNote = async () => {
+        this.htmlOfCurrentNote = await noteObjectRenderer.renderNoteObjectToHtml(this.noteObject);
     }
 }
 //86b1f541-c454-4478-a185-a25031a8a1d2-1915d40dedf
