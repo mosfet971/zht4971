@@ -69,6 +69,7 @@ class WindowAssocEditorStore {
 
         this.nameOfTargetNote = "";
         this.isOpLoading = false;
+        document.getElementById("assocEditorInputName").scrollIntoView(false);
         document.getElementById("assocEditorInputName").focus();
     };
 

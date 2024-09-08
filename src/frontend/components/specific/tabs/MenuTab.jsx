@@ -32,8 +32,8 @@ let MenuTab = observer(() => {
     return (
         <MenuCardsContainer>
             <MenuCard handler={async () => {
+                await noteTabStore.createNewNoteAndOpenForWriting();
                 await tabsManagerStore.openTab("mainTabs", "readAndWrite");
-                noteTabStore.createNewNoteAndOpenForWriting()
             }}>
                 <IconFilePlus />
                 Создать новую запись

@@ -138,6 +138,13 @@ function createWindow() {
             return false;
         }
     });
+    ipcMain.handle("saveFile", async (e, params) => {
+        let fileBuffer = params.fileBuffer;
+        let fileType = params.fileType;
+        let fileName = params.fileName;
+        let fileId = await zhtToolkit.filesTools.createFileObjectAndSave(fileName, fileBuffer, fileType);
+        return fileId;
+    });
 }
 ;
 app.on('ready', createWindow);

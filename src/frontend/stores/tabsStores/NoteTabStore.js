@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { modalWindowsManagerStore } from "../ModalWindowsManagerStore";
 import { tabsManagerStore } from "../TabsManagerStore";
+import * as filesFrontendUtils from "../../utils/filesFrontendUtils";
 
 class NoteTabStore {
     constructor() {
@@ -27,14 +28,17 @@ class NoteTabStore {
     }
     */
     noteHtml = "";
-
+    tabScrollPos = { left: 0, top: 0 };
     historyStack = [];
+    isFileUploadLoading = false;
 
     closeNote = async () => {
         this.noteObject = {};
         this.noteHtml = "";
         this.status = "no";
         this.historyStack = [];
+        this.tabScrollPos = { left: 0, top: 0 };
+        this.isFileUploadLoading = false;
     };
 
     openNote = async (noteId) => {
@@ -103,7 +107,6 @@ class NoteTabStore {
 
     };
 
-    tabScrollPos = { left: 0, top: 0 };
 
     noteTextOnKeyDownEventHandler = (e) => {
         let tabElement = document.getElementById("readAndWrite");
@@ -178,6 +181,15 @@ class NoteTabStore {
         this.noteObject.associatedNotesIds = newList;
         return;
     };
+
+    selectFileEventHandler = async (e) => {
+        runInAction(() => { this.isFileUploadLoading = true; });
+        for (const file of e.target.files) {
+            let fileId = await filesFrontendUtils.saveNewFile(file);
+            this.noteObject.sourceText += "\n![[" + fileId + "]]\n";
+        }
+        runInAction(() => { this.isFileUploadLoading = false; });
+    }
 }
 //86b1f541-c454-4478-a185-a25031a8a1d2-1915d40dedf
 export const noteTabStore = new NoteTabStore();

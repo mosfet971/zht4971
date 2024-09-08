@@ -11,7 +11,7 @@ import {
          InputGroup,
          Checkbox,
          TagInput,
-         Slider,
+         FileInput,
          NumericInput
         } from "@blueprintjs/core";
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
@@ -61,7 +61,7 @@ let NoteEditMode = observer(() => {
                 <Text>Псевдонимы записи: (нажимайте клавишу "ввод" для сохранения каждого псведонима)</Text>
                 <TagInput placeholder="Псевдонимы записи" intent="primary" fill={true} values={noteTabStore.noteObject.aliasesList} onChange={noteTabStore.noteAliasesListChangeEventHandler}/>
                 
-                <Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату (указанная дата также должна быть включенна в название записи в скобках, в формате (дд.мм.гггг), (мм.гггг) или (гггг)" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} />
+                <Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату (указанная дата также должна быть включенна в название записи в скобках, в формате (дд.мм.гггг), (мм.гггг) или (гггг))" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} />
                 <Text>Уровень точности даты: (1-3 включительно)</Text>
                 <NumericInput min={1} max={3} intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3} onValueChange={noteTabStore.noteHistoricalDateAccuracyLevelChangeEventHandler}/>
                 <Text>Год:</Text>
@@ -72,7 +72,12 @@ let NoteEditMode = observer(() => {
                 <NumericInput min={1} max={31} intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.currentNoteHistoricalDate.day} onValueChange={(v)=>{noteTabStore.setNoteHistoricalDatePart(v, "day")}}/>
                 
                 <br/>
+                <Text>Количество ассоциаций у этой записи: {noteTabStore.noteObject.associatedNotesIds.length}</Text>
                 <Button intent="primary" onClick={()=>{modalWindowsManagerStore.open("WindowAssocEditor");}}>Открыть редактор ассоциаций</Button>
+
+                <br/>
+                <Text>Добавление файлов: (для каждого файла в текст записи будет добавлен свой код)</Text>
+                <FileInput buttonText="Выбрать" disabled={noteTabStore.isFileUploadLoading} text={noteTabStore.isFileUploadLoading ? "Загрузка..." : "Выберите файл" } onInputChange={noteTabStore.selectFileEventHandler} />
             </ContainerForInputs>
             <br/>
 

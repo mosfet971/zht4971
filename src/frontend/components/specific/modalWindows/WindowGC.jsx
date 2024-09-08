@@ -22,7 +22,7 @@ let WindowGC = observer(() => {
     } else if (windowGCStore.status == "loading") {
         return (
             <ModalWindowWithFooter title="Сборка мусора" onClose={modalWindowsManagerStore.close}>
-                <p>Идет удаление мусорных файлов, пожалуйста подождите</p>
+                <p>Идет поиск и удаление мусорных файлов, пожалуйста подождите</p>
                 <ProgressBar intent="primary"/>
             </ModalWindowWithFooter>
         );
