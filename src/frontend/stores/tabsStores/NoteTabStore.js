@@ -188,7 +188,7 @@ class NoteTabStore {
         runInAction(() => { this.isFileUploadLoading = true; });
         for (const file of e.target.files) {
             let fileId = await filesFrontendUtils.saveNewFile(file);
-            this.noteObject.sourceText += "\n![[" + fileId + "]]\n";
+            this.noteObject.sourceText += "\n\n![[" + fileId + "]]\n\n";
         }
         runInAction(() => { this.isFileUploadLoading = false; });
     }

@@ -2,6 +2,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { loginStore } from "../../../stores/LoginStore";
+import { useEffect } from "react";
 
 let LoginForm = styled.div`
   max-width: 35em;
@@ -71,6 +72,10 @@ let Container = styled.div`
 
 
 let LoginPage = observer(() => {
+  useEffect(() => {
+    loginStore.reset();
+  }, []);
+
   return (
     <Container>
       <LoginForm className="bp5-card bp5-elevation-4">
@@ -85,6 +90,7 @@ let LoginPage = observer(() => {
 
           <div className="line"></div>
           <input
+            id="passwordInput"
             className="bp5-input"
             type="password"
             onInput={(e) => loginStore.updatePassword(e.target.value)}

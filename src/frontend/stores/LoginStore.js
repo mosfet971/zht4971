@@ -9,6 +9,10 @@ class LoginStore {
     isLogined = false;
     password = "";
 
+    reset = async () => {
+        document.getElementById("passwordInput").focus();
+    };
+
     login = async () => {
         let isOk = await ipcRenderer.invoke("login", this.password);
         if(isOk) {
