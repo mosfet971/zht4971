@@ -6,6 +6,10 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 
 import App from "./components/specific/App.jsx";
 
+import { setupGlobalFunctions } from "./utils/globalFunctions.js";
+
+setupGlobalFunctions();
+
 ReactDOM.render(
   <App/>,
   document.getElementById("reactRoot")
