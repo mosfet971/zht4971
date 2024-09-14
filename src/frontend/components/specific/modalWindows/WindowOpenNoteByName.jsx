@@ -24,7 +24,7 @@ let WindowOpenNoteByName = observer(() => {
                         onKeyDown={(e) => { e.key == "Enter" ? windowOpenNoteByNameStore.submit() : false }}
                     />
                     <br />
-                    <Button onClick={windowOpenNoteByNameStore.submit}>Открыть</Button>
+                    <Button intent="primary" onClick={windowOpenNoteByNameStore.submit}>Открыть</Button>
                 </div>
             </ModalWindow>
         );

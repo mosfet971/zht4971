@@ -18,22 +18,15 @@ class WindowOpenNoteByNameStore {
 
     submit = async () => {
         runInAction(() => { this.status = "loading"; });
-        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", this.noteName);
-        if (resolvedId) {
-            await noteTabStore.openNote(resolvedId);
-            await tabsManagerStore.openTab("mainTabs", "readAndWrite");
-            await modalWindowsManagerStore.close();
-        } else {
-            modalWindowsManagerStore.open("WindowError", "Ошибка: не удалось найти запись");
-        }
-        runInAction(() => { this.status = "ready"; });
+
+        await noteTabStore.openNoteByName(this.noteName);
     };
-    
+
     reset = async () => {
         this.noteName = "";
         this.status = "ready";
     };
-    
+
 }
 
 export const windowOpenNoteByNameStore = new WindowOpenNoteByNameStore();

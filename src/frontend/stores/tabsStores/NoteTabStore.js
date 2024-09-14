@@ -52,13 +52,27 @@ class NoteTabStore {
                 this.historyStack.push(noteId);
             }
 
-            this.updateHtmlOfCurrentNote();
+            await this.updateHtmlOfCurrentNote();
+            await tabsManagerStore.openTab("mainTabs", "readAndWrite");
         } else {
-            await modalWindowsManagerStore.open("WindowNoteNotExistError");
+            await modalWindowsManagerStore.open("WindowError", "Ошибка: запись не существует");
             await this.closeNote();
         }
 
         //console.log(this.historyStack);
+    };
+
+    openNoteByName = async (noteName) => {
+        let prevStatus = this.status;
+        await runInAction(() => { this.status = "loading"; });
+        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", noteName);
+        if (resolvedId) {
+            await modalWindowsManagerStore.close();
+            await this.openNote(resolvedId);
+        } else {
+            await modalWindowsManagerStore.open("WindowError", "Ошибка: не удалось найти запись");
+            await runInAction(() => { this.status = prevStatus; });
+        }
     };
 
     openPrevNote = async () => {
