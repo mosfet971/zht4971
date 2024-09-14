@@ -42,6 +42,10 @@ let MenuTab = observer(() => {
                 <IconFileSymlink />
                 Открыть запись по id
             </MenuCard>
+            <MenuCard handler={() => { modalWindowsManagerStore.open("WindowOpenNoteByName"); }}>
+                <IconFileSymlink />
+                Открыть запись по названию
+            </MenuCard>
             <MenuCard handler={() => { modalWindowsManagerStore.open("WindowInfo") }}>
                 <IconHelp />
                 О программе

@@ -14,6 +14,7 @@ import WindowError from "../modalWindows/WindowError.jsx";
 import WindowAssocEditor from "../modalWindows/WindowAssocEditor.jsx";
 
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
+import WindowOpenNoteByName from "../modalWindows/WindowOpenNoteByName.jsx";
 
 let ModalWindowWrapper = observer(() => {
     let jsx = [];
@@ -50,7 +51,9 @@ let ModalWindowWrapper = observer(() => {
             jsx.push(<WindowError />);
             break;
         case "WindowAssocEditor":
-            jsx.push(<WindowAssocEditor/>);
+            jsx.push(<WindowAssocEditor />);
+        case "WindowOpenNoteByName":
+            jsx.push(<WindowOpenNoteByName />);
         default:
             jsx.push(<></>);
             break;

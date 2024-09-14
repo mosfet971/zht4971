@@ -56,7 +56,7 @@ function createWindow() {
   ipcMain.handle("login", async (e, password) => {
     try {
 
-      if (__dirname.includes("asar")) {
+      if (__dirname.includes(".asar/")) {
         zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../"), password);
       } else {
         zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../"), password);
