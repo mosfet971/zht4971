@@ -45,15 +45,16 @@ class NoteTabStore {
     openNote = async (noteId) => {
         runInAction(() => { this.status = "loading"; });
         if (await ipcRenderer.invoke("checkNoteExist", noteId)) {
+            await tabsManagerStore.openTab("mainTabs", "readAndWrite");
             this.noteObject = await ipcRenderer.invoke("getNoteObject", noteId);
-            this.status = "view";
 
             if (this.historyStack[this.historyStack.length - 1] !== noteId) {
                 this.historyStack.push(noteId);
             }
 
             await this.updateHtmlOfCurrentNote();
-            await tabsManagerStore.openTab("mainTabs", "readAndWrite");
+
+            this.status = "view";
         } else {
             await modalWindowsManagerStore.open("WindowError", "Ошибка: запись не существует");
             await this.closeNote();
