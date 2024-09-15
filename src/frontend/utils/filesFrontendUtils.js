@@ -58,7 +58,7 @@ to style:
 */
 
 
-export let processTextToShowFiles = async (textToProcess) => {
+export let processText = async (textToProcess) => {
   if (!window.objUrls) {
     window.objUrls = [];
   }
@@ -70,14 +70,20 @@ export let processTextToShowFiles = async (textToProcess) => {
   }
   let inpText = textToProcess;
   let outText = inpText;
-  for (const j of inpText.matchAll(/!\[\[(.*?)\]\]/g)) {
+  for (const j of inpText.matchAll(/!\!\[\[(.*?)\]\]/g)) {
     let i = j[0];
-    let fileId = i.replaceAll(/\[|\]|\!/g, "");
+    let fileId = i.replaceAll(/\[|\]|\!|\!/g, "");
 
     let fileZhtObject = await ipcRenderer.invoke("getFileZhtObject", { id: fileId });
+    let fileHtml = "";
+
+    if (fileZhtObject == false) {
+      fileHtml = "<br/>[Ошибка: файл не найден]<br/>";
+      outText = outText.replace(i, fileHtml);
+      continue;
+    }
 
     let file = new File([new Blob([Buffer.from(fileZhtObject.fileBuffer)])], fileZhtObject.name, { type: fileZhtObject.mimeType });
-    let fileHtml = "";
     let objUrl = URL.createObjectURL(file);
     window.objUrls.push(objUrl);
 
@@ -95,7 +101,7 @@ export let processTextToShowFiles = async (textToProcess) => {
         fileHtml = "<br/><a class='copyFileLink' class='copyFileLink' download='" + file.name + "' href='" + objUrl + "'>Копировать файл: " + file.name + "</a><br/>";
         break;
     }
-    outText = outText.replaceAll(i, fileHtml)
+    outText = outText.replace(i, fileHtml);
   }
   return outText;
 };

@@ -1,5 +1,8 @@
 import markdownit from "markdown-it";
-import { processTextToShowFiles } from "./filesFrontendUtils";
+import * as filesFrontendUtils from "./filesFrontendUtils";
+import * as includesTextProcessor from "./includesTextProcessor";
+import * as linksTextProcessor from "./linksTextProcessor";
+
 const md = markdownit({ html: true, linkify: true, typographer: true });
 
 /*
@@ -40,10 +43,13 @@ let renderNoteObjectParamsToHtml = async (noteObject) => {
 };
 
 let renderNoteObjectTextToHtml = async (noteObject) => {
-    let out = "";
+    let out = noteObject.sourceText;
 
-    out = await processTextToShowFiles(noteObject.sourceText);
+    out = await filesFrontendUtils.processText(out);
+    out = await includesTextProcessor.processText(out);
+    out = await linksTextProcessor.processText(out);
     out = md.render(out);
+
     console.log(out);
 
     return out;

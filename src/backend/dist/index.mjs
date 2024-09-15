@@ -146,7 +146,12 @@ function createWindow() {
         return fileId;
     });
     ipcMain.handle("getFileZhtObject", async (e, params) => {
-        return await zhtToolkit.filesTools.get(params.id);
+        try {
+            return await zhtToolkit.filesTools.get(params.id);
+        }
+        catch (error) {
+            return false;
+        }
     });
 }
 ;
