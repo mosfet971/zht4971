@@ -63,9 +63,11 @@ export let processText = async (textToProcess) => {
     window.objUrls = [];
   }
 
-  if(!window.objUrls.length>0) {
+  if(window.objUrls.length>0) {
     for (const i of window.objUrls) {
       URL.revokeObjectURL(i);
+      window.objUrls = window.objUrls.filter((v)=>v!==i);
+      console.log("revoke object url");
     }
   }
   let inpText = textToProcess;
