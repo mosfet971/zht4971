@@ -1,3 +1,4 @@
+import { renderNoteObjectTextToHtml } from "./noteObjectRenderer";
 
 
 export let processText = async (textToProcess) => {
@@ -19,7 +20,7 @@ export let processText = async (textToProcess) => {
         
         let noteObject = await ipcRenderer.invoke("getNoteObject", noteId);
 
-        inclHtml = noteObject.sourceText;
+        inclHtml = await renderNoteObjectTextToHtml(noteObject);
         
         outText = outText.replace(i, inclHtml);
     }

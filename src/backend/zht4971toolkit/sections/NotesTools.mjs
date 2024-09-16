@@ -38,6 +38,18 @@ class NotesTools {
     }
 
     save = (noteObject) => {
+        if (noteObject.name.includes("|")) {
+            throw new Error('Ошибка: указанное название записи содержит недопустимый символ ("|")');
+        }
+
+        if (noteObject.name.includes("[")) {
+            throw new Error('Ошибка: указанное название записи содержит недопустимый символ ("[")');
+        }
+
+        if (noteObject.name.includes("]")) {
+            throw new Error('Ошибка: указанное название записи содержит недопустимый символ ("]")');
+        }
+
         if (!this.isNameFreeForNoteWithId(noteObject.name, noteObject.id)) {
             throw new Error("Ошибка: указанное название уже занято другой записью");
         }
@@ -45,6 +57,18 @@ class NotesTools {
         for (const i of noteObject.aliasesList) {
             if (!this.isNameFreeForNoteWithId(i, noteObject.id)) {
                 throw new Error("Ошибка: один из указанных псевдонимов уже занят другой записью");
+            }
+
+            if (i.includes("|")) {
+                throw new Error('Ошибка: недопустимый символ ("|") в одном из псевдонимов записи');
+            }
+    
+            if (i.includes("[")) {
+                throw new Error('Ошибка: недопустимый символ ("[") в одном из псевдонимов записи');
+            }
+    
+            if (i.includes("]")) {
+                throw new Error('Ошибка: недопустимый символ ("]") в одном из псевдонимов записи');
             }
         }
 

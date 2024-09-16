@@ -7,8 +7,17 @@ export let processText = async (textToProcess) => {
   for (const j of inpText.matchAll(/\[\[(.*?)\]\]/g)) {
     let i = j[0];
     let noteName = i.replaceAll(/\[|\]|/g, "");
+    let displayText;
 
-    linkHtml = `<a onclick="window.openNoteByName('` + noteName + `')">` + noteName + "</a>";
+    if (noteName.includes("|")) {
+      let parts = noteName.split("|");
+      noteName = parts[0];
+      displayText = parts[1];
+    } else {
+      displayText = noteName;
+    }
+
+    linkHtml = `<a onclick="window.openNoteByName('` + noteName + `')">` + displayText + "</a>";
 
     outText = outText.replace(i, linkHtml);
   }

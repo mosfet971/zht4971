@@ -26,7 +26,7 @@ const md = markdownit({ html: true, linkify: true, typographer: true });
 
 
 
-let renderNoteObjectParamsToHtml = async (noteObject) => {
+export let renderNoteObjectParamsToHtml = async (noteObject) => {
     let out = "";
 
     out += "Название: " + noteObject.name + "<br/>";
@@ -42,7 +42,7 @@ let renderNoteObjectParamsToHtml = async (noteObject) => {
     return out;
 };
 
-let renderNoteObjectTextToHtml = async (noteObject) => {
+export let renderNoteObjectTextToHtml = async (noteObject) => {
     let out = noteObject.sourceText;
 
     out = await filesFrontendUtils.processText(out);
@@ -56,6 +56,18 @@ let renderNoteObjectTextToHtml = async (noteObject) => {
 };
 
 export let renderNoteObjectToHtml = async (noteObject) => {
+    if (!window.objUrls) {
+        window.objUrls = [];
+    }
+
+    if (window.objUrls.length > 0) {
+        for (const i of window.objUrls) {
+            URL.revokeObjectURL(i);
+            window.objUrls = window.objUrls.filter((v) => v !== i);
+            console.log("revoke object url");
+        }
+    }
+
     if (noteObject.sourceText) {
         console.log(noteObject);
         let paramBlock = await renderNoteObjectParamsToHtml(noteObject);

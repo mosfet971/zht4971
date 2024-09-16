@@ -59,17 +59,6 @@ to style:
 
 
 export let processText = async (textToProcess) => {
-  if (!window.objUrls) {
-    window.objUrls = [];
-  }
-
-  if(window.objUrls.length>0) {
-    for (const i of window.objUrls) {
-      URL.revokeObjectURL(i);
-      window.objUrls = window.objUrls.filter((v)=>v!==i);
-      console.log("revoke object url");
-    }
-  }
   let inpText = textToProcess;
   let outText = inpText;
   for (const j of inpText.matchAll(/!\!\[\[(.*?)\]\]/g)) {
@@ -87,6 +76,7 @@ export let processText = async (textToProcess) => {
 
     let file = new File([new Blob([Buffer.from(fileZhtObject.fileBuffer)])], fileZhtObject.name, { type: fileZhtObject.mimeType });
     let objUrl = URL.createObjectURL(file);
+    
     window.objUrls.push(objUrl);
 
     switch (file.type.split("/")[0]) {
