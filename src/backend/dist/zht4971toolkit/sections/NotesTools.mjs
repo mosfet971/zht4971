@@ -29,13 +29,13 @@ class NotesTools {
     };
     save = (noteObject) => {
         if (noteObject.name.includes("|")) {
-            throw new Error('Ошибка: указанное название записи содержит недопустимый символ "|"');
+            throw new Error('Ошибка: указанное название записи содержит недопустимый символ ("|")');
         }
         if (noteObject.name.includes("[")) {
-            throw new Error('Ошибка: указанное название записи содержит недопустимый символ "["');
+            throw new Error('Ошибка: указанное название записи содержит недопустимый символ ("[")');
         }
         if (noteObject.name.includes("]")) {
-            throw new Error('Ошибка: указанное название записи содержит недопустимый символ "]"');
+            throw new Error('Ошибка: указанное название записи содержит недопустимый символ ("]")');
         }
         if (!this.isNameFreeForNoteWithId(noteObject.name, noteObject.id)) {
             throw new Error("Ошибка: указанное название уже занято другой записью");
