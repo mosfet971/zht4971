@@ -39,7 +39,7 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
 
     // TODO: ассоциации
 
-    return out;
+    return "<div class='bp5-card'>" + out + "</div>";
 };
 
 export let renderNoteObjectTextToHtml = async (noteObject) => {
@@ -74,7 +74,7 @@ export let renderNoteObjectToHtml = async (noteObject) => {
         let textBlock = await renderNoteObjectTextToHtml(noteObject);
 
         return ("<div class='renderedNoteContainer' style='word-break: break-all; max-width: 90%; margin: 1em; font-size: 110%;'>"
-            + paramBlock + "<hr/>" + textBlock +
+            + paramBlock + "<br/>" + textBlock +
             "</div>");
     } else {
         return "";
