@@ -52,8 +52,10 @@ let ModalWindowWrapper = observer(() => {
             break;
         case "WindowAssocEditor":
             jsx.push(<WindowAssocEditor />);
+            break;
         case "WindowOpenNoteByName":
             jsx.push(<WindowOpenNoteByName />);
+            break;
         default:
             jsx.push(<></>);
             break;

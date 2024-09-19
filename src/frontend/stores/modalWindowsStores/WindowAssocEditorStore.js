@@ -41,7 +41,7 @@ class WindowAssocEditorStore {
         if (resolvedId !== false) {
             if (!list.includes(resolvedId)) {
                 list.push(resolvedId);
-                noteTabStore.setNoteObjectAssocsList(list);
+                await noteTabStore.setNoteObjectAssocsList(list);
                 let name = (await ipcRenderer.invoke("getNoteObject", resolvedId)).name;
                 this.assocsNamesList.push(name);
             }
@@ -60,7 +60,7 @@ class WindowAssocEditorStore {
         let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", this.nameOfTargetNote);
 
         if (resolvedId !== false) {
-            noteTabStore.setNoteObjectAssocsList(noteTabStore.noteObject.associatedNotesIds.filter((v) => v !== resolvedId));
+            await noteTabStore.setNoteObjectAssocsList(noteTabStore.noteObject.associatedNotesIds.filter((v) => v !== resolvedId));
             let name = (await ipcRenderer.invoke("getNoteObject", resolvedId)).name;
             this.assocsNamesList = this.assocsNamesList.filter((v) => v !== name);
         }

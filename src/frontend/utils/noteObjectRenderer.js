@@ -3,7 +3,7 @@ import * as filesFrontendUtils from "./filesFrontendUtils";
 import * as includesTextProcessor from "./includesTextProcessor";
 import * as linksTextProcessor from "./linksTextProcessor";
 
-const md = markdownit({ html: true, linkify: true, typographer: true });
+const md = markdownit({ html: true, linkify: false, typographer: true });
 
 /*
     {
@@ -29,17 +29,20 @@ const md = markdownit({ html: true, linkify: true, typographer: true });
 export let renderNoteObjectParamsToHtml = async (noteObject) => {
     let out = "";
 
-    out += "Название: " + noteObject.name + "<br/>";
+    out += "<h3>Название: " + noteObject.name + "</h3><hr/>";
     out += "Псевдонимы: " + noteObject.aliasesList.map((v) => '"' + v + '"').join(", ") + "<br/>";
     out += "Идентификатор: " + noteObject.id + "<br/>";
     out += "Избранная запись: " + (noteObject.isPrimary ? "Да" : "Нет") + "<br/>";
-    out += "Время предидущего просмотра записи: " + (new Date(noteObject.lastGetTime)).toLocaleString() + "<br/>";
-    out += "Время предидущего изменения записи: " + (new Date(noteObject.editionTime)).toLocaleString() + "<br/>";
     out += "Время создания записи: " + (new Date(noteObject.creationTime)).toLocaleString() + "<br/>";
+    out += "Время предидущего изменения записи: " + (new Date(noteObject.editionTime)).toLocaleString() + "<br/>";
+    
+    out += "Ассоциации: ";
+    for (const id of noteObject.associatedNotesIds) {
+        let name = (await ipcRenderer.invoke("getNoteObject", id)).name;
+        out += `<span style='margin: 0.3em' onclick="window.openNoteByName('` + name + `')" class='bp5-tag bp5-intent-primary bp5-interactive'>` + name + `</span>`;
+    }
 
-    // TODO: ассоциации
-
-    return "<div class='bp5-card'>" + out + "</div>";
+    return "<div style='width: fit-content;' class='bp5-card'>" + out + "</div>";
 };
 
 export let renderNoteObjectTextToHtml = async (noteObject) => {
