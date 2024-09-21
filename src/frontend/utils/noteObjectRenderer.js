@@ -36,10 +36,19 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
     out += "Время создания записи: " + (new Date(noteObject.creationTime)).toLocaleString() + "<br/>";
     out += "Время предидущего изменения записи: " + (new Date(noteObject.editionTime)).toLocaleString() + "<br/>";
     
-    out += "Ассоциации: ";
+    let objs = [];
     for (const id of noteObject.associatedNotesIds) {
-        let name = (await ipcRenderer.invoke("getNoteObject", id)).name;
-        out += `<span style='margin: 0.3em' onclick="window.openNoteByName('` + name + `')" class='bp5-tag bp5-intent-primary bp5-interactive'>` + name + `</span>`;
+        let obj = (await ipcRenderer.invoke("getNoteObject", id));
+        objs.push(obj);
+    }
+
+    objs = objs.sort((a,b)=>{
+        return (a.isPrimary ? 1 : 0) - (b.isPrimary ? 1 : 0);
+    });
+
+    out += "Ассоциации: ";
+    for (const obj of objs) {
+        out += `<span style='margin-right: 0.6em; margin-bottom: 0.3em; margin-top: 0.3em;' onclick="window.openNoteByName('` + obj.name + `')" class='` + (obj.isPrimary ? "bp5-intent-danger" : "bp5-intent-primary")  + ` bp5-tag bp5-interactive'>` + obj.name + `</span>`;
     }
 
     return "<div style='width: fit-content;' class='bp5-card'>" + out + "</div>";
