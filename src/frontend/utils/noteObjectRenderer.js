@@ -11,6 +11,7 @@ const md = markdownit({ html: true, linkify: false, typographer: true });
         name: "Новая запись " + id,
         aliasesList: [],
         isPrimary: false,
+        noteTypeNumber: 0,
         tagsNotesListIds: [],
         lastGetTime: Date.now(),
         creationTime: Date.now(),
@@ -29,7 +30,22 @@ const md = markdownit({ html: true, linkify: false, typographer: true });
 export let renderNoteObjectParamsToHtml = async (noteObject) => {
     let out = "";
 
+    let mapNoteTypeNumberToCssClassString = {
+        0: "bp5-intent-primary",
+        1: "bp5-intent-success",
+        2: "bp5-intent-warning",
+        3: "bp5-intent-danger"
+    };
+
+    let mapNoteTypeNumberToInfoString = {
+        0: "Обычная запись",
+        1: "Запись-тег локального уровня",
+        2: "Запись-тег среднего уровня",
+        3: "Запись-тег глобального уровня"
+    };
+
     out += "<h3>Название: " + noteObject.name + "</h3><hr/>";
+    out += "Тип: " + mapNoteTypeNumberToInfoString[noteObject.noteTypeNumber] + "<br/>";
     out += "Псевдонимы: " + noteObject.aliasesList.map((v) => '"' + v + '"').join(", ") + "<br/>";
     out += "Идентификатор: " + noteObject.id + "<br/>";
     out += "Избранная запись: " + (noteObject.isPrimary ? "Да" : "Нет") + "<br/>";
@@ -43,12 +59,13 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
     }
 
     objs = objs.sort((a,b)=>{
-        return (a.isPrimary ? 1 : 0) - (b.isPrimary ? 1 : 0);
+        return b.noteTypeNumber - a.noteTypeNumber;
     });
-
+    
     out += "Ассоциации: ";
     for (const obj of objs) {
-        out += `<span style='margin-right: 0.6em; margin-bottom: 0.3em; margin-top: 0.3em;' onclick="window.openNoteByName('` + obj.name + `')" class='` + (obj.isPrimary ? "bp5-intent-danger" : "bp5-intent-primary")  + ` bp5-tag bp5-interactive'>` + obj.name + `</span>`;
+        let noteTypeNumberCssClassString = mapNoteTypeNumberToCssClassString[obj.noteTypeNumber];
+        out += `<span style='margin-right: 0.6em; margin-bottom: 0.3em; margin-top: 0.3em;' onclick="window.openNoteByName('` + obj.name + `')" class='` + noteTypeNumberCssClassString + ` bp5-tag bp5-interactive'>` + obj.name + `</span>`;
     }
 
     return "<div style='width: fit-content;' class='bp5-card'>" + out + "</div>";

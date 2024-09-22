@@ -13,6 +13,7 @@ class NotesTools {
             name: "Новая запись " + id,
             aliasesList: [],
             isPrimary: false,
+            noteTypeNumber: 0,
             tagsNotesListIds: [],
             lastGetTime: Date.now(),
             creationTime: Date.now(),
@@ -126,23 +127,24 @@ class NotesTools {
         database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, noteObject.id, noteObject);
     };
     /**
-     * {
-            id: id,
-            name: "Новая запись " + id,
-            aliasesList: [],
-            isPrimary: false,
-            tagsNotesListIds: [],
-            lastGetTime: Date.now(),
-            creationTime: Date.now(),
-            editionTime: Date.now(),
-            hasHistoricalDate: false,
-            historicalDateNumber: 19700101, // 1970 01 01
-            historicalDateAccuracyLevel_1_2_3: 3,
-            sourceText: "Текст новой записи",
-            taggedNotesIds: [],
-            associatedNotesIds: []
-        }
-     */
+    {
+        id: id,
+        name: "Новая запись " + id,
+        aliasesList: [],
+        isPrimary: false,
+        noteTypeNumber: 0,
+        tagsNotesListIds: [],
+        lastGetTime: Date.now(),
+        creationTime: Date.now(),
+        editionTime: Date.now(),
+        hasHistoricalDate: false,
+        historicalDateNumber: 19700101, // 1970 01 01
+        historicalDateAccuracyLevel_1_2_3: 3,
+        sourceText: "Текст новой записи",
+        taggedNotesIds: [],
+        associatedNotesIds: []
+    }
+    */
     getInfo = (id) => {
         let noteObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
         noteObject["sourceText"] = "";

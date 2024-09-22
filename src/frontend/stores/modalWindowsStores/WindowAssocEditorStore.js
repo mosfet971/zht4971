@@ -9,7 +9,7 @@ class WindowAssocEditorStore {
 
     status = "loading"; // loading, ready, finished
     isOpLoading = false;
-    assocsNamesList = [];
+    tagsPreviewHtml = [];
     nameOfTargetNote = "";
 
     reset = async () => {
@@ -24,11 +24,37 @@ class WindowAssocEditorStore {
     };
 
     fetchAssocs = async () => {
-        this.assocsNamesList = [];
+        let out = "";
+
+        let mapNoteTypeNumberToCssClassString = {
+            0: "bp5-intent-primary",
+            1: "bp5-intent-success",
+            2: "bp5-intent-warning",
+            3: "bp5-intent-danger"
+        };
+
+        let objs = [];
         for (const id of noteTabStore.noteObject.associatedNotesIds) {
-            let name = (await ipcRenderer.invoke("getNoteObject", id)).name;
-            this.assocsNamesList.push(name);
+            let obj = (await ipcRenderer.invoke("getNoteObject", id));
+            objs.push(obj);
         }
+
+        objs = objs.sort((a, b) => {
+            return b.noteTypeNumber - a.noteTypeNumber;
+        });
+
+        out += "";
+        for (const obj of objs) {
+            let noteTypeNumberCssClassString = mapNoteTypeNumberToCssClassString[obj.noteTypeNumber];
+            out += `<span style='margin-right: 0.6em; margin-bottom: 0.3em; margin-top: 0.3em;' class='` + noteTypeNumberCssClassString + ` bp5-tag'>` + obj.name + `</span>`;
+        }
+
+        if(out.trim().length == 0) {
+            out += "<p>Еще не указано ни одной ассоциации для этой записи</p>";
+        }
+
+        this.tagsPreviewHtml = out;
+
     };
 
 
@@ -42,8 +68,7 @@ class WindowAssocEditorStore {
             if (!list.includes(resolvedId)) {
                 list.push(resolvedId);
                 await noteTabStore.setNoteObjectAssocsList(list);
-                let name = (await ipcRenderer.invoke("getNoteObject", resolvedId)).name;
-                this.assocsNamesList.push(name);
+                await this.fetchAssocs();
             }
         }
 
@@ -61,8 +86,7 @@ class WindowAssocEditorStore {
 
         if (resolvedId !== false) {
             await noteTabStore.setNoteObjectAssocsList(noteTabStore.noteObject.associatedNotesIds.filter((v) => v !== resolvedId));
-            let name = (await ipcRenderer.invoke("getNoteObject", resolvedId)).name;
-            this.assocsNamesList = this.assocsNamesList.filter((v) => v !== name);
+            await this.fetchAssocs();
         }
 
         //await this.fetchAssocs();

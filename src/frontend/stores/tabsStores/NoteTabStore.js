@@ -16,6 +16,7 @@ class NoteTabStore {
         name: "Новая запись " + id,
         aliasesList: [],
         isPrimary: false,
+        noteTypeNumber: 0,
         tagsNotesListIds: [],
         lastGetTime: Date.now(),
         creationTime: Date.now(),
@@ -207,11 +208,15 @@ class NoteTabStore {
         }
         //e.target.files = [];
         runInAction(() => { this.isFileUploadLoading = false; });
-    }
+    };
 
     updateHtmlOfCurrentNote = async () => {
         this.htmlOfCurrentNote = await noteObjectRenderer.renderNoteObjectToHtml(this.noteObject);
-    }
+    };
+
+    setNoteTypeNumber = async (newLevel) => {
+        this.noteObject.noteTypeNumber = parseInt(newLevel);
+    };
 }
 //86b1f541-c454-4478-a185-a25031a8a1d2-1915d40dedf
 export const noteTabStore = new NoteTabStore();

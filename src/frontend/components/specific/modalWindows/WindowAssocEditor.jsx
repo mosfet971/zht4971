@@ -21,20 +21,10 @@ let WindowAssocEditor = observer(() => {
       );
       break;
     case "ready":
-      let tagsView = [];
-      
-      for (const i of windowAssocEditorStore.assocsNamesList) {
-        tagsView.push(<Tag style={{userSelect: "text", margin: "0.3em"}}>{i}</Tag>)
-      }
-
-      if(tagsView.length == 0) {
-        tagsView.push(<p>Еще не указано ни одной ассоциации для этой записи</p>)
-      }
-
       return (
         <ModalWindowWithFooter title="Редактор ассоциаций" onClose={modalWindowsManagerStore.close}>
           <p>Ассоциации: </p>
-          <div style={{display: "flex", flexFlow: "row wrap"}}>{tagsView}</div>
+          <div style={{display: "flex", flexFlow: "row wrap"}} dangerouslySetInnerHTML={{__html: windowAssocEditorStore.tagsPreviewHtml}}></div>
           <br />
           <InputGroup
             id="assocEditorInputName"
