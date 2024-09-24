@@ -102,7 +102,7 @@ export let renderNoteObjectToHtml = async (noteObject) => {
         let paramBlock = await renderNoteObjectParamsToHtml(noteObject);
         let textBlock = await renderNoteObjectTextToHtml(noteObject);
 
-        return ("<div class='renderedNoteContainer' style='word-break: break-all; max-width: 90%; margin: 1em; font-size: 110%;'>"
+        return ("<div class='renderedNoteContainer' style='letter-spacing: .01em; word-break: normal; max-width: 90%; margin: 1em; font-size: 125%;'>"
             + paramBlock + "<br/>" + textBlock +
             "</div>");
     } else {
