@@ -143,7 +143,11 @@ class NoteTabStore {
     };
 
     setNoteObject = async (noteObject) => {
-        this.noteObject = noteObject;
+        for (const i of Object.keys(noteObject)) {
+            if (i !== "id") {
+                this.noteObject[i] = noteObject[i];
+            }
+        }
     };
 
     noteNameInputEventHandler = async (e) => {

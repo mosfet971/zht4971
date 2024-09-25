@@ -21,9 +21,13 @@ class WindowSaveTemplateStore {
 
     submit = async () => {
         runInAction(()=>{this.status = "loading";});
+        let obj = JSON.parse(JSON.stringify(noteTabStore.noteObject));
+
+        obj.id = "";
+
         if(await ipcRenderer.invoke("saveTemplate", {
             templateName: this.templateName,
-            templateText: JSON.stringify(noteTabStore.noteObject)
+            templateText: obj
         })) {
             runInAction(()=>{this.status = "finished";});
         } else {
