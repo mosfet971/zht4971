@@ -53,6 +53,11 @@ let NoteEditMode = observer(() => {
         <SourceTextEditorContainer>
             <br />
             <ContainerForInputs>
+                <ButtonGroup large={true} alignText="center">
+                    <Button icon="document-share" onClick={() => { modalWindowsManagerStore.open("WindowSaveTemplate") }}>Сохранить как шаблон</Button>
+                    <Button icon="document" onClick={() => { modalWindowsManagerStore.open("WindowTemplates") }}>Шаблоны</Button>
+                </ButtonGroup>
+                
                 <Text>Название записи:</Text>
                 <InputGroup placeholder="Название записи" intent="primary" value={noteTabStore.noteObject.name} onInput={noteTabStore.noteNameInputEventHandler}></InputGroup>
 
@@ -62,7 +67,7 @@ let NoteEditMode = observer(() => {
                 <TagInput placeholder="Псевдонимы записи" intent="primary" fill={true} values={noteTabStore.noteObject.aliasesList} onChange={noteTabStore.noteAliasesListChangeEventHandler} />
 
                 <Text>Тип записи: (влияет на отображение записи в ассоциациях)</Text>
-                <select style={{width: "100%"}} name="select" onChange={(e)=>{noteTabStore.setNoteTypeNumber(e.target.value);}}>
+                <select style={{ width: "100%" }} name="select" onChange={(e) => { noteTabStore.setNoteTypeNumber(e.target.value); }}>
                     <option value="0" selected={noteTabStore.noteObject.noteTypeNumber == 0}>Обычная запись</option>
                     <option value="1" selected={noteTabStore.noteObject.noteTypeNumber == 1}>Запись-тег локального уровня</option>
                     <option value="2" selected={noteTabStore.noteObject.noteTypeNumber == 2}>Запись-тег среднего уровня</option>
@@ -89,10 +94,6 @@ let NoteEditMode = observer(() => {
             </ContainerForInputs>
             <br />
 
-            <ButtonGroup large={true} alignText="center">
-                <Button icon="document-share" onClick={() => { modalWindowsManagerStore.open("WindowSaveTemplate") }}>Сохранить как шаблон</Button>
-                <Button icon="document" onClick={() => { modalWindowsManagerStore.open("WindowTemplates") }}>Шаблоны</Button>
-            </ButtonGroup>
             <TextArea
                 intent="primary"
                 autoResize={false}
