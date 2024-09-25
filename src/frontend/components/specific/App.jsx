@@ -42,7 +42,7 @@ let App = observer(() => {
   }
 
   return (
-    <Background style={{ color: Colors.WHITE, background: Colors.DARK_GRAY2 }} className="bp5-dark">
+    <Background style={{ color: Colors.WHITE, background: Colors.DARK_GRAY1 }} className="bp5-dark">
       <OverlaysProvider>
         {content}
       </OverlaysProvider>
