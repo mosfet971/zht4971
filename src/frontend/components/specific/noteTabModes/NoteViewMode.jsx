@@ -4,9 +4,14 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import { noteTabStore } from "../../../stores/tabsStores/NoteTabStore";
 
+let NoteContainerDiv = styled.div`
+    /*color: black;
+    background-color: white;*/
+`;
+
 let NoteViewMode = observer(() => {
     return (<>
-        <div dangerouslySetInnerHTML={{__html: noteTabStore.htmlOfCurrentNote}}></div>
+        <NoteContainerDiv className="bp5-light" dangerouslySetInnerHTML={{__html: noteTabStore.htmlOfCurrentNote}}></NoteContainerDiv>
         <br />
     </>);
 });

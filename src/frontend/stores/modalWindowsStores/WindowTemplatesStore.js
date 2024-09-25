@@ -23,7 +23,7 @@ class WindowTemplatesStore {
                 selectedTemplate = i;
             }
         }
-        noteTabStore.setNoteSourceText(selectedTemplate.text);
+        noteTabStore.setNoteObject(JSON.parse(selectedTemplate.text));
         runInAction(()=>{this.status = "finished";});
     };
 

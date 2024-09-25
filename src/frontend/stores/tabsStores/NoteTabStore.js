@@ -142,8 +142,8 @@ class NoteTabStore {
         tabElement.scrollTo(this.tabScrollPos.left, this.tabScrollPos.top);
     };
 
-    setNoteSourceText = async (text) => {
-        this.noteObject.sourceText = text;
+    setNoteObject = async (noteObject) => {
+        this.noteObject = noteObject;
     };
 
     noteNameInputEventHandler = async (e) => {
