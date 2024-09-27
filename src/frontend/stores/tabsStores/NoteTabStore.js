@@ -166,8 +166,8 @@ class NoteTabStore {
         this.noteObject.hasHistoricalDate = !this.noteObject.hasHistoricalDate;
     };
 
-    noteHistoricalDateAccuracyLevelChangeEventHandler = async (newNum) => {
-        this.noteObject.historicalDateAccuracyLevel_1_2_3 = newNum;
+    noteHistoricalDateAccuracyLevelChangeEventHandler = async (e) => {
+        this.noteObject.historicalDateAccuracyLevel_1_2_3 = parseInt(e.target.value);
     };
 
     get currentNoteHistoricalDate() {

@@ -7,6 +7,21 @@ import { noteTabStore } from "../../../stores/tabsStores/NoteTabStore";
 let NoteContainerDiv = styled.div`
     /*color: black;
     background-color: white;*/
+
+    overflow-x: hidden;
+
+    & > div > p {
+        max-width: 40em;
+    }
+    & > div > p:has(table) {
+        max-width: unset;
+    }
+    & > div > p:has(img) {
+        max-width: unset;
+    }
+    & > div > p:has(video) {
+        max-width: unset;
+    }
 `;
 
 let NoteViewMode = observer(() => {

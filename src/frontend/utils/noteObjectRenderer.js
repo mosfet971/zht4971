@@ -44,31 +44,42 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
         3: "Запись-тег глобального уровня"
     };
 
+    let mapHistoricalDateAccuracyLevelNumberToInfoString = {
+        0: "Нет",
+        1: "Низкая",
+        2: "Средняя",
+        3: "Максимальная"
+    };
+
+
     out += "<h3>Название: " + noteObject.name + "</h3><hr/>";
     out += "Тип: " + mapNoteTypeNumberToInfoString[noteObject.noteTypeNumber] + "<br/>";
     out += "Псевдонимы: " + noteObject.aliasesList.map((v) => '"' + v + '"').join(", ") + "<br/>";
     out += "Идентификатор: " + noteObject.id + "<br/>";
+    if (noteObject.hasHistoricalDate) {
+        out += "Точность дополнительной даты: " + mapHistoricalDateAccuracyLevelNumberToInfoString[noteObject.historicalDateAccuracyLevel_1_2_3] + "<br/>";
+    }
     out += "Избранная запись: " + (noteObject.isPrimary ? "Да" : "Нет") + "<br/>";
     out += "Время создания записи: " + (new Date(noteObject.creationTime)).toLocaleString() + "<br/>";
     out += "Время предидущего изменения записи: " + (new Date(noteObject.editionTime)).toLocaleString() + "<br/>";
-    
+
     let objs = [];
     for (const id of noteObject.associatedNotesIds) {
         let obj = (await ipcRenderer.invoke("getNoteObject", id));
         objs.push(obj);
     }
 
-    objs = objs.sort((a,b)=>{
+    objs = objs.sort((a, b) => {
         return b.noteTypeNumber - a.noteTypeNumber;
     });
-    
+
     out += "Ассоциации: ";
     for (const obj of objs) {
         let noteTypeNumberCssClassString = mapNoteTypeNumberToCssClassString[obj.noteTypeNumber];
         out += `<span style='margin-right: 0.6em; margin-bottom: 0.3em; margin-top: 0.3em;' onclick="window.openNoteByName('` + obj.name + `')" class='` + noteTypeNumberCssClassString + ` bp5-tag bp5-interactive'>` + obj.name + `</span>`;
     }
 
-    return "<div style='width: fit-content;' class='bp5-card'>" + out + "</div>";
+    return "<div style='width: fit-content; margin-left: -2em;' class='bp5-card'>" + out + "</div>";
 };
 
 export let renderNoteObjectTextToHtml = async (noteObject) => {
@@ -102,8 +113,8 @@ export let renderNoteObjectToHtml = async (noteObject) => {
         let paramBlock = await renderNoteObjectParamsToHtml(noteObject);
         let textBlock = await renderNoteObjectTextToHtml(noteObject);
 
-        return ("<div class='renderedNoteContainer' style='letter-spacing: .01em; word-break: normal; max-width: 90%; margin: 1em; font-size: 125%;'>"
-            + paramBlock + "<br/>" + textBlock +
+        return ("<div class='renderedNoteContainer' style='letter-spacing: .01em; word-break: normal; max-width: 90%; margin-left: 3em; margin-right: 1em; margin-top: 1em; margin-bottom: 1em; font-size: 125%;'>"
+            + paramBlock + "<hr style='margin-top: 1em; margin-bottom: 1em; width: 110vw; margin-left: -5em;'/>" + textBlock +
             "</div>");
     } else {
         return "";

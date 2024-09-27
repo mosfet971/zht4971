@@ -75,8 +75,12 @@ let NoteEditMode = observer(() => {
                 </select>
 
                 <Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату (указанная дата также должна быть включенна в название записи в скобках, в формате (дд.мм.гггг), (мм.гггг) или (гггг))" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} />
-                <Text>Уровень точности даты: (1-3 включительно)</Text>
-                <NumericInput min={1} max={3} intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3} onValueChange={noteTabStore.noteHistoricalDateAccuracyLevelChangeEventHandler} />
+                <Text>Уровень точности даты:</Text>
+                <select style={{ width: "100%" }} disabled={!noteTabStore.noteObject.hasHistoricalDate} onChange={noteTabStore.noteHistoricalDateAccuracyLevelChangeEventHandler} >
+                    <option value="1" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 1}>Низкий</option>
+                    <option value="2" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 2}>Средний</option>
+                    <option value="3" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 3}>Высокий</option>
+                </select>
                 <Text>Год:</Text>
                 <NumericInput intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.currentNoteHistoricalDate.year} onValueChange={(v) => { noteTabStore.setNoteHistoricalDatePart(v, "year") }} />
                 <Text>Месяц:</Text>
