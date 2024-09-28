@@ -5,18 +5,20 @@ import styled from "styled-components";
 
 import MenuTab from "../tabs/MenuTab.jsx";
 import NoteTab from "../tabs/NoteTab.jsx";
+import PrimaryTab from "../tabs/PrimaryTab.jsx";
 
 import TabSection from "../../universal/TabSection.jsx";
 import TabMenu from "../../universal/TabMenu.jsx";
 import TabButton from "../../universal/TabButton.jsx";
 import TabPanel from "../../universal/TabPanel.jsx";
 
+
 let MainPage = observer(() => {
   return (<>
     <TabSection id="mainTabs">
       <TabMenu>
         <TabButton target="menu" isDefaultSelected={true}>Меню</TabButton>
-        <TabButton target="favs" isDefaultSelected={false}>Избранное</TabButton>
+        <TabButton target="primary" isDefaultSelected={false}>Избранное</TabButton>
         <TabButton target="graph" isDefaultSelected={false}>Граф</TabButton>
         <TabButton target="recent" isDefaultSelected={false}>Недавнее</TabButton>
         <TabButton target="search" isDefaultSelected={false}>Поиск</TabButton>
@@ -24,7 +26,7 @@ let MainPage = observer(() => {
       </TabMenu>
       <hr style={{margin: 0}}/>
       <TabPanel isDefaultHidden={false} id="menu"><MenuTab/></TabPanel>
-      <TabPanel isDefaultHidden={true} id="favs">Tab B1 is active</TabPanel>
+      <TabPanel isDefaultHidden={true} id="primary"><PrimaryTab/></TabPanel>
       <TabPanel isDefaultHidden={true} id="graph">Tab B2 is active</TabPanel>
       <TabPanel isDefaultHidden={true} id="recent">Tab B3 is active</TabPanel>
       <TabPanel isDefaultHidden={true} id="search">Tab B4 is active</TabPanel>
