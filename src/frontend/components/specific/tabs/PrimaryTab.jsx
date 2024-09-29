@@ -36,6 +36,29 @@ let ButtonGroupContainer = styled.div`
     border-bottom: 0.05em solid white;
 `;
 
+let ContainerForInputs = styled.div`
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+
+    & > * {
+        margin-top: 0.7em;
+        user-select: none;
+    }
+
+    & > * > input {
+        user-select: unset;
+    }
+
+    & > * > * {
+        outline: 0 !important;
+    }
+`;
+
+let ListContainer = styled.div`
+    margin-top: 1em;
+    margin-bottom: 1em;
+    width: 100%;
+`;
 
 let PrimaryTab = observer(() => {
     useEffect(() => {
@@ -58,19 +81,22 @@ let PrimaryTab = observer(() => {
             markup.push(
                 <>
                     <ButtonGroupContainer>
-                        <Text>Сортировка: </Text>
-                        <select style={{ width: "100%" }} name="select" onChange={primaryTabStore.sortModeChangeHandler}>
-                            <option value="byCreationTime" selected={primaryTabStore.sortMode == "byCreationTime"}>По времени создания</option>
-                            <option value="byGetTime" selected={primaryTabStore.sortMode == "byGetTime"}>По времени последнего просмотра</option>
-                            <option value="byEditionTime" selected={primaryTabStore.sortMode == "byEditionTime"}>По времени последнего изменения</option>
-                        </select>
-                        <Text>Порядок сортировки: </Text>
-                        <select style={{ width: "100%" }} name="select" onChange={primaryTabStore.sortOrderChangeHandler}>
-                            <option value="aToB" selected={primaryTabStore.sortOrder == "aToB"}>По возрастанию</option>
-                            <option value="bToA" selected={primaryTabStore.sortOrder == "bToA"}>По убыванию</option>
-                        </select>
+                        <ContainerForInputs>
+                            <Text>Сортировка: </Text>
+                            <select style={{ width: "100%" }} value={primaryTabStore.sortMode} name="select" onChange={primaryTabStore.sortModeChangeHandler}>
+                                <option value="byCreationTime" >По времени создания</option>
+                                <option value="byGetTime">По времени просмотра</option>
+                                <option value="byEditionTime">По времени изменения</option>
+                            </select>
+                            <Text>Порядок сортировки: </Text>
+                            <select style={{ width: "100%" }} value={primaryTabStore.sortOrder} name="select" onChange={primaryTabStore.sortOrderChangeHandler}>
+                                <option value="aToB">По возрастанию</option>
+                                <option value="bToA">По убыванию</option>
+                            </select>
+                            <Button onClick={primaryTabStore.fetch} intent="primary" icon="refresh">Обновить</Button>
+                        </ContainerForInputs>
                     </ButtonGroupContainer>
-                    <div dangerouslySetInnerHTML={{ __html: primaryTabStore.listOfNoteCardsHtml }} />
+                    <ListContainer dangerouslySetInnerHTML={{ __html: primaryTabStore.listOfNoteCardsHtml }} ></ListContainer>
                 </>
             );
             break;

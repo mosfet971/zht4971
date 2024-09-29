@@ -16,7 +16,9 @@ class WindowOpenNoteByIdStore {
     };
 
     submit = async () => {
+        await modalWindowsManagerStore.close();
         await noteTabStore.openNote(this.noteId);
+        
     };
     
     reset = async () => {

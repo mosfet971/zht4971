@@ -11,31 +11,30 @@ class PrimaryTabStore {
 
     status = "loading"; // loading, ready 
     listOfNoteCardsHtml = "";
-    sortMode = "byCreationTime"; // byCreationTime, byGetTime, byEditionTime
-    sortOrder = "aToB";
+    sortMode = "byGetTime"; // byCreationTime, byGetTime, byEditionTime
+    sortOrder = "bToA"; // aToB, bToA
 
     reset = async () => {
         this.status = "loading";
         this.listOfNoteCardsHtml = "";
-        this.sortMode = "byCreationTime"; 
-        this.sortOrder = "aToB";
+        this.sortMode = "byGetTime"; 
+        this.sortOrder = "bToA";
         await this.fetch();
     };
 
     fetch = async () => {
         await runInAction(()=>{this.status="loading"});
-        this.listOfNoteCardsHtml = "cards: list of bibas " + this.sortMode + " " + this.sortOrder;
+        let objs = await ipcRenderer.invoke("getPrimaryList", {sortMode: this.sortMode, sortOrder: this.sortOrder})
+        this.listOfNoteCardsHtml = JSON.stringify(objs);
         await runInAction(()=>{this.status="ready"});
     };
 
     sortModeChangeHandler = async (e) => {
         this.sortMode = e.target.value;
-        await this.fetch();
     };
 
     sortOrderChangeHandler = async (e) => {
         this.sortOrder = e.target.value;
-        await this.fetch();
     };
 
 }

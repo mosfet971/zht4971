@@ -4,6 +4,21 @@ import ZhtToolkit from './zht4971toolkit/index.mjs';
 import { fileURLToPath } from 'url';
 import contextMenu from 'electron-context-menu';
 
+import { Worker } from 'worker_threads';
+
+function runService(workerData) {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(path.join(__dirname, './service.mjs'), { workerData });
+    worker.on('message', resolve);
+    worker.on('error', reject);
+    worker.on('exit', (code) => {
+      if (code !== 0)
+        reject(new Error(`Worker stopped with exit code ${code}`));
+    })
+  })
+}
+
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let mainWindow: BrowserWindow;
@@ -52,9 +67,11 @@ function createWindow() {
   });
 
   let zhtToolkit: ZhtToolkit;
+  let zhtPassword = "";
 
   ipcMain.handle("login", async (e, password) => {
     try {
+      zhtPassword = password;
 
       if (__dirname.includes(".asar/")) {
         zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../"), password);
@@ -115,7 +132,7 @@ function createWindow() {
   });
 
   ipcMain.handle("getNoteObject", async (e, id) => {
-    return await zhtToolkit.notesTools.get(id);
+    return await zhtToolkit.notesTools.get(id, true);
   });
 
   ipcMain.handle("saveNoteObject", async (e, noteObject) => {
@@ -183,6 +200,11 @@ function createWindow() {
     } catch (error) {
       return false;
     }
+  });
+
+  ipcMain.handle("getPrimaryList", async (e, params) => {
+    const result = await runService({action: "getPrimaryList", password: zhtPassword, params});
+    return result;
   });
 
 };

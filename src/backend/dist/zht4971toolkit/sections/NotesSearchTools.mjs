@@ -6,7 +6,8 @@ class NotesSearchTools {
             "range": this._checkParamRange,
             "rangeStringLength": this._checkStringParamLengthRange,
             "stringStrict": this._checkParamIncludesStringStrict,
-            "stringFuse": this._checkParamIncludesStringFuse
+            "stringFuse": this._checkParamIncludesStringFuse,
+            "bool": this._checkParamBool
         };
     }
     getListOfNotesIdsSortedByParamWithFilters = (paramName, filtersList, isNeedInvertedOrderList) => {
@@ -87,6 +88,16 @@ class NotesSearchTools {
         }
         return true;
     };
+    _checkParamBool = (noteObject, filterObject) => {
+        try {
+            return noteObject[filterObject.paramName] == filterObject.value;
+        }
+        catch (error) {
+            //console.log(error);
+            return false;
+        }
+        return true;
+    };
     creteBlankFiltersList = () => {
         return ([]);
     };
@@ -111,6 +122,12 @@ class NotesSearchTools {
     addPramIncludesStringFuseFilter = (filtersList, paramName, value, isInverted) => {
         let list = filtersList;
         let type = "stringFuse";
+        list.push({ type, paramName, value, isInverted });
+        return list;
+    };
+    addPramBoolFilter = (filtersList, paramName, value, isInverted) => {
+        let list = filtersList;
+        let type = "bool";
         list.push({ type, paramName, value, isInverted });
         return list;
     };

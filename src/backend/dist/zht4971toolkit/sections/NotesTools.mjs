@@ -150,11 +150,13 @@ class NotesTools {
         noteObject["sourceText"] = "";
         return noteObject;
     };
-    get = (id) => {
+    get = (id, isUserCall) => {
         let noteObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
-        let noteObject2 = { ...noteObject };
-        noteObject2.lastGetTime = Date.now();
-        database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, noteObject2.id, noteObject2);
+        if (isUserCall == true) {
+            let noteObject2 = { ...noteObject };
+            noteObject2.lastGetTime = Date.now();
+            database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, noteObject2.id, noteObject2);
+        }
         return noteObject;
     };
     getNoteIdByNameOrAlias = (name) => {
