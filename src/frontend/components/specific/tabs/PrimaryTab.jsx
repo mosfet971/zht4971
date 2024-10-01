@@ -3,11 +3,12 @@ import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { ButtonGroup, Button, Spinner } from "@blueprintjs/core";
+import { renderToStaticMarkup } from "react-dom/server"
 
 import NoteEditMode from "../noteTabModes/NoteEditMode.jsx";
 import NoteViewMode from "../noteTabModes/NoteViewMode.jsx";
 
-import { Text } from "@blueprintjs/core";
+import { Text, CardList } from "@blueprintjs/core";
 
 import {
     IconTrash,
@@ -20,8 +21,6 @@ import {
 } from '@tabler/icons-react';
 
 import { primaryTabStore } from "../../../stores/tabsStores/PrimaryTabStore.js";
-
-
 
 let ButtonGroupContainerWithoutBorder = styled.div`
     width: 100%;
@@ -96,7 +95,10 @@ let PrimaryTab = observer(() => {
                             <Button onClick={primaryTabStore.fetch} intent="primary" icon="refresh">Обновить</Button>
                         </ContainerForInputs>
                     </ButtonGroupContainer>
-                    <ListContainer dangerouslySetInnerHTML={{ __html: primaryTabStore.listOfNoteCardsHtml }} ></ListContainer>
+                    <ListContainer>
+                        <CardList dangerouslySetInnerHTML={{ __html: primaryTabStore.listOfNoteCardsHtml }}>
+                        </CardList>
+                    </ListContainer>
                 </>
             );
             break;

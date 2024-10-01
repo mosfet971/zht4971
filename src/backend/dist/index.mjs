@@ -107,6 +107,9 @@ function createWindow() {
         return isOk;
     });
     ipcMain.handle("getNoteObject", async (e, id) => {
+        return await zhtToolkit.notesTools.get(id, false);
+    });
+    ipcMain.handle("getNoteObjectByUser", async (e, id) => {
         return await zhtToolkit.notesTools.get(id, true);
     });
     ipcMain.handle("saveNoteObject", async (e, noteObject) => {

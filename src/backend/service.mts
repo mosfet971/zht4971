@@ -32,7 +32,14 @@ let f = async () => {
 
       let filters = await zhtToolkit.notesSearchTools.creteBlankFiltersList();
       filters = await zhtToolkit.notesSearchTools.addPramBoolFilter(filters, "isPrimary", true, false);
-      let objs = await zhtToolkit.notesSearchTools.getListOfNotesIdsSortedByParamWithFilters(paramName, filters, isNeedInvertedOrderList);
+      let ids = await zhtToolkit.notesSearchTools.getListOfNotesIdsSortedByParamWithFilters(paramName, filters, isNeedInvertedOrderList);
+
+      let objs = [];
+      for (const id of ids) {
+        let obj = await zhtToolkit.notesTools.get(id, false);
+        objs.push({name: obj.name, id: obj.id});
+      }
+
 
       result = objs;
       break;

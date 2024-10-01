@@ -47,7 +47,7 @@ class NoteTabStore {
         runInAction(() => { this.status = "loading"; });
         if (await ipcRenderer.invoke("checkNoteExist", noteId)) {
             await tabsManagerStore.openTab("mainTabs", "readAndWrite");
-            this.noteObject = await ipcRenderer.invoke("getNoteObject", noteId);
+            this.noteObject = await ipcRenderer.invoke("getNoteObjectByUser", noteId);
 
             if (this.historyStack[this.historyStack.length - 1] !== noteId) {
                 this.historyStack.push(noteId);

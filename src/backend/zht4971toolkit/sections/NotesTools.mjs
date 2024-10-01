@@ -200,6 +200,7 @@ class NotesTools {
 
         let noteObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
 
+        //console.log(isUserCall);
         if (isUserCall == true) {
             let noteObject2 = { ...noteObject };
             noteObject2.lastGetTime = Date.now();
@@ -210,6 +211,7 @@ class NotesTools {
                 noteObject2.id,
                 noteObject2
             );
+            return noteObject2;
         }
 
         return noteObject;

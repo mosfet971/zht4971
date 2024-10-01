@@ -24,8 +24,15 @@ class PrimaryTabStore {
 
     fetch = async () => {
         await runInAction(()=>{this.status="loading"});
+
+
         let objs = await ipcRenderer.invoke("getPrimaryList", {sortMode: this.sortMode, sortOrder: this.sortOrder})
-        this.listOfNoteCardsHtml = JSON.stringify(objs);
+
+        this.listOfNoteCardsHtml = "";
+        for (const i of objs) {
+            this.listOfNoteCardsHtml += `<div style='justify-content: space-between;' class='bp5-card bp5-interactive' ` +  `onclick='window.openNoteByName(`+ '"' + i.name + '"' + `)'>` + i.name + "<span class='bp5-icon-standard bp5-icon-document-open'></span></div>"
+        }
+
         await runInAction(()=>{this.status="ready"});
     };
 
