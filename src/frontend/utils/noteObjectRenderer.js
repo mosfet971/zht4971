@@ -76,7 +76,7 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
     out += "Ассоциации: ";
     for (const obj of objs) {
         let noteTypeNumberCssClassString = mapNoteTypeNumberToCssClassString[obj.noteTypeNumber];
-        out += `<span style='margin-right: 0.6em; margin-bottom: 0.3em; margin-top: 0.3em;' onclick="window.openNoteByName('` + obj.name + `')" class='` + noteTypeNumberCssClassString + ` bp5-tag bp5-interactive'>` + obj.name + `</span>`;
+        out += `<span style='margin-right: 0.6em; margin-bottom: 0.3em; margin-top: 0.3em;' onclick="window.openNoteById('` + obj.id + `')" class='` + noteTypeNumberCssClassString + ` bp5-tag bp5-interactive'>` + obj.name + `</span>`;
     }
 
     return "<div style='width: fit-content; margin-left: -2em;' class='bp5-card'>" + out + "</div>";

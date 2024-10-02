@@ -44,6 +44,14 @@ let f = async () => {
       result = objs;
       break;
 
+    case "getNoteIdByNameOrAlias":
+      try {
+        result = await zhtToolkit.notesTools.getNoteIdByNameOrAlias(params.name);
+      } catch (error) {
+        result = false;
+      }
+      break;
+
     default:
       break;
   }

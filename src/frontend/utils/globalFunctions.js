@@ -9,6 +9,10 @@ let setupGlobalFunctions = () => {
     window.openNoteByName = async (name) => {
         await noteTabStore.openNoteByName(name);
     };
+
+    window.openNoteById = async (id) => {
+        await noteTabStore.openNote(id);
+    };
 };
 
 export { setupGlobalFunctions };

@@ -148,12 +148,8 @@ function createWindow() {
         await zhtToolkit.templatesTools.delete(id);
     });
     ipcMain.handle("getNoteIdByNameOrAlias", async (e, name) => {
-        try {
-            return await zhtToolkit.notesTools.getNoteIdByNameOrAlias(name);
-        }
-        catch (error) {
-            return false;
-        }
+        const result = await runService({ action: "getNoteIdByNameOrAlias", password: zhtPassword, params: { name } });
+        return result;
     });
     ipcMain.handle("saveFile", async (e, params) => {
         let fileBuffer = params.fileBuffer;
