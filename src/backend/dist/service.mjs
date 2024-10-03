@@ -15,29 +15,52 @@ let f = async () => {
     }
     switch (action) {
         case "getPrimaryList":
-            let sortModeToParamNameMap = {
-                "byCreationTime": "creationTime",
-                "byGetTime": "lastGetTime",
-                "byEditionTime": "editionTime"
-            };
-            let paramName = sortModeToParamNameMap[params.sortMode];
-            let isNeedInvertedOrderList = params.sortOrder == "bToA";
-            let filters = await zhtToolkit.notesSearchTools.creteBlankFiltersList();
-            filters = await zhtToolkit.notesSearchTools.addPramBoolFilter(filters, "isPrimary", true, false);
-            let ids = await zhtToolkit.notesSearchTools.getListOfNotesIdsSortedByParamWithFilters(paramName, filters, isNeedInvertedOrderList);
-            let objs = [];
-            for (const id of ids) {
-                let obj = await zhtToolkit.notesTools.get(id, false);
-                objs.push({ name: obj.name, id: obj.id });
+            {
+                let sortModeToParamNameMap = {
+                    "byCreationTime": "creationTime",
+                    "byGetTime": "lastGetTime",
+                    "byEditionTime": "editionTime"
+                };
+                let paramName = sortModeToParamNameMap[params.sortMode];
+                let isNeedInvertedOrderList = params.sortOrder == "bToA";
+                let filters = await zhtToolkit.notesSearchTools.creteBlankFiltersList();
+                filters = await zhtToolkit.notesSearchTools.addPramBoolFilter(filters, "isPrimary", true, false);
+                let ids = await zhtToolkit.notesSearchTools.getListOfNotesIdsSortedByParamWithFilters(paramName, filters, isNeedInvertedOrderList);
+                let objs = [];
+                for (const id of ids) {
+                    let obj = await zhtToolkit.notesTools.get(id, false);
+                    objs.push({ name: obj.name, id: obj.id });
+                }
+                result = objs;
             }
-            result = objs;
             break;
         case "getNoteIdByNameOrAlias":
-            try {
-                result = await zhtToolkit.notesTools.getNoteIdByNameOrAlias(params.name);
+            {
+                try {
+                    result = await zhtToolkit.notesTools.getNoteIdByNameOrAlias(params.name);
+                }
+                catch (error) {
+                    result = false;
+                }
             }
-            catch (error) {
-                result = false;
+            break;
+        case "getNotesList":
+            {
+                let sortModeToParamNameMap = {
+                    "byCreationTime": "creationTime",
+                    "byGetTime": "lastGetTime",
+                    "byEditionTime": "editionTime"
+                };
+                let paramName = sortModeToParamNameMap[params.sortMode];
+                let isNeedInvertedOrderList = params.sortOrder == "bToA";
+                let filters = await zhtToolkit.notesSearchTools.creteBlankFiltersList();
+                let ids = await zhtToolkit.notesSearchTools.getListOfNotesIdsSortedByParamWithFilters(paramName, filters, isNeedInvertedOrderList);
+                let objs = [];
+                for (const id of ids) {
+                    let obj = await zhtToolkit.notesTools.get(id, false);
+                    objs.push({ name: obj.name, id: obj.id });
+                }
+                result = objs;
             }
             break;
         default:

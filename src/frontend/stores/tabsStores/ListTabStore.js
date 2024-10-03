@@ -4,7 +4,7 @@ import { tabsManagerStore } from "../TabsManagerStore";
 import * as filesFrontendUtils from "../../utils/filesFrontendUtils";
 import * as noteObjectRenderer from "../../utils/noteObjectRenderer";
 
-class PrimaryTabStore {
+class ListTabStore {
     constructor() {
         makeAutoObservable(this);
     }
@@ -26,7 +26,7 @@ class PrimaryTabStore {
         await runInAction(()=>{this.status="loading"});
 
 
-        let objs = await ipcRenderer.invoke("getPrimaryList", {sortMode: this.sortMode, sortOrder: this.sortOrder})
+        let objs = await ipcRenderer.invoke("getNotesList", {sortMode: this.sortMode, sortOrder: this.sortOrder})
 
         this.listOfNoteCardsHtml = "";
         for (const i of objs) {
@@ -50,4 +50,4 @@ class PrimaryTabStore {
 
 }
 
-export const primaryTabStore = new PrimaryTabStore();
+export const listTabStore = new ListTabStore();

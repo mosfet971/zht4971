@@ -208,6 +208,11 @@ function createWindow() {
     return result;
   });
 
+  ipcMain.handle("getNotesList", async (e, params) => {
+    const result = await runService({action: "getNotesList", password: zhtPassword, params});
+    return result;
+  });
+
 };
 
 app.on('ready', createWindow);
