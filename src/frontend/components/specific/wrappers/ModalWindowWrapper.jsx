@@ -15,6 +15,7 @@ import WindowAssocEditor from "../modalWindows/WindowAssocEditor.jsx";
 
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
 import WindowOpenNoteByName from "../modalWindows/WindowOpenNoteByName.jsx";
+import WindowFilterAdd from "../modalWindows/WindowFilterAdd.jsx";
 
 let ModalWindowWrapper = observer(() => {
     let jsx = [];
@@ -55,6 +56,9 @@ let ModalWindowWrapper = observer(() => {
             break;
         case "WindowOpenNoteByName":
             jsx.push(<WindowOpenNoteByName />);
+            break;
+        case "WindowFilterAdd":
+            jsx.push(<WindowFilterAdd />);
             break;
         default:
             jsx.push(<></>);

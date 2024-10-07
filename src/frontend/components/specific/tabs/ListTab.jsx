@@ -59,6 +59,17 @@ let ListContainer = styled.div`
     width: 100%;
 `;
 
+let FiltersSettingsContainer = styled.div`
+    border: 0.1em white solid;
+    padding: 1em;
+    width: 100%;
+    min-height: 10em;
+
+    & > button {
+        margin-bottom: 1em;
+    }
+`;
+
 let ListTab = observer(() => {
     useEffect(() => {
         listTabStore.reset();
@@ -92,6 +103,10 @@ let ListTab = observer(() => {
                                 <option value="aToB">По возрастанию</option>
                                 <option value="bToA">По убыванию</option>
                             </select>
+                            <FiltersSettingsContainer>
+                                <Button onClick={listTabStore.openFiltersWindow} intent="primary">Добавить фильтр</Button>
+                                <CardList>{JSON.stringify(listTabStore.filtersList)}</CardList>
+                            </FiltersSettingsContainer>
                             <Button onClick={listTabStore.fetch} intent="primary" icon="refresh">Обновить</Button>
                         </ContainerForInputs>
                     </ButtonGroupContainer>

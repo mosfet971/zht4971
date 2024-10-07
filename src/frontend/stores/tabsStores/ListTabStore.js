@@ -13,12 +13,14 @@ class ListTabStore {
     listOfNoteCardsHtml = "";
     sortMode = "byGetTime"; // byCreationTime, byGetTime, byEditionTime
     sortOrder = "bToA"; // aToB, bToA
+    filtersList = [];
 
     reset = async () => {
         this.status = "loading";
         this.listOfNoteCardsHtml = "";
         this.sortMode = "byGetTime"; 
         this.sortOrder = "bToA";
+        this.filtersList = [];
         await this.fetch();
     };
 
@@ -26,7 +28,8 @@ class ListTabStore {
         await runInAction(()=>{this.status="loading"});
 
 
-        let objs = await ipcRenderer.invoke("getNotesList", {sortMode: this.sortMode, sortOrder: this.sortOrder})
+        console.log(this.filtersList)
+        let objs = await ipcRenderer.invoke("getNotesList", {sortMode: this.sortMode, sortOrder: this.sortOrder, filtersList: [...this.filtersList]})
 
         this.listOfNoteCardsHtml = "";
         for (const i of objs) {
@@ -46,6 +49,10 @@ class ListTabStore {
 
     sortOrderChangeHandler = async (e) => {
         this.sortOrder = e.target.value;
+    };
+
+    openFiltersWindow = async () => {
+
     };
 
 }
