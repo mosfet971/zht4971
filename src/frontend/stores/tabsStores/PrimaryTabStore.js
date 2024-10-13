@@ -34,7 +34,7 @@ class PrimaryTabStore {
         }
 
         if (this.listOfNoteCardsHtml == "") {
-            this.listOfNoteCardsHtml = "<h4>Ничего не найдено</h4>";
+            this.listOfNoteCardsHtml = "<h4 style='margin: 1em'>Ничего не найдено</h4>";
         }
 
         await runInAction(()=>{this.status="ready"});
