@@ -50,6 +50,8 @@ class WindowFilterAddStore {
             "stringInList": []
         };
 
+        //TODO: maps to display text and input type
+        
         if (
             filterTypeToFilterParamsMap.hasOwnProperty(this.filterType) 
             && filterTypeToFilterParamsMap.hasOwnProperty(this.filterType)
