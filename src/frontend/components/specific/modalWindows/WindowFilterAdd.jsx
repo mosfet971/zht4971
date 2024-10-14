@@ -15,8 +15,9 @@ let WindowAssocEditor = observer(() => {
     case "selectType":
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
-          <p>Выбор типа</p>
-          <Button onClick={windowFilterAddStore.saveFilterType}>Подтвердить выбор</Button>
+          <p>Выберите тип фильра:</p>
+
+          <Button intent="primary" onClick={windowFilterAddStore.saveFilterType}>Подтвердить выбор</Button>
         </ModalWindowWithFooter>
       );
       break;
@@ -24,7 +25,15 @@ let WindowAssocEditor = observer(() => {
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
           <p>Настройки</p>
-          <Button onClick={windowFilterAddStore.save}>Сохранить</Button>
+          <Button intent="primary" onClick={windowFilterAddStore.save}>Сохранить</Button>
+        </ModalWindowWithFooter>
+      );
+      break;
+    case "error":
+      return (
+        <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
+          <p>Ошибка</p>
+          <Button intent="primary" onClick={windowFilterAddStore.reset}>Попробовать еще раз</Button>
         </ModalWindowWithFooter>
       );
       break;

@@ -8,16 +8,22 @@ class WindowFilterAddStore {
         makeAutoObservable(this);
     }
 
-    status = "selectType"; // selectType, settings
+    status = "selectType"; // selectType, settings, error
+    
     filterType = "";
-    filterParams = {};
-    paramsList = [];
+    filterParamsList = [];
+    filterObject = {};
+
+    actualNoteParamsList = [];
 
     reset = async () => {
-        this.status = "selectType";
+        this.status = "selectType"; // selectType, settings, error
+    
         this.filterType = "";
-        this.filterParams = {as: "asd", id: crypto.randomUUID()};
-        this.paramsList = [];
+        this.filterParamsList = [];
+        this.filterObject = { as: "asd", id: crypto.randomUUID() };
+    
+        this.actualNoteParamsList = [];
     };
 
     //selectType
@@ -27,23 +33,46 @@ class WindowFilterAddStore {
     };
 
     saveFilterType = async () => {
-        // TODO: map type to params
-        // TODO: check is type correct
-        this.paramsList = [];
+        let filterTypeToFilterParamsMap = {
+            "range": ["type", "paramName", "minValue", "maxValue", "isInverted"],
+            "rangeStringLength": ["type", "paramName", "minValue", "maxValue", "isInverted"],
+            "stringStrict": ["type", "paramName", "value", "isInverted"],
+            "stringFuse": ["type", "paramName", "value", "isInverted"],
+            "bool": ["type", "paramName", "value", "isInverted"],
+            "stringInList": ["type", "paramName", "value", "isInverted"]
+        };
+        let filterTypeToActualNoteParamsMap = {
+            "range": [],
+            "rangeStringLength": [],
+            "stringStrict": [],
+            "stringFuse": [],
+            "bool": [],
+            "stringInList": []
+        };
 
-        this.status = "settings";
+        if (
+            filterTypeToFilterParamsMap.hasOwnProperty(this.filterType) 
+            && filterTypeToFilterParamsMap.hasOwnProperty(this.filterType)
+        ) {
+            this.filterParams = filterTypeToFilterParamsMap[this.filterType];
+            this.actualNoteParamsList = filterTypeToActualNoteParamsMap[this.filterType]
+            // TODO: init filter object
+            this.status = "settings";
+        } else {
+            this.status = "error";
+        }
     };
 
     //settings
 
-    setFilterParam = async (paramName, paramValue) => {
-        this.filterParams[paramName] = paramValue;
+    setFilterObjectParam = async (paramName, paramValue) => {
+        this.filterObject[paramName] = paramValue;
     };
 
     save = async () => {
-        let filterObject = this.filterParams;
-        //TODO: filterParams To filterObject
-        listTabStore.addFilter(filterObject);
+        let filterObjectFinal = this.filterObject;
+        //TODO: filterObject To filterObjectFinal
+        listTabStore.addFilter(filterObjectFinal);
         modalWindowsManagerStore.close();
     };
 
