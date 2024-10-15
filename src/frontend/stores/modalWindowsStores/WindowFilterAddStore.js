@@ -9,9 +9,9 @@ class WindowFilterAddStore {
     }
 
     status = "selectType"; // selectType, settings, error
-    
-    filterType = "";
-    filterParamsList = [];
+
+    filterType = "stringFuse";
+    actualFilterParamsList = [];
     filterObject = {};
 
     actualNoteParamsList = [];
@@ -47,9 +47,9 @@ class WindowFilterAddStore {
         "isPrimary": "Избранность",
         "noteTypeNumber": "Числовой тип записи",
         "tagsNotesListIds": "",
-        "lastGetTime": "Время предыдущего открытия",
-        "creationTime": "Время создания",
-        "editionTime": "Время изменения",
+        "lastGetTime": "Время предыдущего открытия (в формате unix time)",
+        "creationTime": "Время создания (в формате unix time)",
+        "editionTime": "Время изменения (в формате unix time)",
         "hasHistoricalDate": "Наличие дополнительной даты",
         "historicalDateNumber": "Дополнительная дата в формате ггггммдд (напр. 19700101)", // 1970 01 01
         "historicalDateAccuracyLevel_1_2_3": "Уровень точности дополнительной даты (1, 2, 3)",
@@ -66,13 +66,22 @@ class WindowFilterAddStore {
         "stringInList": "string_inp"
     };
 
+    filterParamToDisplayTextMap = {
+        "type": "Тип фильтра",
+        "paramName": "Параметр записи",
+        "minValue": "Минимальное числовое значение",
+        "maxValue": "Максимальное числовое значение",
+        "isInverted": "Инверсия",
+        "value": "Текстовое значение"
+    };
+
     reset = async () => {
         this.status = "selectType"; // selectType, settings, error
-    
-        this.filterType = "";
-        this.filterParamsList = [];
-        this.filterObject = { as: "asd", id: crypto.randomUUID() };
-    
+
+        this.filterType = "stringFuse";
+        this.actualFilterParamsList = [];
+        this.filterObject = {};
+
         this.actualNoteParamsList = [];
     };
 
@@ -81,34 +90,59 @@ class WindowFilterAddStore {
     setFilterType = async (filterType) => {
         this.filterType = filterType;
     };
-/*
-    {
-        id: id,
-        name: "Новая запись " + id,
-        aliasesList: [],
-        isPrimary: false,
-        noteTypeNumber: 0,
-        tagsNotesListIds: [],
-        lastGetTime: Date.now(),
-        creationTime: Date.now(),
-        editionTime: Date.now(),
-        hasHistoricalDate: false,
-        historicalDateNumber: 19700101, // 1970 01 01
-        historicalDateAccuracyLevel_1_2_3: 3,
-        sourceText: "Текст новой записи",
-        taggedNotesIds: [],
-        associatedNotesIds: []
-    }
-    */
-    saveFilterType = async () => {
-        
+    /*
+        {
+            id: id,
+            name: "Новая запись " + id,
+            aliasesList: [],
+            isPrimary: false,
+            noteTypeNumber: 0,
+            tagsNotesListIds: [],
+            lastGetTime: Date.now(),
+            creationTime: Date.now(),
+            editionTime: Date.now(),
+            hasHistoricalDate: false,
+            historicalDateNumber: 19700101, // 1970 01 01
+            historicalDateAccuracyLevel_1_2_3: 3,
+            sourceText: "Текст новой записи",
+            taggedNotesIds: [],
+            associatedNotesIds: []
+        }
+        */
+    saveFilterType = () => {
+
         if (
-            this.filterTypeToFilterParamsMap.hasOwnProperty(this.filterType) 
+            this.filterTypeToFilterParamsMap.hasOwnProperty(this.filterType)
             && this.filterTypeToActualNoteParamsMap.hasOwnProperty(this.filterType)
         ) {
-            this.filterParams = this.filterTypeToFilterParamsMap[this.filterType];
+            this.actualFilterParamsList = this.filterTypeToFilterParamsMap[this.filterType];
             this.actualNoteParamsList = this.filterTypeToActualNoteParamsMap[this.filterType]
-            // TODO: init filter object
+
+
+            for (const i of this.filterTypeToFilterParamsMap[this.filterType]) {
+                switch (i) {
+                    case "type":
+                        this.setFilterObjectParam(i, this.filterType);
+                        break;
+                    case "paramName":
+                        this.setFilterObjectParam(i, this.filterTypeToActualNoteParamsMap[this.filterType][0]);
+                        break;
+                    case "minValue":
+                        this.setFilterObjectParam(i, 0);
+                        break;
+                    case "maxValue":
+                        this.setFilterObjectParam(i, 100);
+                        break;
+                    case "isInverted":
+                        this.setFilterObjectParam(i, false);
+                        break;
+                    case "value":
+                        this.setFilterObjectParam(i, "");
+                        break;
+                    default:
+                        break;
+                }
+            }
             this.status = "settings";
         } else {
             this.status = "error";
@@ -117,7 +151,7 @@ class WindowFilterAddStore {
 
     //settings
 
-    setFilterObjectParam = async (paramName, paramValue) => {
+    setFilterObjectParam = (paramName, paramValue) => {
         this.filterObject[paramName] = paramValue;
     };
 

@@ -22,8 +22,8 @@ let WindowAssocEditor = observer(() => {
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
           <p>Выберите тип фильра:</p>
-          <br></br>
-          <select style={{ width: "100%" }} value={windowFilterAddStore.filterType} name="select" onChange={(e) => windowFilterAddStore.setFilterType(e.target.value)}>
+
+          <select style={{ width: "100%", marginButtom: "1em" }} value={windowFilterAddStore.filterType} name="select" onChange={(e) => windowFilterAddStore.setFilterType(e.target.value)}>
             {filterTabsOptions}
           </select>
 
@@ -32,10 +32,45 @@ let WindowAssocEditor = observer(() => {
       );
       break;
     case "settings":
+      /**
+       *     filterParamToDisplayTextMap = {
+        "type": "Тип фильтра",
+        "paramName": "Параметр записи",
+        "minValue": "Минимальное числовое значение",
+        "maxValue": "Максимальное числовое значение",
+        "isInverted": "Инверсия",
+        "value": "Текстовое значение"
+    };
+       */
+      let filterParamsInputs = [];
+
+      for (const i of windowFilterAddStore.actualFilterParamsList) {
+        switch (i) {
+          case "paramName": {
+            let noteParamsOptions = [];
+            for (const j of windowFilterAddStore.actualNoteParamsList) {
+              noteParamsOptions.push(<option value={j}>{windowFilterAddStore.noteParamToDisplayTextMap[j]}</option>);
+            }
+            filterParamsInputs.push(<>
+              <select style={{ width: "100%", marginButtom: "1em" }} name="select" onChange={(e) => windowFilterAddStore.setFilterObjectParam("paramName", e.target.value)}>
+                {noteParamsOptions}
+              </select>
+            </>);
+            break;
+          }
+
+          // TODO: доделать для других типов
+
+          default: {
+            break;
+          }
+        }
+      }
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
-          <p>Настройки: </p>
-          
+          <p>Выберите параметр записи для фильра:</p>
+          {filterParamsInputs}
+
           <Button intent="primary" onClick={windowFilterAddStore.save}>Сохранить</Button>
         </ModalWindowWithFooter>
       );
@@ -43,7 +78,7 @@ let WindowAssocEditor = observer(() => {
     case "error":
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
-          <p>Ошибка</p>
+          <p>Ошибка: что-то пошло не так</p>
           <Button intent="primary" onClick={windowFilterAddStore.reset}>Попробовать еще раз</Button>
         </ModalWindowWithFooter>
       );
