@@ -13,9 +13,19 @@ let WindowAssocEditor = observer(() => {
 
   switch (windowFilterAddStore.status) {
     case "selectType":
+      let filterTabsOptions = [];
+      for (const i in windowFilterAddStore.filterTypeToDisplayTextMap) {
+        filterTabsOptions.push(<>
+          <option value={i}>{windowFilterAddStore.filterTypeToDisplayTextMap[i]}</option>
+        </>);
+      }
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
           <p>Выберите тип фильра:</p>
+          <br></br>
+          <select style={{ width: "100%" }} value={windowFilterAddStore.filterType} name="select" onChange={(e) => windowFilterAddStore.setFilterType(e.target.value)}>
+            {filterTabsOptions}
+          </select>
 
           <Button intent="primary" onClick={windowFilterAddStore.saveFilterType}>Подтвердить выбор</Button>
         </ModalWindowWithFooter>
@@ -24,7 +34,8 @@ let WindowAssocEditor = observer(() => {
     case "settings":
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
-          <p>Настройки</p>
+          <p>Настройки: </p>
+          
           <Button intent="primary" onClick={windowFilterAddStore.save}>Сохранить</Button>
         </ModalWindowWithFooter>
       );

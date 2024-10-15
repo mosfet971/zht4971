@@ -16,6 +16,56 @@ class WindowFilterAddStore {
 
     actualNoteParamsList = [];
 
+    filterTypeToFilterParamsMap = {
+        "range": ["type", "paramName", "minValue", "maxValue", "isInverted"],
+        "rangeLength": ["type", "paramName", "minValue", "maxValue", "isInverted"],
+        "stringStrict": ["type", "paramName", "value", "isInverted"],
+        "stringFuse": ["type", "paramName", "value", "isInverted"],
+        "bool": ["type", "paramName", "value", "isInverted"],
+        "stringInList": ["type", "paramName", "value", "isInverted"]
+    };
+    filterTypeToActualNoteParamsMap = {
+        "range": ["noteTypeNumber", "lastGetTime", "creationTime", "editionTime", "historicalDateNumber", "historicalDateAccuracyLevel_1_2_3"],
+        "rangeLength": ["name", "aliasesList", "sourceText", "associatedNotesIds"],
+        "stringStrict": ["id", "name", "sourceText"],
+        "stringFuse": ["id", "name", "sourceText"],
+        "bool": ["isPrimary", "hasHistoricalDate"],
+        "stringInList": ["aliasesList", "associatedNotesIds"]
+    };
+    filterTypeToDisplayTextMap = {
+        "stringFuse": "Нечеткое текстовое значение",
+        "range": "Диапазон",
+        "rangeLength": "Диапазон длинны текстового значения",
+        "stringStrict": "Четкое текстовое значение",
+        "bool": "Логическое значение",
+        "stringInList": "Наличие элемента в списке"
+    };
+    noteParamToDisplayTextMap = {
+        "id": "Идентификатор",
+        "name": "Название",
+        "aliasesList": "Список псевдонимов",
+        "isPrimary": "Избранность",
+        "noteTypeNumber": "Числовой тип записи",
+        "tagsNotesListIds": "",
+        "lastGetTime": "Время предыдущего открытия",
+        "creationTime": "Время создания",
+        "editionTime": "Время изменения",
+        "hasHistoricalDate": "Наличие дополнительной даты",
+        "historicalDateNumber": "Дополнительная дата в формате ггггммдд (напр. 19700101)", // 1970 01 01
+        "historicalDateAccuracyLevel_1_2_3": "Уровень точности дополнительной даты (1, 2, 3)",
+        "sourceText": "Исходный текст записи",
+        "taggedNotesIds": "",
+        "associatedNotesIds": "Список ассоциированных записей"
+    };
+    filterTypeToInputTypeMap = {
+        "range": "range_inp",
+        "rangeLength": "range_inp",
+        "stringStrict": "string_inp",
+        "stringFuse": "string_inp",
+        "bool": "bool_inp",
+        "stringInList": "string_inp"
+    };
+
     reset = async () => {
         this.status = "selectType"; // selectType, settings, error
     
@@ -51,63 +101,13 @@ class WindowFilterAddStore {
     }
     */
     saveFilterType = async () => {
-        let filterTypeToFilterParamsMap = {
-            "range": ["type", "paramName", "minValue", "maxValue", "isInverted"],
-            "rangeLength": ["type", "paramName", "minValue", "maxValue", "isInverted"],
-            "stringStrict": ["type", "paramName", "value", "isInverted"],
-            "stringFuse": ["type", "paramName", "value", "isInverted"],
-            "bool": ["type", "paramName", "value", "isInverted"],
-            "stringInList": ["type", "paramName", "value", "isInverted"]
-        };
-        let filterTypeToActualNoteParamsMap = {
-            "range": ["noteTypeNumber", "lastGetTime", "creationTime", "editionTime", "historicalDateNumber", "historicalDateAccuracyLevel_1_2_3"],
-            "rangeLength": ["name", "aliasesList", "sourceText", "associatedNotesIds"],
-            "stringStrict": ["id", "name", "sourceText"],
-            "stringFuse": ["id", "name", "sourceText"],
-            "bool": ["isPrimary", "hasHistoricalDate"],
-            "stringInList": ["aliasesList", "associatedNotesIds"]
-        };
-        let filterTypeToDisplayTextMap = {
-            "range": "Диапазон",
-            "rangeLength": "Диапазон длинны текстового значения",
-            "stringStrict": "Четкое текстовое значение",
-            "stringFuse": "Нечеткое текстовое значение",
-            "bool": "Логическое значение",
-            "stringInList": "Наличие элемента в списке"
-        };
-        let noteParamToDisplayTextMap = {
-            "id": "Идентификатор",
-            "name": "Название",
-            "aliasesList": "Список псевдонимов",
-            "isPrimary": "Избранность",
-            "noteTypeNumber": "Числовой тип записи",
-            "tagsNotesListIds": "",
-            "lastGetTime": "Время предыдущего открытия",
-            "creationTime": "Время создания",
-            "editionTime": "Время изменения",
-            "hasHistoricalDate": "Наличие дополнительной даты",
-            "historicalDateNumber": "Дополнительная дата в формате ггггммдд (напр. 19700101)", // 1970 01 01
-            "historicalDateAccuracyLevel_1_2_3": "Уровень точности дополнительной даты (1, 2, 3)",
-            "sourceText": "Исходный текст записи",
-            "taggedNotesIds": "",
-            "associatedNotesIds": "Список ассоциированных записей"
-        };
-
-        let filterTypeToInputTypeMap = {
-            "range": "range_inp",
-            "rangeLength": "range_inp",
-            "stringStrict": "string_inp",
-            "stringFuse": "string_inp",
-            "bool": "bool_inp",
-            "stringInList": "string_inp"
-        };
         
         if (
-            filterTypeToFilterParamsMap.hasOwnProperty(this.filterType) 
-            && filterTypeToFilterParamsMap.hasOwnProperty(this.filterType)
+            this.filterTypeToFilterParamsMap.hasOwnProperty(this.filterType) 
+            && this.filterTypeToActualNoteParamsMap.hasOwnProperty(this.filterType)
         ) {
-            this.filterParams = filterTypeToFilterParamsMap[this.filterType];
-            this.actualNoteParamsList = filterTypeToActualNoteParamsMap[this.filterType]
+            this.filterParams = this.filterTypeToFilterParamsMap[this.filterType];
+            this.actualNoteParamsList = this.filterTypeToActualNoteParamsMap[this.filterType]
             // TODO: init filter object
             this.status = "settings";
         } else {
