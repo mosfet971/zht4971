@@ -4,7 +4,7 @@ class NotesSearchTools {
         this.notesTools = notesTools;
         this.types = {
             "range": this._checkParamRange,
-            "rangeStringLength": this._checkStringParamLengthRange,
+            "rangeLength": this._checkParamLengthRange,
             "stringStrict": this._checkParamIncludesStringStrict,
             "stringFuse": this._checkParamIncludesStringFuse,
             "bool": this._checkParamBool,
@@ -46,7 +46,7 @@ class NotesSearchTools {
             return false;
         }
     };
-    _checkStringParamLengthRange = (noteObject, filterObject) => {
+    _checkParamLengthRange = (noteObject, filterObject) => {
         if (noteObject[filterObject.paramName].length >= filterObject.minValue
             && noteObject[filterObject.paramName].length <= filterObject.maxValue) {
             return true;
@@ -118,9 +118,9 @@ class NotesSearchTools {
         list.push({ type, paramName, minValue, maxValue, isInverted });
         return list;
     };
-    addStringParamLengthFilter = (filtersList, paramName, minValue, maxValue, isInverted) => {
+    addParamLengthFilter = (filtersList, paramName, minValue, maxValue, isInverted) => {
         let list = filtersList;
-        let type = "rangeStringLength";
+        let type = "rangeLength";
         list.push({ type, paramName, minValue, maxValue, isInverted });
         return list;
     };
