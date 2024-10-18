@@ -22,15 +22,18 @@ class WindowFilterAddStore {
         "stringStrict": ["type", "paramName", "value", "isInverted"],
         "stringFuse": ["type", "paramName", "value", "isInverted"],
         "bool": ["type", "paramName", "value", "isInverted"],
-        "stringInList": ["type", "paramName", "value", "isInverted"]
+        "stringInList": ["type", "paramName", "value", "isInverted"],
+        "ddmmggggFilter": ["type", "paramName", "minDateValue", "maxDateValue", "isInverted"],
     };
+
     filterTypeToActualNoteParamsMap = {
-        "range": ["noteTypeNumber", "lastGetTime", "creationTime", "editionTime", "historicalDateNumber", "historicalDateAccuracyLevel_1_2_3"],
+        "range": ["noteTypeNumber", "historicalDateAccuracyLevel_1_2_3"],
         "rangeLength": ["name", "aliasesList", "sourceText", "associatedNotesIds"],
         "stringStrict": ["id", "name", "sourceText"],
         "stringFuse": ["id", "name", "sourceText"],
         "bool": ["isPrimary", "hasHistoricalDate"],
-        "stringInList": ["aliasesList", "associatedNotesIds"]
+        "stringInList": ["aliasesList", "associatedNotesIds"],
+        "ddmmggggFilter": ["lastGetTime", "creationTime", "editionTime", "historicalDateNumber"]
     };
     filterTypeToDisplayTextMap = {
         "stringFuse": "Нечеткое текстовое значение",
@@ -38,7 +41,8 @@ class WindowFilterAddStore {
         "rangeLength": "Диапазон длинны текстового значения",
         "stringStrict": "Четкое текстовое значение",
         "bool": "Логическое значение",
-        "stringInList": "Наличие элемента в списке"
+        "stringInList": "Наличие элемента в списке",
+        "ddmmggggFilter": "Дата в формате дд.мм.гггг (например: 01.01.2001)"
     };
     noteParamToDisplayTextMap = {
         "id": "Идентификатор",
@@ -47,23 +51,15 @@ class WindowFilterAddStore {
         "isPrimary": "Избранность",
         "noteTypeNumber": "Числовой тип записи",
         "tagsNotesListIds": "",
-        "lastGetTime": "Время предыдущего открытия (в формате unix time)",
-        "creationTime": "Время создания (в формате unix time)",
-        "editionTime": "Время изменения (в формате unix time)",
+        "lastGetTime": "Время предыдущего открытия ",
+        "creationTime": "Время создания",
+        "editionTime": "Время изменения",
         "hasHistoricalDate": "Наличие дополнительной даты",
-        "historicalDateNumber": "Дополнительная дата в формате ггггммдд (напр. 19700101)", // 1970 01 01
+        "historicalDateNumber": "Дополнительная дата", // 1970 01 01
         "historicalDateAccuracyLevel_1_2_3": "Уровень точности дополнительной даты (1, 2, 3)",
         "sourceText": "Исходный текст записи",
         "taggedNotesIds": "",
         "associatedNotesIds": "Список ассоциированных записей"
-    };
-    filterTypeToInputTypeMap = {
-        "range": "range_inp",
-        "rangeLength": "range_inp",
-        "stringStrict": "string_inp",
-        "stringFuse": "string_inp",
-        "bool": "bool_inp",
-        "stringInList": "string_inp"
     };
 
     filterParamToDisplayTextMap = {
@@ -72,7 +68,20 @@ class WindowFilterAddStore {
         "minValue": "Минимальное числовое значение",
         "maxValue": "Максимальное числовое значение",
         "isInverted": "Инверсия",
-        "value": "Текстовое значение"
+        "value": "Текстовое значение",
+        "minDateValue": "Минимальная дата",
+        "minDateValue": "Максимальная дата",
+    };
+
+    filterParamsToDefaultVals = {
+        "type": "-",
+        "paramName": "-",
+        "minValue": 0,
+        "maxValue": 100,
+        "isInverted": false,
+        "value": "",
+        "minDateValue": "01.01.2001",
+        "maxDateValue": "12.12.2007",
     };
 
     reset = async () => {
@@ -90,25 +99,7 @@ class WindowFilterAddStore {
     setFilterType = async (filterType) => {
         this.filterType = filterType;
     };
-    /*
-        {
-            id: id,
-            name: "Новая запись " + id,
-            aliasesList: [],
-            isPrimary: false,
-            noteTypeNumber: 0,
-            tagsNotesListIds: [],
-            lastGetTime: Date.now(),
-            creationTime: Date.now(),
-            editionTime: Date.now(),
-            hasHistoricalDate: false,
-            historicalDateNumber: 19700101, // 1970 01 01
-            historicalDateAccuracyLevel_1_2_3: 3,
-            sourceText: "Текст новой записи",
-            taggedNotesIds: [],
-            associatedNotesIds: []
-        }
-        */
+
     saveFilterType = () => {
 
         if (
@@ -118,31 +109,16 @@ class WindowFilterAddStore {
             this.actualFilterParamsList = this.filterTypeToFilterParamsMap[this.filterType];
             this.actualNoteParamsList = this.filterTypeToActualNoteParamsMap[this.filterType]
 
-
             for (const i of this.filterTypeToFilterParamsMap[this.filterType]) {
-                switch (i) {
-                    case "type":
-                        this.setFilterObjectParam(i, this.filterType);
-                        break;
-                    case "paramName":
-                        this.setFilterObjectParam(i, this.filterTypeToActualNoteParamsMap[this.filterType][0]);
-                        break;
-                    case "minValue":
-                        this.setFilterObjectParam(i, 0);
-                        break;
-                    case "maxValue":
-                        this.setFilterObjectParam(i, 100);
-                        break;
-                    case "isInverted":
-                        this.setFilterObjectParam(i, false);
-                        break;
-                    case "value":
-                        this.setFilterObjectParam(i, "");
-                        break;
-                    default:
-                        break;
+                if (i == "type") {
+                    this.setFilterObjectParam(i, this.filterType);
+                } else if (i == "paramName") {
+                    this.setFilterObjectParam(i, this.filterTypeToActualNoteParamsMap[this.filterType][0]);
+                } else {
+                    this.setFilterObjectParam(i, this.filterParamsToDefaultVals[i]);
                 }
             }
+
             this.status = "settings";
         } else {
             this.status = "error";

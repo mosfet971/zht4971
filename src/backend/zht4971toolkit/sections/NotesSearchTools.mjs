@@ -10,7 +10,8 @@ class NotesSearchTools {
             "stringStrict": this._checkParamIncludesStringStrict,
             "stringFuse": this._checkParamIncludesStringFuse,
             "bool": this._checkParamBool,
-            "stringInList": this._checkStringInList
+            "stringInList": this._checkStringInList,
+            "ddmmggggFilter": this._checkDateParamRangeFilter
         }
     }
 
@@ -41,11 +42,6 @@ class NotesSearchTools {
     };
 
     _checkParamRange = (noteObject, filterObject) => {
-        if (filterObject.paramName == "historicalTime" || filterObject.paramName == "historicalTimeAccuracyLevel_1_2_3") {
-            if(!noteObject.hasHistoricalTime) {
-                return false;            
-            }
-        }
         if (
             parseInt(noteObject[filterObject.paramName]) >= filterObject.minValue
             && parseInt(noteObject[filterObject.paramName]) <= filterObject.maxValue
@@ -123,6 +119,68 @@ class NotesSearchTools {
         return true;
     };
 
+    //type, paramName, minDateValue, maxDateValue, isInverted
+    _checkDateParamRangeFilter = (noteObject, filterObject) => {
+        let reverseString = (s) => { return s.split("").reverse().join(""); }
+        
+        
+        let checkValid = (v) => (v
+            .replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "date_marker")
+            .includes("date_marker")
+        );
+
+        if (!checkValid(filterObject.minDateValue)) return false;
+        if (!checkValid(filterObject.maxDateValue)) return false;
+
+        let minDateStruct = { 
+            d: filterObject.minDateValue.split(".")[0],
+            m: filterObject.minDateValue.split(".")[1],
+            y: filterObject.minDateValue.split(".")[2]
+        };
+
+        let maxDateStruct = { 
+            d: filterObject.maxDateValue.split(".")[0],
+            m: filterObject.maxDateValue.split(".")[1],
+            y: filterObject.maxDateValue.split(".")[2]
+        };
+
+        let noteDateStruct;
+
+        try {
+            if (filterObject.paramName == "historicalDateNumber") {
+                if (!noteObject.hasHistoricalTime) {
+                    return false;
+                }
+                noteDateStruct = {
+                    y: parseInt(noteObject[filterObject.paramName].toString().substring(0, str.length - 4)),
+                    m: parseInt(noteObject[filterObject.paramName].toString().substring(str.length - 4, str.length - 2)),
+                    d: parseInt(noteObject[filterObject.paramName].toString().substring(str.length - 2, str.length))
+                };
+            } else {
+                let dateObj = new Date(noteObject[filterObject.paramName]);
+                noteDateStruct = {
+                    y: dateObj.getFullYear(),
+                    m: dateObj.getMonth(),
+                    d: dateObj.getDay()
+                }
+            }
+
+            let isYearInRange = (noteDateStruct.y >= minDateStruct.y) && (noteDateStruct.y <= maxDateStruct.y); 
+            let isMonthInRange = (noteDateStruct.m >= minDateStruct.m) && (noteDateStruct.m <= maxDateStruct.m); 
+            let isDayInRange = (noteDateStruct.d >= minDateStruct.d) && (noteDateStruct.d <= maxDateStruct.d); 
+
+            let isDateInRange = isYearInRange && isMonthInRange && isDayInRange;
+
+            if (isDateInRange) {
+                return true;
+            }
+
+        } catch (error) {
+            return false;
+        }
+        return true;
+    };
+
     creteBlankFiltersList = () => {
         return ([]);
     };
@@ -166,6 +224,13 @@ class NotesSearchTools {
         let list = filtersList;
         let type = "stringInList";
         list.push({ type, paramName, value, isInverted });
+        return list;
+    };
+
+    addDateParamRangeFilter = (filtersList, paramName, minDateValue, maxDateValue, isInverted) => {
+        let list = filtersList;
+        let type = "ddmmggggFilter";
+        list.push({ type, paramName, minDateValue, maxDateValue, isInverted });
         return list;
     };
 }

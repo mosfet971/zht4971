@@ -65,7 +65,7 @@ let WindowAssocEditor = observer(() => {
             break;
           }
         }
-      }
+      }// НАПИСАТЬ ЧТО ВКЛЮЧИТЕЛЬНО
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
           <p>Выберите параметр записи для фильра:</p>
