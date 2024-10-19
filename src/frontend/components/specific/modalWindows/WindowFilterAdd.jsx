@@ -6,6 +6,18 @@ import { windowFilterAddStore } from "../../../stores/modalWindowsStores/WindowF
 import { ProgressBar, Button, InputGroup, ButtonGroup, Tag } from "@blueprintjs/core";
 import { useEffect } from "react";
 
+import styled from "styled-components";
+
+let InputsContainerDiv = styled.div`
+  &>input {
+    margin-bottom: 1em;
+  }
+  &>select {
+    margin-bottom: 1em;
+  }
+`;
+
+
 let WindowAssocEditor = observer(() => {
   useEffect(() => {
     windowFilterAddStore.reset();
@@ -21,13 +33,15 @@ let WindowAssocEditor = observer(() => {
       }
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
-          <p>Выберите тип фильра:</p>
+          <InputsContainerDiv>
+            <p>Выберите тип фильра:</p>
 
-          <select style={{ width: "100%", marginButtom: "1em" }} value={windowFilterAddStore.filterType} name="select" onChange={(e) => windowFilterAddStore.setFilterType(e.target.value)}>
-            {filterTabsOptions}
-          </select>
+            <select style={{ width: "100%", marginButtom: "1em" }} value={windowFilterAddStore.filterType} name="select" onChange={(e) => windowFilterAddStore.setFilterType(e.target.value)}>
+              {filterTabsOptions}
+            </select>
 
-          <Button intent="primary" onClick={windowFilterAddStore.saveFilterType}>Подтвердить выбор</Button>
+            <Button intent="primary" onClick={windowFilterAddStore.saveFilterType}>Подтвердить выбор</Button>
+          </InputsContainerDiv>
         </ModalWindowWithFooter>
       );
       break;
@@ -52,6 +66,7 @@ let WindowAssocEditor = observer(() => {
               noteParamsOptions.push(<option value={j}>{windowFilterAddStore.noteParamToDisplayTextMap[j]}</option>);
             }
             filterParamsInputs.push(<>
+              <p>Свойство записи для фильтрации:</p>
               <select style={{ width: "100%", marginButtom: "1em" }} name="select" onChange={(e) => windowFilterAddStore.setFilterObjectParam("paramName", e.target.value)}>
                 {noteParamsOptions}
               </select>
@@ -68,17 +83,21 @@ let WindowAssocEditor = observer(() => {
       }// НАПИСАТЬ ЧТО ВКЛЮЧИТЕЛЬНО
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
-          {filterParamsInputs}
+          <InputsContainerDiv>
+            {filterParamsInputs}
 
-          <Button intent="primary" onClick={windowFilterAddStore.save}>Сохранить</Button>
+            <Button intent="primary" onClick={windowFilterAddStore.save}>Сохранить</Button>
+          </InputsContainerDiv>
         </ModalWindowWithFooter>
       );
       break;
     case "error":
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
-          <p>Ошибка: что-то пошло не так</p>
-          <Button intent="primary" onClick={windowFilterAddStore.reset}>Попробовать еще раз</Button>
+          <InputsContainerDiv>
+            <p>Ошибка: что-то пошло не так</p>
+            <Button intent="primary" onClick={windowFilterAddStore.reset}>Попробовать еще раз</Button>
+          </InputsContainerDiv>
         </ModalWindowWithFooter>
       );
       break;
