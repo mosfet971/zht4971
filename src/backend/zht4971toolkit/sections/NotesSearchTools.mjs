@@ -18,9 +18,21 @@ class NotesSearchTools {
     getListOfNotesIdsSortedByParamWithFilters = (paramName, filtersList, isNeedInvertedOrderList) => {
         let notesIds = this.notesTools.getListOfIds();
         //console.log(notesIds);
-        let notes = [];
+        let notes0 = [];
         for (const i of notesIds) {
-            notes.push(this.notesTools.get(i));
+            notes0.push(this.notesTools.get(i));
+        }
+
+        let notes;
+        if (paramName == "historicalDateNumber") {
+            notes = [];
+            for (const i of notes0) {
+                if (i.hasHistoricalDate) {
+                    notes.push(i)
+                }
+            }
+        } else {
+            notes = notes0;
         }
 
         notes = notes.sort((a, b) => {
@@ -122,8 +134,8 @@ class NotesSearchTools {
     //type, paramName, minDateValue, maxDateValue, isInverted
     _checkDateParamRangeFilter = (noteObject, filterObject) => {
         let reverseString = (s) => { return s.split("").reverse().join(""); }
-        
-        
+
+
         let checkValid = (v) => (v
             .replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "date_marker")
             .includes("date_marker")
@@ -132,13 +144,13 @@ class NotesSearchTools {
         if (!checkValid(filterObject.minDateValue)) return false;
         if (!checkValid(filterObject.maxDateValue)) return false;
 
-        let minDateStruct = { 
+        let minDateStruct = {
             d: filterObject.minDateValue.split(".")[0],
             m: filterObject.minDateValue.split(".")[1],
             y: filterObject.minDateValue.split(".")[2]
         };
 
-        let maxDateStruct = { 
+        let maxDateStruct = {
             d: filterObject.maxDateValue.split(".")[0],
             m: filterObject.maxDateValue.split(".")[1],
             y: filterObject.maxDateValue.split(".")[2]
@@ -165,9 +177,9 @@ class NotesSearchTools {
                 }
             }
 
-            let isYearInRange = (noteDateStruct.y >= minDateStruct.y) && (noteDateStruct.y <= maxDateStruct.y); 
-            let isMonthInRange = (noteDateStruct.m >= minDateStruct.m) && (noteDateStruct.m <= maxDateStruct.m); 
-            let isDayInRange = (noteDateStruct.d >= minDateStruct.d) && (noteDateStruct.d <= maxDateStruct.d); 
+            let isYearInRange = (noteDateStruct.y >= minDateStruct.y) && (noteDateStruct.y <= maxDateStruct.y);
+            let isMonthInRange = (noteDateStruct.m >= minDateStruct.m) && (noteDateStruct.m <= maxDateStruct.m);
+            let isDayInRange = (noteDateStruct.d >= minDateStruct.d) && (noteDateStruct.d <= maxDateStruct.d);
 
             let isDateInRange = isYearInRange && isMonthInRange && isDayInRange;
 

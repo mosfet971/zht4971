@@ -15,9 +15,21 @@ class NotesSearchTools {
     getListOfNotesIdsSortedByParamWithFilters = (paramName, filtersList, isNeedInvertedOrderList) => {
         let notesIds = this.notesTools.getListOfIds();
         //console.log(notesIds);
-        let notes = [];
+        let notes0 = [];
         for (const i of notesIds) {
-            notes.push(this.notesTools.get(i));
+            notes0.push(this.notesTools.get(i));
+        }
+        let notes;
+        if (paramName == "historicalDateNumber") {
+            notes = [];
+            for (const i of notes0) {
+                if (i.hasHistoricalDate) {
+                    notes.push(i);
+                }
+            }
+        }
+        else {
+            notes = notes0;
         }
         notes = notes.sort((a, b) => {
             return !isNeedInvertedOrderList ? a[paramName] - b[paramName] : b[paramName] - a[paramName];

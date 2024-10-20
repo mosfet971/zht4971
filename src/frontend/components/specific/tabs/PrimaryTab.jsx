@@ -86,6 +86,7 @@ let PrimaryTab = observer(() => {
                                 <option value="byCreationTime" >По времени создания</option>
                                 <option value="byGetTime">По времени просмотра</option>
                                 <option value="byEditionTime">По времени изменения</option>
+                                <option value="byHistDate">По дополнительной дате</option>
                             </select>
                             <Text>Порядок сортировки: </Text>
                             <select style={{ width: "100%" }} value={primaryTabStore.sortOrder} name="select" onChange={primaryTabStore.sortOrderChangeHandler}>

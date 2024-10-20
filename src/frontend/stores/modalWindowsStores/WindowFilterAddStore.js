@@ -36,10 +36,10 @@ class WindowFilterAddStore {
         "ddmmggggFilter": ["lastGetTime", "creationTime", "editionTime", "historicalDateNumber"]
     };
     filterTypeToDisplayTextMap = {
-        "stringFuse": "Нечеткое текстовое значение",
+        "stringFuse": "Нечеткое включение текстового значения",
         "range": "Диапазон",
         "rangeLength": "Диапазон длинны текстового значения",
-        "stringStrict": "Четкое текстовое значение",
+        "stringStrict": "Включение текстового значения",
         "bool": "Логическое значение",
         "stringInList": "Наличие элемента в списке",
         "ddmmggggFilter": "Дата в формате дд.мм.гггг (например: 01.01.2001)"

@@ -11,7 +11,7 @@ class PrimaryTabStore {
 
     status = "loading"; // loading, ready 
     listOfNoteCardsHtml = "";
-    sortMode = "byGetTime"; // byCreationTime, byGetTime, byEditionTime
+    sortMode = "byGetTime"; // byCreationTime, byGetTime, byEditionTime, byHistDate
     sortOrder = "bToA"; // aToB, bToA
 
     reset = async () => {

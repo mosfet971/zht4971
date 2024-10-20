@@ -23,7 +23,8 @@ let f = async () => {
       let sortModeToParamNameMap = {
         "byCreationTime": "creationTime",
         "byGetTime": "lastGetTime",
-        "byEditionTime": "editionTime"
+        "byEditionTime": "editionTime",
+        "byHistDate": "historicalDateNumber"
       };
 
       let paramName = sortModeToParamNameMap[params.sortMode];
@@ -58,7 +59,8 @@ let f = async () => {
       let sortModeToParamNameMap = {
         "byCreationTime": "creationTime",
         "byGetTime": "lastGetTime",
-        "byEditionTime": "editionTime"
+        "byEditionTime": "editionTime",
+        "byHistDate": "historicalDateNumber"
       };
 
       let paramName = sortModeToParamNameMap[params.sortMode];

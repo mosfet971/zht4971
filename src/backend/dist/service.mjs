@@ -19,7 +19,8 @@ let f = async () => {
                 let sortModeToParamNameMap = {
                     "byCreationTime": "creationTime",
                     "byGetTime": "lastGetTime",
-                    "byEditionTime": "editionTime"
+                    "byEditionTime": "editionTime",
+                    "byHistDate": "historicalDateNumber"
                 };
                 let paramName = sortModeToParamNameMap[params.sortMode];
                 let isNeedInvertedOrderList = params.sortOrder == "bToA";
@@ -49,7 +50,8 @@ let f = async () => {
                 let sortModeToParamNameMap = {
                     "byCreationTime": "creationTime",
                     "byGetTime": "lastGetTime",
-                    "byEditionTime": "editionTime"
+                    "byEditionTime": "editionTime",
+                    "byHistDate": "historicalDateNumber"
                 };
                 let paramName = sortModeToParamNameMap[params.sortMode];
                 let isNeedInvertedOrderList = params.sortOrder == "bToA";
