@@ -29,7 +29,7 @@ class ListTabStore {
 
 
         console.log(this.filtersList)
-        let objs = await ipcRenderer.invoke("getNotesList", {sortMode: this.sortMode, sortOrder: this.sortOrder, filtersList: [...this.filtersList]})
+        let objs = await ipcRenderer.invoke("getNotesList", {sortMode: this.sortMode, sortOrder: this.sortOrder, filtersList: JSON.parse(JSON.stringify(this.filtersList))})
 
         this.listOfNoteCardsHtml = "";
         for (const i of objs) {

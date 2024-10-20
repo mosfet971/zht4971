@@ -11,6 +11,7 @@ import styled from "styled-components";
 let InputsContainerDiv = styled.div`
   &>input {
     margin-bottom: 1em;
+    width: 100%;
   }
   &>select {
     margin-bottom: 1em;
@@ -47,13 +48,16 @@ let WindowAssocEditor = observer(() => {
       break;
     case "settings":
       /**
-       *     filterParamToDisplayTextMap = {
+       *    {
         "type": "Тип фильтра",
         "paramName": "Параметр записи",
         "minValue": "Минимальное числовое значение",
         "maxValue": "Максимальное числовое значение",
         "isInverted": "Инверсия",
-        "value": "Текстовое значение"
+        "value": "Текстовое значение",
+        "minDateValue": "Минимальная дата",
+        "minDateValue": "Максимальная дата",
+    };
     };
        */
       let filterParamsInputs = [];
@@ -67,20 +71,71 @@ let WindowAssocEditor = observer(() => {
             }
             filterParamsInputs.push(<>
               <p>Свойство записи для фильтрации:</p>
-              <select style={{ width: "100%", marginButtom: "1em" }} name="select" onChange={(e) => windowFilterAddStore.setFilterObjectParam("paramName", e.target.value)}>
+              <select style={{ width: "100%", marginButtom: "1em" }} name="select" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)}>
                 {noteParamsOptions}
               </select>
             </>);
             break;
           }
 
-          // TODO: доделать для других типов
+          case "minValue": {
+            filterParamsInputs.push(<>
+              <p>Минимальное включительное числовое значение:</p>
+              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Минимальное включительное числовое значение" type="number" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, parseInt(e.target.value))}/>
+            </>);
+            break;
+          }
 
+          case "maxValue": {
+            filterParamsInputs.push(<>
+              <p>Максимальное включительное числовое значение:</p>
+              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Максимальное включительное числовое значение" type="number" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, parseInt(e.target.value))}/>
+            </>);
+            break;
+          }
+
+          case "minDateValue": {
+            filterParamsInputs.push(<>
+              <p>Минимальное значение даты (в формате дд.мм.гггг):</p>
+              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Минимальное включительное значение даты" type="text" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)}/>
+            </>);
+            break;
+          }
+
+          case "maxDateValue": {
+            filterParamsInputs.push(<>
+              <p>Максимальное значение даты (в формате дд.мм.гггг):</p>
+              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Максимальное включительное значение даты" type="text" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)}/>
+            </>);
+            break;
+          }
+
+          case "value": {
+            filterParamsInputs.push(<>
+              <p>Текстовое значение:</p>
+              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Текстовое значение" type="text" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)}/>
+            </>);
+            break;
+          }
+
+          case "isInverted": {
+            filterParamsInputs.push(<>
+              <p>Пропускать только не прошедшие фильтр записи (инвертированный фильтр):</p>
+              <select style={{ width: "100%", marginButtom: "1em" }} defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} name="select" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value == "true")}>
+                <option value={"false"}>Нет</option>
+                <option value={"true"}>Да</option>
+              </select>
+            </>);
+            break;
+          }
+          // TODO: специальный select для типов записи 
+          // TODO: специальное поле ввода для логических значений input 
+          // TODO: все починить и протестировать (особенно фильтр по диапозону дат)
           default: {
             break;
           }
         }
-      }// НАПИСАТЬ ЧТО ВКЛЮЧИТЕЛЬНО
+      }
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
           <InputsContainerDiv>

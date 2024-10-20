@@ -29,20 +29,20 @@ class WindowFilterAddStore {
     filterTypeToActualNoteParamsMap = {
         "range": ["noteTypeNumber", "historicalDateAccuracyLevel_1_2_3"],
         "rangeLength": ["name", "aliasesList", "sourceText", "associatedNotesIds"],
-        "stringStrict": ["id", "name", "sourceText"],
-        "stringFuse": ["id", "name", "sourceText"],
+        "stringStrict": ["name", "sourceText", "id"],
+        "stringFuse": ["name", "sourceText", "id"],
         "bool": ["isPrimary", "hasHistoricalDate"],
         "stringInList": ["aliasesList", "associatedNotesIds"],
         "ddmmggggFilter": ["lastGetTime", "creationTime", "editionTime", "historicalDateNumber"]
     };
     filterTypeToDisplayTextMap = {
         "stringFuse": "Нечеткое включение текстового значения",
-        "range": "Диапазон",
-        "rangeLength": "Диапазон длинны текстового значения",
         "stringStrict": "Включение текстового значения",
-        "bool": "Логическое значение",
         "stringInList": "Наличие элемента в списке",
-        "ddmmggggFilter": "Дата в формате дд.мм.гггг (например: 01.01.2001)"
+        "range": "Диапазон числового значения параметра",
+        "rangeLength": "Диапазон длинны текстового значения",
+        "bool": "Логическое значение",
+        "ddmmggggFilter": "Диапозон даты в формате дд.мм.гггг"
     };
     noteParamToDisplayTextMap = {
         "id": "Идентификатор",
@@ -55,11 +55,11 @@ class WindowFilterAddStore {
         "creationTime": "Время создания",
         "editionTime": "Время изменения",
         "hasHistoricalDate": "Наличие дополнительной даты",
-        "historicalDateNumber": "Дополнительная дата", // 1970 01 01
+        "historicalDateNumber": "Дополнительная дата",
         "historicalDateAccuracyLevel_1_2_3": "Уровень точности дополнительной даты (1, 2, 3)",
         "sourceText": "Исходный текст записи",
         "taggedNotesIds": "",
-        "associatedNotesIds": "Список ассоциированных записей"
+        "associatedNotesIds": "Список ассоциированных записей (названия и псевдонимы)"
     };
 
     filterParamToDisplayTextMap = {
@@ -77,11 +77,11 @@ class WindowFilterAddStore {
         "type": "-",
         "paramName": "-",
         "minValue": 0,
-        "maxValue": 100,
+        "maxValue": 0,
         "isInverted": false,
         "value": "",
-        "minDateValue": "01.01.2001",
-        "maxDateValue": "12.12.2007",
+        "minDateValue": "",
+        "maxDateValue": "",
     };
 
     reset = async () => {
@@ -133,7 +133,15 @@ class WindowFilterAddStore {
 
     save = async () => {
         let filterObjectFinal = this.filterObject;
-        //TODO: filterObject To filterObjectFinal
+        if (filterObjectFinal.paramName == "associatedNotesIds") {
+            let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", filterObjectFinal.value);
+            if(resolvedId) {
+                filterObjectFinal.value = resolvedId; 
+            } else {
+                this.status = "error";
+                return;
+            }
+        }
         listTabStore.addFilter(filterObjectFinal);
         modalWindowsManagerStore.close();
     };

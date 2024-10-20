@@ -67,7 +67,7 @@ let f = async () => {
 
       let isNeedInvertedOrderList = params.sortOrder == "bToA";
 
-      let filters = await zhtToolkit.notesSearchTools.creteBlankFiltersList();
+      let filters = params.filtersList;
       let ids = await zhtToolkit.notesSearchTools.getListOfNotesIdsSortedByParamWithFilters(paramName, filters, isNeedInvertedOrderList);
 
       let objs = [];

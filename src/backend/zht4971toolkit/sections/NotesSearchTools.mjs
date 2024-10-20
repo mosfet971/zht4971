@@ -133,11 +133,8 @@ class NotesSearchTools {
 
     //type, paramName, minDateValue, maxDateValue, isInverted
     _checkDateParamRangeFilter = (noteObject, filterObject) => {
-        let reverseString = (s) => { return s.split("").reverse().join(""); }
-
-
         let checkValid = (v) => (v
-            .replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "date_marker")
+            .replaceAll(/[0-9]{2}\.[0-9]{2}\.[0-9]{4}/g, "date_marker")
             .includes("date_marker")
         );
 
@@ -169,7 +166,7 @@ class NotesSearchTools {
                     d: parseInt(noteObject[filterObject.paramName].toString().substring(str.length - 2, str.length))
                 };
             } else {
-                let dateObj = new Date(noteObject[filterObject.paramName]);
+                let dateObj = new Date(parseInt(noteObject[filterObject.paramName]));
                 noteDateStruct = {
                     y: dateObj.getFullYear(),
                     m: dateObj.getMonth(),
