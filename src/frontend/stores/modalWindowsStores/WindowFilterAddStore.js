@@ -2,10 +2,24 @@ import { autorun, makeAutoObservable, reaction, runInAction } from "mobx";
 import { noteTabStore } from "../tabsStores/NoteTabStore";
 import { modalWindowsManagerStore } from "../ModalWindowsManagerStore";
 import { listTabStore } from "../tabsStores/ListTabStore";
+import { IconArrowRightSquare } from "@tabler/icons-react";
 
 class WindowFilterAddStore {
     constructor() {
         makeAutoObservable(this);
+
+        reaction(() => this.filterType, () => {
+            this.filterObject = {};
+            for (const i of this.filterTypeToFilterParamsMap[this.filterType]) {
+                if (i == "type") {
+                    this.setFilterObjectParam(i, this.filterType);
+                } else if (i == "paramName") {
+                    this.setFilterObjectParam(i, this.filterTypeToActualNoteParamsMap[this.filterType][0]);
+                } else {
+                    this.setFilterObjectParam(i, this.filterParamsToDefaultVals[i]);
+                }
+            }
+        });
     }
 
     status = "settings"; // settings, error
@@ -28,7 +42,7 @@ class WindowFilterAddStore {
         "range": ["noteTypeNumber", "historicalDateAccuracyLevel_1_2_3"],
         "rangeLength": ["name", "aliasesList", "sourceText", "associatedNotesIds"],
         "stringStrict": ["name", "sourceText", "id"],
-        "stringFuse": ["name", "sourceText", "id"],
+        "stringFuse": ["sourceText", "name", "id"],
         "bool": ["isPrimary", "hasHistoricalDate"],
         "stringInList": ["aliasesList", "associatedNotesIds"],
         "ddmmggggFilter": ["lastGetTime", "creationTime", "editionTime", "historicalDateNumber"]
@@ -96,19 +110,6 @@ class WindowFilterAddStore {
                 this.setFilterObjectParam(i, this.filterParamsToDefaultVals[i]);
             }
         }
-
-        reaction(()=>this.filterType, ()=>{
-            this.filterObject = {};
-            for (const i of this.filterTypeToFilterParamsMap[this.filterType]) {
-                if (i == "type") {
-                    this.setFilterObjectParam(i, this.filterType);
-                } else if (i == "paramName") {
-                    this.setFilterObjectParam(i, this.filterTypeToActualNoteParamsMap[this.filterType][0]);
-                } else {
-                    this.setFilterObjectParam(i, this.filterParamsToDefaultVals[i]);
-                }
-            }
-        });
     };
 
     //settings
@@ -133,8 +134,8 @@ class WindowFilterAddStore {
         if (filterObjectFinal.paramName == "associatedNotesIds") {
             //console.log(this.filterObject)
             let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", filterObjectFinal.value);
-            if(resolvedId) {
-                filterObjectFinal.value = resolvedId; 
+            if (resolvedId) {
+                filterObjectFinal.value = resolvedId;
             } else {
                 this.status = "error";
                 return;

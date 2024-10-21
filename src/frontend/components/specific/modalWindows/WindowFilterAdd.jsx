@@ -90,6 +90,7 @@ let WindowAssocEditor = observer(() => {
           }
 
           case "value": {
+            //if
             filterParamsInputs.push(<>
               <p>Текстовое значение:</p>
               <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Текстовое значение" type="text" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)} />
