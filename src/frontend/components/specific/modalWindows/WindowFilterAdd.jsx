@@ -25,27 +25,6 @@ let WindowAssocEditor = observer(() => {
   }, []);
 
   switch (windowFilterAddStore.status) {
-    case "selectType":
-      let filterTabsOptions = [];
-      for (const i in windowFilterAddStore.filterTypeToDisplayTextMap) {
-        filterTabsOptions.push(<>
-          <option value={i}>{windowFilterAddStore.filterTypeToDisplayTextMap[i]}</option>
-        </>);
-      }
-      return (
-        <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
-          <InputsContainerDiv>
-            <p>Выберите тип фильра:</p>
-
-            <select style={{ width: "100%", marginButtom: "1em" }} value={windowFilterAddStore.filterType} name="select" onChange={(e) => windowFilterAddStore.setFilterType(e.target.value)}>
-              {filterTabsOptions}
-            </select>
-
-            <Button intent="primary" onClick={windowFilterAddStore.saveFilterType}>Подтвердить выбор</Button>
-          </InputsContainerDiv>
-        </ModalWindowWithFooter>
-      );
-      break;
     case "settings":
       /**
        *    {
@@ -81,7 +60,7 @@ let WindowAssocEditor = observer(() => {
           case "minValue": {
             filterParamsInputs.push(<>
               <p>Минимальное включительное числовое значение:</p>
-              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Минимальное включительное числовое значение" type="number" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, parseInt(e.target.value))}/>
+              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Минимальное включительное числовое значение" type="number" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, parseInt(e.target.value))} />
             </>);
             break;
           }
@@ -89,7 +68,7 @@ let WindowAssocEditor = observer(() => {
           case "maxValue": {
             filterParamsInputs.push(<>
               <p>Максимальное включительное числовое значение:</p>
-              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Максимальное включительное числовое значение" type="number" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, parseInt(e.target.value))}/>
+              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Максимальное включительное числовое значение" type="number" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, parseInt(e.target.value))} />
             </>);
             break;
           }
@@ -97,7 +76,7 @@ let WindowAssocEditor = observer(() => {
           case "minDateValue": {
             filterParamsInputs.push(<>
               <p>Минимальное значение даты (в формате дд.мм.гггг):</p>
-              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Минимальное включительное значение даты" type="text" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)}/>
+              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Минимальное включительное значение даты" type="text" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)} />
             </>);
             break;
           }
@@ -105,7 +84,7 @@ let WindowAssocEditor = observer(() => {
           case "maxDateValue": {
             filterParamsInputs.push(<>
               <p>Максимальное значение даты (в формате дд.мм.гггг):</p>
-              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Максимальное включительное значение даты" type="text" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)}/>
+              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Максимальное включительное значение даты" type="text" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)} />
             </>);
             break;
           }
@@ -113,7 +92,7 @@ let WindowAssocEditor = observer(() => {
           case "value": {
             filterParamsInputs.push(<>
               <p>Текстовое значение:</p>
-              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Текстовое значение" type="text" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)}/>
+              <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Текстовое значение" type="text" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)} />
             </>);
             break;
           }
@@ -136,9 +115,22 @@ let WindowAssocEditor = observer(() => {
           }
         }
       }
+      
+      let filterTabsOptions = [];
+      for (const i in windowFilterAddStore.filterTypeToDisplayTextMap) {
+        filterTabsOptions.push(<>
+          <option value={i}>{windowFilterAddStore.filterTypeToDisplayTextMap[i]}</option>
+        </>);
+      }
       return (
         <ModalWindowWithFooter title="Добавление фильтра" onClose={modalWindowsManagerStore.close}>
           <InputsContainerDiv>
+            <p>Выберите тип фильра:</p>
+
+            <select style={{ width: "100%", marginButtom: "1em" }} value={windowFilterAddStore.filterType} name="select" onChange={(e) => windowFilterAddStore.setFilterType(e.target.value)}>
+              {filterTabsOptions}
+            </select>
+
             {filterParamsInputs}
 
             <Button intent="primary" onClick={windowFilterAddStore.save}>Сохранить</Button>

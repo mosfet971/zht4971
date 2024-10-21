@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { autorun, makeAutoObservable, reaction, runInAction } from "mobx";
 import { noteTabStore } from "../tabsStores/NoteTabStore";
 import { modalWindowsManagerStore } from "../ModalWindowsManagerStore";
 import { listTabStore } from "../tabsStores/ListTabStore";
@@ -8,13 +8,11 @@ class WindowFilterAddStore {
         makeAutoObservable(this);
     }
 
-    status = "selectType"; // selectType, settings, error
+    status = "settings"; // settings, error
 
     filterType = "stringFuse";
-    actualFilterParamsList = [];
-    filterObject = {};
 
-    actualNoteParamsList = [];
+    filterObject = {};
 
     filterTypeToFilterParamsMap = {
         "range": ["type", "paramName", "minValue", "maxValue", "isInverted"],
@@ -85,30 +83,22 @@ class WindowFilterAddStore {
     };
 
     reset = async () => {
-        this.status = "selectType"; // selectType, settings, error
+        this.status = "settings"; // settings, error
 
         this.filterType = "stringFuse";
-        this.actualFilterParamsList = [];
         this.filterObject = {};
+        for (const i of this.filterTypeToFilterParamsMap[this.filterType]) {
+            if (i == "type") {
+                this.setFilterObjectParam(i, this.filterType);
+            } else if (i == "paramName") {
+                this.setFilterObjectParam(i, this.filterTypeToActualNoteParamsMap[this.filterType][0]);
+            } else {
+                this.setFilterObjectParam(i, this.filterParamsToDefaultVals[i]);
+            }
+        }
 
-        this.actualNoteParamsList = [];
-    };
-
-    //selectType
-
-    setFilterType = async (filterType) => {
-        this.filterType = filterType;
-    };
-
-    saveFilterType = () => {
-
-        if (
-            this.filterTypeToFilterParamsMap.hasOwnProperty(this.filterType)
-            && this.filterTypeToActualNoteParamsMap.hasOwnProperty(this.filterType)
-        ) {
-            this.actualFilterParamsList = this.filterTypeToFilterParamsMap[this.filterType];
-            this.actualNoteParamsList = this.filterTypeToActualNoteParamsMap[this.filterType]
-
+        reaction(()=>this.filterType, ()=>{
+            this.filterObject = {};
             for (const i of this.filterTypeToFilterParamsMap[this.filterType]) {
                 if (i == "type") {
                     this.setFilterObjectParam(i, this.filterType);
@@ -118,14 +108,21 @@ class WindowFilterAddStore {
                     this.setFilterObjectParam(i, this.filterParamsToDefaultVals[i]);
                 }
             }
-
-            this.status = "settings";
-        } else {
-            this.status = "error";
-        }
+        });
     };
 
     //settings
+    setFilterType = async (filterType) => {
+        this.filterType = filterType;
+    };
+
+    get actualFilterParamsList() {
+        return this.filterTypeToFilterParamsMap[this.filterType];
+    }
+
+    get actualNoteParamsList() {
+        return this.filterTypeToActualNoteParamsMap[this.filterType];
+    }
 
     setFilterObjectParam = (paramName, paramValue) => {
         this.filterObject[paramName] = paramValue;
@@ -134,6 +131,7 @@ class WindowFilterAddStore {
     save = async () => {
         let filterObjectFinal = this.filterObject;
         if (filterObjectFinal.paramName == "associatedNotesIds") {
+            //console.log(this.filterObject)
             let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", filterObjectFinal.value);
             if(resolvedId) {
                 filterObjectFinal.value = resolvedId; 
