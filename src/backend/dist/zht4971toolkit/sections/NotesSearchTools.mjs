@@ -99,7 +99,7 @@ class NotesSearchTools {
     };
     _checkParamBool = (noteObject, filterObject) => {
         try {
-            return noteObject[filterObject.paramName] == filterObject.value;
+            return noteObject[filterObject.paramName] == filterObject.valueBool;
         }
         catch (error) {
             //console.log(error);
@@ -196,10 +196,10 @@ class NotesSearchTools {
         list.push({ type, paramName, value, isInverted });
         return list;
     };
-    addPramBoolFilter = (filtersList, paramName, value, isInverted) => {
+    addPramBoolFilter = (filtersList, paramName, valueBool, isInverted) => {
         let list = filtersList;
         let type = "bool";
-        list.push({ type, paramName, value, isInverted });
+        list.push({ type, paramName, valueBool, isInverted });
         return list;
     };
     addPramIncludesStringInListFilter = (filtersList, paramName, value, isInverted) => {

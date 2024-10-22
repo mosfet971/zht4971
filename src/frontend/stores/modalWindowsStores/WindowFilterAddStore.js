@@ -33,7 +33,7 @@ class WindowFilterAddStore {
         "rangeLength": ["type", "paramName", "minValue", "maxValue", "isInverted"],
         "stringStrict": ["type", "paramName", "value", "isInverted"],
         "stringFuse": ["type", "paramName", "value", "isInverted"],
-        "bool": ["type", "paramName", "value", "isInverted"],
+        "bool": ["type", "paramName", "valueBool", "isInverted"],
         "stringInList": ["type", "paramName", "value", "isInverted"],
         "ddmmggggFilter": ["type", "paramName", "minDateValue", "maxDateValue", "isInverted"],
     };
@@ -42,7 +42,7 @@ class WindowFilterAddStore {
         "range": ["noteTypeNumber", "historicalDateAccuracyLevel_1_2_3"],
         "rangeLength": ["name", "aliasesList", "sourceText", "associatedNotesIds"],
         "stringStrict": ["name", "sourceText", "id"],
-        "stringFuse": ["sourceText", "name", "id"],
+        "stringFuse": ["name", "sourceText", "id"],
         "bool": ["isPrimary", "hasHistoricalDate"],
         "stringInList": ["aliasesList", "associatedNotesIds"],
         "ddmmggggFilter": ["lastGetTime", "creationTime", "editionTime", "historicalDateNumber"]
@@ -52,7 +52,7 @@ class WindowFilterAddStore {
         "stringStrict": "Включение текстового значения",
         "stringInList": "Наличие элемента в списке",
         "range": "Диапазон числового значения параметра",
-        "rangeLength": "Диапазон длинны текстового значения",
+        "rangeLength": "Диапазон длинны текстового значения или списка",
         "bool": "Логическое значение",
         "ddmmggggFilter": "Диапозон даты в формате дд.мм.гггг"
     };
@@ -88,8 +88,8 @@ class WindowFilterAddStore {
     filterParamsToDefaultVals = {
         "type": "-",
         "paramName": "-",
-        "minValue": 0,
-        "maxValue": 0,
+        "minValue": 1,
+        "maxValue": 1,
         "isInverted": false,
         "value": "",
         "minDateValue": "",
@@ -131,7 +131,7 @@ class WindowFilterAddStore {
 
     save = async () => {
         let filterObjectFinal = this.filterObject;
-        if (filterObjectFinal.paramName == "associatedNotesIds") {
+        if (filterObjectFinal.paramName == "associatedNotesIds" && filterObjectFinal.hasOwnProperty("value")) {
             //console.log(this.filterObject)
             let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", filterObjectFinal.value);
             if (resolvedId) {

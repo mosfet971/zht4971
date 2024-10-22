@@ -14,6 +14,7 @@ let InputsContainerDiv = styled.div`
     width: 100%;
   }
   &>select {
+    width: 100%;
     margin-bottom: 1em;
   }
 `;
@@ -49,8 +50,8 @@ let WindowAssocEditor = observer(() => {
               noteParamsOptions.push(<option value={j}>{windowFilterAddStore.noteParamToDisplayTextMap[j]}</option>);
             }
             filterParamsInputs.push(<>
-              <p>Свойство записи для фильтрации:</p>
-              <select style={{ width: "100%", marginButtom: "1em" }} name="select" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)}>
+              <p>Свойство для фильтрации:</p>
+              <select name="select" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)}>
                 {noteParamsOptions}
               </select>
             </>);
@@ -90,7 +91,6 @@ let WindowAssocEditor = observer(() => {
           }
 
           case "value": {
-            //if
             filterParamsInputs.push(<>
               <p>Текстовое значение:</p>
               <input className="bp5-input bp5-intent-primary" defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} placeholder="Текстовое значение" type="text" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value)} />
@@ -98,18 +98,30 @@ let WindowAssocEditor = observer(() => {
             break;
           }
 
+          case "valueBool": {
+            filterParamsInputs.push(<>
+              <p>Логическое значение:</p>
+              <select  defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} name="select" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value == "true")}>
+                <option value={"false"}>Нет</option>
+                <option value={"true"}>Да</option>
+              </select>
+              </>);
+            break;
+          }
+
           case "isInverted": {
             filterParamsInputs.push(<>
               <p>Пропускать только не прошедшие фильтр записи (инвертированный фильтр):</p>
-              <select style={{ width: "100%", marginButtom: "1em" }} defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} name="select" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value == "true")}>
+              <select defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} name="select" onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, e.target.value == "true")}>
                 <option value={"false"}>Нет</option>
                 <option value={"true"}>Да</option>
               </select>
             </>);
             break;
           }
-          // TODO: специальный select для типов записи 
-          // TODO: специальное поле ввода для логических значений input 
+          // TODO: нечеткое наличие элемента в списке
+          // TODO: нечеткое наличие подстроки в названии или псевдонимах
+          // TODO: специальный select для типов записи с "магическими числами" 
           // TODO: все починить и протестировать (особенно фильтр по диапозону дат)
           default: {
             break;
@@ -128,9 +140,11 @@ let WindowAssocEditor = observer(() => {
           <InputsContainerDiv>
             <p>Выберите тип фильра:</p>
 
-            <select style={{ width: "100%", marginButtom: "1em" }} value={windowFilterAddStore.filterType} name="select" onChange={(e) => windowFilterAddStore.setFilterType(e.target.value)}>
+            <select value={windowFilterAddStore.filterType} name="select" onChange={(e) => windowFilterAddStore.setFilterType(e.target.value)}>
               {filterTabsOptions}
             </select>
+
+            <p>Настройки, перечисленные ниже, актуальны для указанного типа фильтра.</p>
 
             {filterParamsInputs}
 
