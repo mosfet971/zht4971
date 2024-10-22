@@ -24,32 +24,35 @@ class WindowFilterAddStore {
 
     status = "settings"; // settings, error
 
-    filterType = "stringFuse";
+    filterType = "nameOrAliasFilterFuse";
 
     filterObject = {};
 
     filterTypeToFilterParamsMap = {
+        "nameOrAliasFilterFuse": ["type", "value", "isInverted"],
         "range": ["type", "paramName", "minValue", "maxValue", "isInverted"],
         "rangeLength": ["type", "paramName", "minValue", "maxValue", "isInverted"],
         "stringStrict": ["type", "paramName", "value", "isInverted"],
         "stringFuse": ["type", "paramName", "value", "isInverted"],
         "bool": ["type", "paramName", "valueBool", "isInverted"],
         "stringInList": ["type", "paramName", "value", "isInverted"],
-        "ddmmggggFilter": ["type", "paramName", "minDateValue", "maxDateValue", "isInverted"],
+        "ddmmggggFilter": ["type", "paramName", "minDateValue", "maxDateValue", "isInverted"]
     };
 
     filterTypeToActualNoteParamsMap = {
+        "nameOrAliasFilterFuse": [],
         "range": ["noteTypeNumber", "historicalDateAccuracyLevel_1_2_3"],
         "rangeLength": ["name", "aliasesList", "sourceText", "associatedNotesIds"],
-        "stringStrict": ["name", "sourceText", "id"],
-        "stringFuse": ["name", "sourceText", "id"],
+        "stringStrict": ["name", "sourceText", "id", "aliasesList"],
+        "stringFuse": ["name", "sourceText", "id", "aliasesList", "associatedNotesIds"],
         "bool": ["isPrimary", "hasHistoricalDate"],
         "stringInList": ["aliasesList", "associatedNotesIds"],
         "ddmmggggFilter": ["lastGetTime", "creationTime", "editionTime", "historicalDateNumber"]
     };
     filterTypeToDisplayTextMap = {
-        "stringFuse": "Нечеткое включение текстового значения",
-        "stringStrict": "Включение текстового значения",
+        "nameOrAliasFilterFuse": "Нечеткое влючение текстового значения в название или псевдоним",
+        "stringFuse": "Нечеткое включение в текстовом параметре или списке",
+        "stringStrict": "Включение значения в текстовом параметре или списке",
         "stringInList": "Наличие элемента в списке",
         "range": "Диапазон числового значения параметра",
         "rangeLength": "Диапазон длинны текстового значения или списка",
@@ -99,7 +102,7 @@ class WindowFilterAddStore {
     reset = async () => {
         this.status = "settings"; // settings, error
 
-        this.filterType = "stringFuse";
+        this.filterType = "nameOrAliasFilterFuse";
         this.filterObject = {};
         for (const i of this.filterTypeToFilterParamsMap[this.filterType]) {
             if (i == "type") {
@@ -131,14 +134,16 @@ class WindowFilterAddStore {
 
     save = async () => {
         let filterObjectFinal = this.filterObject;
-        if (filterObjectFinal.paramName == "associatedNotesIds" && filterObjectFinal.hasOwnProperty("value")) {
-            //console.log(this.filterObject)
-            let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", filterObjectFinal.value);
-            if (resolvedId) {
-                filterObjectFinal.value = resolvedId;
-            } else {
-                this.status = "error";
-                return;
+        if (filterObjectFinal.hasOwnProperty("paramName")) {
+            if (filterObjectFinal.paramName == "associatedNotesIds" && filterObjectFinal.hasOwnProperty("value")) {
+                //console.log(this.filterObject)
+                let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", filterObjectFinal.value);
+                if (resolvedId) {
+                    filterObjectFinal.value = resolvedId;
+                } else {
+                    this.status = "error";
+                    return;
+                }
             }
         }
         listTabStore.addFilter(filterObjectFinal);

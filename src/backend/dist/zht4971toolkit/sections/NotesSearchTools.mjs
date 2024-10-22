@@ -9,7 +9,8 @@ class NotesSearchTools {
             "stringFuse": this._checkParamIncludesStringFuse,
             "bool": this._checkParamBool,
             "stringInList": this._checkStringInList,
-            "ddmmggggFilter": this._checkDateParamRangeFilter
+            "ddmmggggFilter": this._checkDateParamRangeFilter,
+            "nameOrAliasFilterFuse": this._checkNameOrAliasFuse
         };
     }
     getListOfNotesIdsSortedByParamWithFilters = (paramName, filtersList, isNeedInvertedOrderList) => {
@@ -169,6 +170,11 @@ class NotesSearchTools {
         }
         return true;
     };
+    _checkNameOrAliasFuse = (noteObject, filterObject) => {
+        return (this._checkParamIncludesStringFuse(noteObject, { type: "stringFuse", paramName: "name", value: filterObject.value, isInverted: filterObject.isInverted })
+            ||
+                this._checkParamIncludesStringFuse(noteObject, { type: "stringFuse", paramName: "aliasesList", value: filterObject.value, isInverted: filterObject.isInverted }));
+    };
     creteBlankFiltersList = () => {
         return ([]);
     };
@@ -212,6 +218,12 @@ class NotesSearchTools {
         let list = filtersList;
         let type = "ddmmggggFilter";
         list.push({ type, paramName, minDateValue, maxDateValue, isInverted });
+        return list;
+    };
+    addFuseNoteNameOrAliasIncludeFilter = (filtersList, value, isInverted) => {
+        let list = filtersList;
+        let type = "nameOrAliasFilterFuse";
+        list.push({ type, value, isInverted });
         return list;
     };
 }
