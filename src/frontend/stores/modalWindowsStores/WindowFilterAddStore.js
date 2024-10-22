@@ -36,35 +36,37 @@ class WindowFilterAddStore {
         "stringFuse": ["type", "paramName", "value", "isInverted"],
         "bool": ["type", "paramName", "valueBool", "isInverted"],
         "stringInList": ["type", "paramName", "value", "isInverted"],
-        "ddmmggggFilter": ["type", "paramName", "minDateValue", "maxDateValue", "isInverted"]
+        "ddmmggggFilter": ["type", "paramName", "minDateValue", "maxDateValue", "isInverted"],
+        "noteTypeNumberRangeFilter": ["type", "minNoteTypeNumberValue", "maxNoteTypeNumberValue", "isInverted"]
     };
-
     filterTypeToActualNoteParamsMap = {
         "nameOrAliasFilterFuse": [],
-        "range": ["noteTypeNumber", "historicalDateAccuracyLevel_1_2_3"],
+        "range": ["historicalDateAccuracyLevel_1_2_3", "noteTypeNumber"],
         "rangeLength": ["name", "aliasesList", "sourceText", "associatedNotesIds"],
         "stringStrict": ["name", "sourceText", "id", "aliasesList"],
         "stringFuse": ["name", "sourceText", "id", "aliasesList", "associatedNotesIds"],
         "bool": ["isPrimary", "hasHistoricalDate"],
         "stringInList": ["aliasesList", "associatedNotesIds"],
-        "ddmmggggFilter": ["lastGetTime", "creationTime", "editionTime", "historicalDateNumber"]
+        "ddmmggggFilter": ["historicalDateNumber", "lastGetTime", "creationTime", "editionTime"],
+        "noteTypeNumberRangeFilter": []
     };
     filterTypeToDisplayTextMap = {
-        "nameOrAliasFilterFuse": "Нечеткое влючение текстового значения в название или псевдоним",
-        "stringFuse": "Нечеткое включение в текстовом параметре или списке",
-        "stringStrict": "Включение значения в текстовом параметре или списке",
-        "stringInList": "Наличие элемента в списке",
+        "nameOrAliasFilterFuse": "Нечеткое влючение текста в названии или псевдонимах",
+        "stringFuse": "Нечеткое включение текста в текстовом параметре или списке",
+        "stringStrict": "Включение текста в текстовом параметре или списке",
+        "stringInList": "Включение текста в списке",
         "range": "Диапазон числового значения параметра",
         "rangeLength": "Диапазон длинны текстового значения или списка",
         "bool": "Логическое значение",
-        "ddmmggggFilter": "Диапозон даты в формате дд.мм.гггг"
+        "ddmmggggFilter": "Диапозон даты в формате дд.мм.гггг",
+        "noteTypeNumberRangeFilter": "Диапазон типов"
     };
     noteParamToDisplayTextMap = {
         "id": "Идентификатор",
         "name": "Название",
         "aliasesList": "Список псевдонимов",
         "isPrimary": "Избранность",
-        "noteTypeNumber": "Числовой тип записи",
+        "noteTypeNumber": "Тип записи в виде числа",
         "tagsNotesListIds": "",
         "lastGetTime": "Время предыдущего открытия ",
         "creationTime": "Время создания",
@@ -77,26 +79,17 @@ class WindowFilterAddStore {
         "associatedNotesIds": "Список ассоциированных записей (названия и псевдонимы)"
     };
 
-    filterParamToDisplayTextMap = {
-        "type": "Тип фильтра",
-        "paramName": "Параметр записи",
-        "minValue": "Минимальное числовое значение",
-        "maxValue": "Максимальное числовое значение",
-        "isInverted": "Инверсия",
-        "value": "Текстовое значение",
-        "minDateValue": "Минимальная дата",
-        "minDateValue": "Максимальная дата",
-    };
-
     filterParamsToDefaultVals = {
         "type": "-",
         "paramName": "-",
-        "minValue": 1,
-        "maxValue": 1,
+        "minValue": "1",
+        "maxValue": "1",
         "isInverted": false,
         "value": "",
         "minDateValue": "",
         "maxDateValue": "",
+        "minNoteTypeNumberValue": 0,
+        "maxNoteTypeNumberValue": 3
     };
 
     reset = async () => {
@@ -134,6 +127,16 @@ class WindowFilterAddStore {
 
     save = async () => {
         let filterObjectFinal = this.filterObject;
+
+        if (filterObjectFinal.type == "ddmmggggFilter") {
+            let checkValid = (v) => (v
+                .replaceAll(/[0-9]{2}\.[0-9]{2}\.[0-9]{4}/g, "date_marker")
+                .includes("date_marker")
+            );
+            if (!checkValid(filterObjectFinal.minDateValue)) { this.status = "error"; return; }
+            if (!checkValid(filterObjectFinal.maxDateValue)) { this.status = "error"; return; }
+        }
+
         if (filterObjectFinal.hasOwnProperty("paramName")) {
             if (filterObjectFinal.paramName == "associatedNotesIds" && filterObjectFinal.hasOwnProperty("value")) {
                 //console.log(this.filterObject)
@@ -146,6 +149,7 @@ class WindowFilterAddStore {
                 }
             }
         }
+
         listTabStore.addFilter(filterObjectFinal);
         modalWindowsManagerStore.close();
     };

@@ -10,7 +10,8 @@ class NotesSearchTools {
             "bool": this._checkParamBool,
             "stringInList": this._checkStringInList,
             "ddmmggggFilter": this._checkDateParamRangeFilter,
-            "nameOrAliasFilterFuse": this._checkNameOrAliasFuse
+            "nameOrAliasFilterFuse": this._checkNameOrAliasFuse,
+            "noteTypeNumberRangeFilter": this._checkNoteTypeNumberRangeFilter
         };
     }
     getListOfNotesIdsSortedByParamWithFilters = (paramName, filtersList, isNeedInvertedOrderList) => {
@@ -47,8 +48,13 @@ class NotesSearchTools {
         return notesIdsOut;
     };
     _checkParamRange = (noteObject, filterObject) => {
-        if (parseInt(noteObject[filterObject.paramName]) >= filterObject.minValue
-            && parseInt(noteObject[filterObject.paramName]) <= filterObject.maxValue) {
+        if (filterObject.paramName == "historicalDateAccuracyLevel_1_2_3") {
+            if (!noteObject.hasHistoricalDate) {
+                return false;
+            }
+        }
+        if (parseInt(noteObject[filterObject.paramName]) >= parseInt(filterObject.minValue)
+            && parseInt(noteObject[filterObject.paramName]) <= parseInt(filterObject.maxValue)) {
             return true;
         }
         else {
@@ -120,33 +126,27 @@ class NotesSearchTools {
     };
     //type, paramName, minDateValue, maxDateValue, isInverted
     _checkDateParamRangeFilter = (noteObject, filterObject) => {
-        let checkValid = (v) => (v
-            .replaceAll(/[0-9]{2}\.[0-9]{2}\.[0-9]{4}/g, "date_marker")
-            .includes("date_marker"));
-        if (!checkValid(filterObject.minDateValue))
-            return false;
-        if (!checkValid(filterObject.maxDateValue))
-            return false;
-        let minDateStruct = {
-            d: filterObject.minDateValue.split(".")[0],
-            m: filterObject.minDateValue.split(".")[1],
-            y: filterObject.minDateValue.split(".")[2]
-        };
-        let maxDateStruct = {
-            d: filterObject.maxDateValue.split(".")[0],
-            m: filterObject.maxDateValue.split(".")[1],
-            y: filterObject.maxDateValue.split(".")[2]
-        };
-        let noteDateStruct;
         try {
+            let minDateStruct = {
+                d: parseInt(filterObject.minDateValue.split(".")[0]),
+                m: parseInt(filterObject.minDateValue.split(".")[1]),
+                y: parseInt(filterObject.minDateValue.split(".")[2])
+            };
+            let maxDateStruct = {
+                d: parseInt(filterObject.maxDateValue.split(".")[0]),
+                m: parseInt(filterObject.maxDateValue.split(".")[1]),
+                y: parseInt(filterObject.maxDateValue.split(".")[2])
+            };
+            let noteDateStruct;
             if (filterObject.paramName == "historicalDateNumber") {
-                if (!noteObject.hasHistoricalTime) {
+                if (!noteObject.hasHistoricalDate) {
                     return false;
                 }
+                let str = noteObject[filterObject.paramName].toString();
                 noteDateStruct = {
-                    y: parseInt(noteObject[filterObject.paramName].toString().substring(0, str.length - 4)),
-                    m: parseInt(noteObject[filterObject.paramName].toString().substring(str.length - 4, str.length - 2)),
-                    d: parseInt(noteObject[filterObject.paramName].toString().substring(str.length - 2, str.length))
+                    y: parseInt(str.toString().substring(0, str.length - 4)),
+                    m: parseInt(str.toString().substring(str.length - 4, str.length - 2)),
+                    d: parseInt(str.toString().substring(str.length - 2, str.length))
                 };
             }
             else {
@@ -157,12 +157,15 @@ class NotesSearchTools {
                     d: dateObj.getDay()
                 };
             }
-            let isYearInRange = (noteDateStruct.y >= minDateStruct.y) && (noteDateStruct.y <= maxDateStruct.y);
-            let isMonthInRange = (noteDateStruct.m >= minDateStruct.m) && (noteDateStruct.m <= maxDateStruct.m);
-            let isDayInRange = (noteDateStruct.d >= minDateStruct.d) && (noteDateStruct.d <= maxDateStruct.d);
-            let isDateInRange = isYearInRange && isMonthInRange && isDayInRange;
+            let noteDateNumber = parseInt(noteDateStruct.y.toString().padStart(4, "0") + noteDateStruct.m.toString().padStart(2, "0") + noteDateStruct.d.toString().padStart(2, "0"));
+            let minDateNumber = parseInt(minDateStruct.y.toString().padStart(4, "0") + minDateStruct.m.toString().padStart(2, "0") + minDateStruct.d.toString().padStart(2, "0"));
+            let maxDateNumber = parseInt(maxDateStruct.y.toString().padStart(4, "0") + maxDateStruct.m.toString().padStart(2, "0") + maxDateStruct.d.toString().padStart(2, "0"));
+            let isDateInRange = noteDateNumber >= minDateNumber && noteDateNumber <= maxDateNumber;
             if (isDateInRange) {
                 return true;
+            }
+            else {
+                return false;
             }
         }
         catch (error) {
@@ -174,6 +177,18 @@ class NotesSearchTools {
         return (this._checkParamIncludesStringFuse(noteObject, { type: "stringFuse", paramName: "name", value: filterObject.value, isInverted: filterObject.isInverted })
             ||
                 this._checkParamIncludesStringFuse(noteObject, { type: "stringFuse", paramName: "aliasesList", value: filterObject.value, isInverted: filterObject.isInverted }));
+    };
+    _checkNoteTypeNumberRangeFilter = (noteObject, filterObject) => {
+        if (!noteObject.hasOwnProperty("noteTypeNumber")) {
+            return false;
+        }
+        if (parseInt(noteObject["noteTypeNumber"]) >= filterObject.minNoteTypeNumberValue
+            && parseInt(noteObject["noteTypeNumber"]) <= filterObject.maxNoteTypeNumberValue) {
+            return true;
+        }
+        else {
+            return false;
+        }
     };
     creteBlankFiltersList = () => {
         return ([]);
@@ -224,6 +239,12 @@ class NotesSearchTools {
         let list = filtersList;
         let type = "nameOrAliasFilterFuse";
         list.push({ type, value, isInverted });
+        return list;
+    };
+    addNoteTypeNumberRangeFilter = (filtersList, minNoteTypeNumberValue, maxNoteTypeNumberValue, isInverted) => {
+        let list = filtersList;
+        let type = "noteTypeNumberRangeFilter";
+        list.push({ type, minNoteTypeNumberValue, maxNoteTypeNumberValue, isInverted });
         return list;
     };
 }
