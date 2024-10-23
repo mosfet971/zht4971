@@ -89,11 +89,15 @@ class NotesSearchTools {
             const options = {
                 includeScore: true,
                 keys: [filterObject.paramName],
-                ignoreLocation: true
+                ignoreLocation: true,
+                findAllMatches: true,
+                shouldSort: true
             };
             const fuse = new Fuse([noteObject], options);
             let result = fuse.search(filterObject.value)[0];
-            //console.log(result);
+            if (noteObject.sourceText.includes("пузо")) {
+                console.log(result);
+            }
             if (result.score > 0.8) {
                 return false;
             }
