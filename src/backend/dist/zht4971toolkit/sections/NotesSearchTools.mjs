@@ -95,10 +95,7 @@ class NotesSearchTools {
             };
             const fuse = new Fuse([noteObject], options);
             let result = fuse.search(filterObject.value)[0];
-            if (noteObject.sourceText.includes("пузо")) {
-                console.log(result);
-            }
-            if (result.score > 0.8) {
+            if (result.score > 0.65) {
                 return false;
             }
         }
@@ -142,6 +139,7 @@ class NotesSearchTools {
                 y: parseInt(filterObject.maxDateValue.split(".")[2])
             };
             let noteDateStruct;
+            let dateObj;
             if (filterObject.paramName == "historicalDateNumber") {
                 if (!noteObject.hasHistoricalDate) {
                     return false;
@@ -154,11 +152,12 @@ class NotesSearchTools {
                 };
             }
             else {
-                let dateObj = new Date(parseInt(noteObject[filterObject.paramName]));
+                dateObj = new Date(parseInt(noteObject[filterObject.paramName]));
+                let str = dateObj.toLocaleDateString();
                 noteDateStruct = {
-                    y: dateObj.getFullYear(),
-                    m: dateObj.getMonth(),
-                    d: dateObj.getDay()
+                    y: parseInt(str.split(".")[2]),
+                    m: parseInt(str.split(".")[1]),
+                    d: parseInt(str.split(".")[0])
                 };
             }
             let noteDateNumber = parseInt(noteDateStruct.y.toString().padStart(4, "0") + noteDateStruct.m.toString().padStart(2, "0") + noteDateStruct.d.toString().padStart(2, "0"));

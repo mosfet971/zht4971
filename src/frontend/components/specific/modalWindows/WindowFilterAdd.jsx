@@ -27,19 +27,6 @@ let WindowAssocEditor = observer(() => {
 
   switch (windowFilterAddStore.status) {
     case "settings":
-      /**
-       *    {
-        "type": "Тип фильтра",
-        "paramName": "Параметр записи",
-        "minValue": "Минимальное числовое значение",
-        "maxValue": "Максимальное числовое значение",
-        "isInverted": "Инверсия",
-        "value": "Текстовое значение",
-        "minDateValue": "Минимальная дата",
-        "minDateValue": "Максимальная дата",
-    };
-    };
-       */
       let filterParamsInputs = [];
 
       for (const i of windowFilterAddStore.actualFilterParamsList) {

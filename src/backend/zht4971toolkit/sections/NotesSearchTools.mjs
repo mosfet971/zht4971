@@ -110,7 +110,7 @@ class NotesSearchTools {
             const fuse = new Fuse([noteObject], options)
             let result = fuse.search(filterObject.value)[0];
 
-            if (result.score > 0.8) {
+            if (result.score > 0.65) {
                 return false;
             }
         } catch (error) {
@@ -156,6 +156,7 @@ class NotesSearchTools {
             };
 
             let noteDateStruct;
+            let dateObj;
 
             if (filterObject.paramName == "historicalDateNumber") {
                 if (!noteObject.hasHistoricalDate) {
@@ -168,11 +169,12 @@ class NotesSearchTools {
                     d: parseInt(str.toString().substring(str.length - 2, str.length))
                 };
             } else {
-                let dateObj = new Date(parseInt(noteObject[filterObject.paramName]));
+                dateObj = new Date(parseInt(noteObject[filterObject.paramName]));
+                let str = dateObj.toLocaleDateString();
                 noteDateStruct = {
-                    y: dateObj.getFullYear(),
-                    m: dateObj.getMonth(),
-                    d: dateObj.getDay()
+                    y: parseInt(str.split(".")[2]),
+                    m: parseInt(str.split(".")[1]),
+                    d: parseInt(str.split(".")[0])
                 }
             }
 

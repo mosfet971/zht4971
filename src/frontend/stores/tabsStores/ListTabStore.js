@@ -15,6 +15,46 @@ class ListTabStore {
     sortOrder = "bToA"; // aToB, bToA
     filtersList = [];
 
+    paramToDisplayText = {
+        "nameOrAliasFilterFuse": "Нечеткое влючение текста в названии или псевдонимах",
+        "stringFuse": "Нечеткое включение текста в текстовом параметре или списке",
+        "stringStrict": "Включение текста в текстовом параметре или списке",
+        "stringInList": "Включение текста в списке",
+        "range": "Диапазон числового значения параметра",
+        "rangeLength": "Диапазон длинны текстового значения или списка",
+        "bool": "Логическое значение",
+        "ddmmggggFilter": "Диапозон даты в формате дд.мм.гггг",
+        "noteTypeNumberRangeFilter": "Диапазон типов",
+        "id": "Идентификатор",
+        "name": "Название",
+        "aliasesList": "Список псевдонимов",
+        "isPrimary": "Избранность",
+        "noteTypeNumber": "Тип записи в виде числа",
+        "tagsNotesListIds": "",
+        "lastGetTime": "Время предыдущего открытия ",
+        "creationTime": "Время создания",
+        "editionTime": "Время изменения",
+        "hasHistoricalDate": "Наличие дополнительной даты",
+        "historicalDateNumber": "Дополнительная дата",
+        "historicalDateAccuracyLevel_1_2_3": "Уровень точности дополнительной даты (1, 2, 3)",
+        "sourceText": "Исходный текст записи",
+        "taggedNotesIds": "",
+        "associatedNotesIds": "Список ассоциированных записей (названия и псевдонимы)",
+        "type": "Тип фильтра",
+        "paramName": "Свойство",
+        "minValue": "Минимальное включительное числовое значение",
+        "maxValue": "Максимальное включительное числовое значение",
+        "isInverted": "Инверсия",
+        "value": "Текстовое значение",
+        "valueBool": "Логическое значение",
+        "minDateValue": "Минимальная включительная дата",
+        "maxDateValue": "Максимальная включительная дата",
+        "minNoteTypeNumberValue": "Минимальный включительный числовой тип записи",
+        "maxNoteTypeNumberValue": "Максимальный включительный числовой тип записи",
+        "true": "Да",
+        "false": "Нет"
+    };
+
     reset = async () => {
         this.status = "loading";
         this.listOfNoteCardsHtml = "";
@@ -59,9 +99,9 @@ class ListTabStore {
         this.filtersList.push(filterObject);
     }
 
-    // TODO: delete filter from list
-    // TODO: use filter list
-
+    rmFilter = async (filterObject) => {
+        this.filtersList = this.filtersList.filter((v)=>!(JSON.stringify(v) === JSON.stringify(filterObject)));
+    };
 }
 
 export const listTabStore = new ListTabStore();

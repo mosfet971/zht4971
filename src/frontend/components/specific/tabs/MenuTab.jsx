@@ -46,10 +46,6 @@ let MenuTab = observer(() => {
                 <IconFileSymlink />
                 Открыть запись по названию
             </MenuCard>
-            <MenuCard handler={() => { modalWindowsManagerStore.open("WindowInfo") }}>
-                <IconHelp />
-                О программе
-            </MenuCard>
             <MenuCard handler={() => { modalWindowsManagerStore.open("WindowChangePassword") }}>
                 <IconLock />
                 Смена пароля

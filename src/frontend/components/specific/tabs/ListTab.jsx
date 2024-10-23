@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import styled from "styled-components";
-import { ButtonGroup, Button, Spinner } from "@blueprintjs/core";
+import { ButtonGroup, Button, Spinner, Card } from "@blueprintjs/core";
 import { renderToStaticMarkup } from "react-dom/server"
 
 import NoteEditMode from "../noteTabModes/NoteEditMode.jsx";
@@ -88,6 +88,22 @@ let ListTab = observer(() => {
             );
             break;
         case "ready":
+            let filtersCards = [];
+            for (const i of listTabStore.filtersList) {
+                let filterParamsHtml = "";
+                for (const j in i) {
+                    filterParamsHtml += (listTabStore.paramToDisplayText[j] ? listTabStore.paramToDisplayText[j] : j) + ": " + (listTabStore.paramToDisplayText[i[j]] ? listTabStore.paramToDisplayText[i[j]] : i[j]) + "<br/>";
+                }
+                filtersCards.push(<>
+                    <Card onClick={() => listTabStore.rmFilter(i)} style={{ justifyContent: "space-between" }} interactive={true}>
+                        <div dangerouslySetInnerHTML={{ __html: filterParamsHtml }}></div>
+                        <span class='bp5-icon-standard bp5-icon-delete'></span>
+                    </Card>
+                </>);
+            }
+            if (filtersCards.length == 0) {
+                filtersCards.push(<Card>Еще не добавлено ни одного фильтра</Card>)
+            }
             markup.push(
                 <>
                     <ButtonGroupContainer>
@@ -104,11 +120,10 @@ let ListTab = observer(() => {
                                 <option value="aToB">По возрастанию</option>
                                 <option value="bToA">По убыванию</option>
                             </select>
-                            <FiltersSettingsContainer>
-                                <Button onClick={listTabStore.openFiltersWindow} intent="primary">Добавить фильтр</Button>
-                                <CardList>{JSON.stringify(listTabStore.filtersList)}</CardList>
-                            </FiltersSettingsContainer>
-                            <Button onClick={listTabStore.fetch} intent="primary" icon="refresh">Обновить</Button>
+                            <Text>Фильтры: </Text>
+                            <Button onClick={listTabStore.openFiltersWindow} intent="primary">Добавить фильтр</Button>
+                            <CardList>{filtersCards}</CardList>
+                            <Button onClick={listTabStore.fetch} intent="primary" icon="refresh">Обновить список</Button>
                         </ContainerForInputs>
                     </ButtonGroupContainer>
                     <ListContainer>
