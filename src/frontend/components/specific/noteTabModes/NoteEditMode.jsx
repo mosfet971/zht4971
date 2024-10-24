@@ -93,7 +93,7 @@ let NoteEditMode = observer(() => {
                 <Button intent="primary" onClick={() => { modalWindowsManagerStore.open("WindowAssocEditor"); }}>Открыть редактор ассоциаций</Button>
 
                 <br />
-                <Text>Добавление файлов: (для каждого файла в текст записи будет добавлен свой код)</Text>
+                <Text>Добавление файлов (видео желательно в формате webm VPx): (для каждого файла в текст записи будет добавлен свой код)</Text>
                 <FileInput buttonText="Выбрать" disabled={noteTabStore.isFileUploadLoading} text={noteTabStore.isFileUploadLoading ? "Загрузка..." : "Выберите файл"} onInputChange={noteTabStore.selectFileEventHandler} />
             </ContainerForInputs>
             <br />

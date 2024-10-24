@@ -88,6 +88,7 @@ function createWindow() {
 
       return true;
     } catch (error) {
+      console.log(error);
       return false;
     }
   });

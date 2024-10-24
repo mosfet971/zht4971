@@ -35,7 +35,7 @@ exp.getMasterKey = (databaseDirPath, password) => {
 
     let encryptedMk = JSON.parse(easyFs.getFileText(dbRootPath + "masterKey.dbf"));
     let mk = cryptog.aes256.decryptString(encryptedMk.aesMessage, cryptog.slowSha256(password), encryptedMk.aesIv);
-
+    //console.log("mk", mk)
     return mk;
 }
 
@@ -69,7 +69,7 @@ exp.setEntity = (databaseDirPath, mk, entityType, entityId, entityObj) => {
 
     let entityFilePath = dirPath + entityId + ".dbf";
 
-    let cryptedEntityJson = JSON.stringify(cryptog.aes256.encryptString(JSON.stringify(entityObj), cryptog.toByte(mk)));
+    let cryptedEntityJson = JSON.stringify(cryptog.aes256.encryptString(JSON.stringify(entityObj), mk));
 
     easyFs.writeTextToFile(entityFilePath, cryptedEntityJson);
 
@@ -133,7 +133,7 @@ exp.getEntity = (databaseDirPath, mk, entityType, entityId) => {
     let dirPath = dbRootPath + entityId[0] + entityId[1] + "/" + entityId[2] + entityId[3] + "/";
     let entityFilePath = dirPath + entityId + ".dbf";
     let encryptedEntity = JSON.parse(easyFs.getFileText(entityFilePath));
-    let decryptedEntityJson = cryptog.aes256.decryptString(encryptedEntity.aesMessage, cryptog.toByte(mk), encryptedEntity.aesIv);
+    let decryptedEntityJson = cryptog.aes256.decryptString(encryptedEntity.aesMessage, mk, encryptedEntity.aesIv);
     let entityObj = JSON.parse(decryptedEntityJson);
 
     if (!(entityType.validator(entityObj))) {

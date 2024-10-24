@@ -1,9 +1,6 @@
 /*
-To index.js: 
-
   // поддерживается очень мало форматов видео, нужно конвертировать перед добавлением
-  // ffmpeg -i [path_to_file] -c:v libvpx out.webm
-  // :)
+  // ffmpeg -i [path_to_file] -c:v libvp9 out.webm
 
   ipcMain.handle("saveFile", async (e, params) => {
     let fileBuffer;
@@ -37,8 +34,6 @@ To index.js:
     return await zhtToolkit.filesTools.get(params.id);
   });
 
-
-to style:
   video {
     max-width: 70%; 
     max-height: 70vh;
