@@ -24,7 +24,7 @@ exp.getMasterKey = (databaseDirPath, password) => {
     let dbRootPath = databaseDirPath + "database/";
     let encryptedMk = JSON.parse(easyFs.getFileText(dbRootPath + "masterKey.dbf"));
     let mk = cryptog.aes256.decryptString(encryptedMk.aesMessage, cryptog.slowSha256(password), encryptedMk.aesIv);
-    console.log("mk", mk);
+    //console.log("mk", mk)
     return mk;
 };
 exp.generateEntityTypeObject = (name, validator) => {

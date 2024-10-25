@@ -20,10 +20,10 @@ let MainPage = observer(() => {
     <TabSection id="mainTabs">
       <TabMenu>
         <TabButton target="menu" isDefaultSelected={true}>Меню</TabButton>
-        <TabButton target="list" isDefaultSelected={false}>Список</TabButton>
+        <TabButton target="list" isDefaultSelected={false}>Список записей</TabButton>
         <TabButton target="primary" isDefaultSelected={false}>Избранное</TabButton>
-        <TabButton target="info" isDefaultSelected={false}>Инструкция</TabButton>
-        <TabButton target="readAndWrite" isDefaultSelected={false}>Просмотр и изменение записи</TabButton>
+        <TabButton target="info" isDefaultSelected={false}>Справочник</TabButton>
+        <TabButton target="readAndWrite" isDefaultSelected={false}>Просмотр и изменение</TabButton>
       </TabMenu>
       <hr style={{margin: 0}}/>
       <TabPanel isDefaultHidden={false} id="menu"><MenuTab/></TabPanel>
