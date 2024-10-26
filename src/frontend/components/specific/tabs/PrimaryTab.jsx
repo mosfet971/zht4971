@@ -93,7 +93,7 @@ let PrimaryTab = observer(() => {
                                 <option value="aToB">По возрастанию</option>
                                 <option value="bToA">По убыванию</option>
                             </select>
-                            <Button onClick={primaryTabStore.fetch} intent="primary" icon="refresh">Обновить</Button>
+                            <Button onClick={primaryTabStore.fetch} intent="primary" icon="refresh">Обновить список</Button>
                         </ContainerForInputs>
                     </ButtonGroupContainer>
                     <ListContainer>

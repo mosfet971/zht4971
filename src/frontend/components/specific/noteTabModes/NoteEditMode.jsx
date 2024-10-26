@@ -68,18 +68,18 @@ let NoteEditMode = observer(() => {
 
                 <Text>Тип записи: (влияет на отображение записи в ассоциациях)</Text>
                 <select style={{ width: "100%" }} name="select" onChange={(e) => { noteTabStore.setNoteTypeNumber(e.target.value); }}>
-                    <option value="0" selected={noteTabStore.noteObject.noteTypeNumber == 0}>Обычная запись</option>
-                    <option value="1" selected={noteTabStore.noteObject.noteTypeNumber == 1}>Запись-тег локального уровня</option>
-                    <option value="2" selected={noteTabStore.noteObject.noteTypeNumber == 2}>Запись-тег среднего уровня</option>
-                    <option value="3" selected={noteTabStore.noteObject.noteTypeNumber == 3}>Запись-тег глобального уровня</option>
+                    <option value="0" selected={noteTabStore.noteObject.noteTypeNumber == 0}>0. Обычная запись</option>
+                    <option value="1" selected={noteTabStore.noteObject.noteTypeNumber == 1}>1. Запись-тег локального уровня</option>
+                    <option value="2" selected={noteTabStore.noteObject.noteTypeNumber == 2}>2. Запись-тег среднего уровня</option>
+                    <option value="3" selected={noteTabStore.noteObject.noteTypeNumber == 3}>3. Запись-тег глобального уровня</option>
                 </select>
 
                 <Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату (указанная дата также должна быть включенна в название записи в скобках, в формате (дд.мм.гггг), (мм.гггг) или (гггг))" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} />
                 <Text>Уровень точности даты:</Text>
                 <select style={{ width: "100%" }} disabled={!noteTabStore.noteObject.hasHistoricalDate} onChange={noteTabStore.noteHistoricalDateAccuracyLevelChangeEventHandler} >
-                    <option value="1" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 1}>Низкий</option>
-                    <option value="2" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 2}>Средний</option>
-                    <option value="3" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 3}>Высокий</option>
+                    <option value="1" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 1}>1. Низкий</option>
+                    <option value="2" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 2}>2. Средний</option>
+                    <option value="3" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 3}>3. Высокий</option>
                 </select>
                 <Text>Год:</Text>
                 <NumericInput intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.currentNoteHistoricalDate.year} onValueChange={(v) => { noteTabStore.setNoteHistoricalDatePart(v, "year") }} />
@@ -93,7 +93,7 @@ let NoteEditMode = observer(() => {
                 <Button intent="primary" onClick={() => { modalWindowsManagerStore.open("WindowAssocEditor"); }}>Открыть редактор ассоциаций</Button>
 
                 <br />
-                <Text>Добавление файлов (видео желательно в формате webm VPx): (для каждого файла в текст записи будет добавлен свой код)</Text>
+                <Text>Добавление файлов (видео желательно в формате webm или mp4): (для каждого файла в текст записи будет добавлен свой код)</Text>
                 <FileInput buttonText="Выбрать" disabled={noteTabStore.isFileUploadLoading} text={noteTabStore.isFileUploadLoading ? "Загрузка..." : "Выберите файл"} onInputChange={noteTabStore.selectFileEventHandler} />
             </ContainerForInputs>
             <br />

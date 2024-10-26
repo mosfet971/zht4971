@@ -22,7 +22,7 @@ let MainPage = observer(() => {
         <TabButton target="menu" isDefaultSelected={true}>Меню</TabButton>
         <TabButton target="list" isDefaultSelected={false}>Список записей</TabButton>
         <TabButton target="primary" isDefaultSelected={false}>Избранное</TabButton>
-        <TabButton target="info" isDefaultSelected={false}>Справочник</TabButton>
+        <TabButton target="info" isDefaultSelected={false}>Справка</TabButton>
         <TabButton target="readAndWrite" isDefaultSelected={false}>Просмотр и изменение</TabButton>
       </TabMenu>
       <hr style={{margin: 0}}/>
