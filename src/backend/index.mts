@@ -3,7 +3,7 @@ import path from 'path';
 import ZhtToolkit from './zht4971toolkit/index.mjs';
 import { fileURLToPath } from 'url';
 import contextMenu from 'electron-context-menu';
-
+import * as url from 'url';
 import { Worker } from 'worker_threads';
 
 function runService(workerData) {
@@ -34,7 +34,7 @@ contextMenu({
 function createWindow() {
   mainWindow = new BrowserWindow({
 
-    icon: __dirname + '/media/logo.ico',
+    icon: path.join(__dirname + '../../../media/logo.ico'),
     titleBarStyle: 'hidden',
     titleBarOverlay: {
       color: 'rgba(37, 42, 49, 0)',
@@ -55,11 +55,15 @@ function createWindow() {
 
   mainWindow.maximize();
 
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 
   mainWindow.show();
 
-  mainWindow.loadURL(path.join(__dirname, '../../frontend/dist/index.html'));
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, '../../frontend/dist/index.html'),
+    protocol: "file:",
+    slashes: true
+  }));
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -73,7 +77,7 @@ function createWindow() {
     try {
       zhtPassword = password;
 
-      if (__dirname.includes(".asar/")) {
+      if (__dirname.includes(".asar")) {
         zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../"), password);
       } else {
         zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../"), password);

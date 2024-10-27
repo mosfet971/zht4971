@@ -7,7 +7,7 @@ let f = async () => {
     let result = {};
     let zhtToolkit;
     let { action, password, params } = workerData;
-    if (__dirname.includes(".asar/")) {
+    if (__dirname.includes(".asar")) {
         zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../"), password);
     }
     else {
