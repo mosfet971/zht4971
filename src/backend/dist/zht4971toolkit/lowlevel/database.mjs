@@ -2,16 +2,16 @@ import easyFs from "./easyFs.mjs";
 import cryptog from "./cryptog.mjs";
 let exp = {};
 exp.cleanUp = (databaseDirPath) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     easyFs.rmDir(dbRootPath + "temp/");
 };
 exp.checkExist = (databaseDirPath) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     let isExist = easyFs.checkFile(dbRootPath + "masterKey.dbf");
     return isExist;
 };
 exp.create = (databaseDirPath, password) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     easyFs.mkDir(dbRootPath);
     let mk = cryptog.random256hex();
     let encryptedMk = cryptog.aes256.encryptString(mk, cryptog.slowSha256(password));
@@ -21,7 +21,7 @@ exp.newId = () => {
     return cryptog.newUUID() + "-" + Date.now().toString(16);
 };
 exp.getMasterKey = (databaseDirPath, password) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     let encryptedMk = JSON.parse(easyFs.getFileText(dbRootPath + "masterKey.dbf"));
     let mk = cryptog.aes256.decryptString(encryptedMk.aesMessage, cryptog.slowSha256(password), encryptedMk.aesIv);
     //console.log("mk", mk)
@@ -31,7 +31,7 @@ exp.generateEntityTypeObject = (name, validator) => {
     return ({ name, validator });
 };
 exp.setEntity = (databaseDirPath, mk, entityType, entityId, entityObj) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     if (!(entityType.validator(entityObj))) {
         throw new Error("Invalid entity");
     }
@@ -51,7 +51,7 @@ exp.setEntity = (databaseDirPath, mk, entityType, entityId, entityObj) => {
     easyFs.writeTextToFile(entityFilePath, cryptedEntityJson);
 };
 exp.setBuffer = (databaseDirPath, mk, bufferId, buffer) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     let dirPath = dbRootPath + bufferId[0] + bufferId[1] + "/" + bufferId[2] + bufferId[3] + "/";
     easyFs.mkDir(dirPath);
     let bufferFilePath = dirPath + bufferId + ".dbf";
@@ -59,7 +59,7 @@ exp.setBuffer = (databaseDirPath, mk, bufferId, buffer) => {
     easyFs.writeBufferToFile(bufferFilePath, encryptedBuffer);
 };
 exp.getBuffer = (databaseDirPath, mk, bufferId) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     let dirPath = dbRootPath + bufferId[0] + bufferId[1] + "/" + bufferId[2] + bufferId[3] + "/";
     let bufferFilePath = dirPath + bufferId + ".dbf";
     let encryptedBuffer = easyFs.getFileBuffer(bufferFilePath);
@@ -67,13 +67,13 @@ exp.getBuffer = (databaseDirPath, mk, bufferId) => {
     return (decryptedBuffer);
 };
 exp.rmBuffer = (databaseDirPath, mk, bufferId) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     let dirPath = dbRootPath + bufferId[0] + bufferId[1] + "/" + bufferId[2] + bufferId[3] + "/";
     let bufferFilePath = dirPath + bufferId + ".dbf";
     easyFs.rmFile(bufferFilePath);
 };
 exp.getEntitiesIdsByType = (databaseDirPath, mk, entityType) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     let idListFilePath = (dbRootPath + entityType.name + ".dbf");
     if (!easyFs.checkFile(idListFilePath)) {
         easyFs.writeTextToFile(idListFilePath, JSON.stringify([]));
@@ -82,7 +82,7 @@ exp.getEntitiesIdsByType = (databaseDirPath, mk, entityType) => {
     return (idList);
 };
 exp.getEntity = (databaseDirPath, mk, entityType, entityId) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     let dirPath = dbRootPath + entityId[0] + entityId[1] + "/" + entityId[2] + entityId[3] + "/";
     let entityFilePath = dirPath + entityId + ".dbf";
     let encryptedEntity = JSON.parse(easyFs.getFileText(entityFilePath));
@@ -94,7 +94,7 @@ exp.getEntity = (databaseDirPath, mk, entityType, entityId) => {
     return entityObj;
 };
 exp.changePassword = (databaseDirPath, oldPassword, newPassword) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     let encryptedMk = JSON.parse(easyFs.getFileText(dbRootPath + "masterKey.dbf"));
     let mk;
     try {
@@ -107,7 +107,7 @@ exp.changePassword = (databaseDirPath, oldPassword, newPassword) => {
     easyFs.writeTextToFile(dbRootPath + "masterKey.dbf", JSON.stringify(encryptedMk));
 };
 exp.rmEntity = (databaseDirPath, mk, entityType, entityId) => {
-    let dbRootPath = databaseDirPath + "database/";
+    let dbRootPath = databaseDirPath + "database-zht4971/";
     let dirPath = dbRootPath + entityId[0] + entityId[1] + "/" + entityId[2] + entityId[3] + "/";
     let entityFilePath = dirPath + entityId + ".dbf";
     easyFs.rmFile(entityFilePath);

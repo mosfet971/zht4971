@@ -63,10 +63,10 @@ function createWindow() {
         try {
             zhtPassword = password;
             if (__dirname.includes(".asar")) {
-                zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../"), password);
+                zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../../"), password);
             }
             else {
-                zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../"), password);
+                zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../"), password);
             }
             /*
             for (let i = 0; i < 100; i++) {

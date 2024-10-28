@@ -60,8 +60,8 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
         out += "Точность дополнительной даты: " + mapHistoricalDateAccuracyLevelNumberToInfoString[noteObject.historicalDateAccuracyLevel_1_2_3] + "<br/>";
     }
     out += "Избранная запись: " + (noteObject.isPrimary ? "Да" : "Нет") + "<br/>";
-    out += "Время создания записи: " + (new Date(noteObject.creationTime)).toLocaleString() + "<br/>";
-    out += "Время предидущего изменения записи: " + (new Date(noteObject.editionTime)).toLocaleString() + "<br/>";
+    out += "Время создания записи: " + (new Date(noteObject.creationTime)).toLocaleString("ru-RU") + "<br/>";
+    out += "Время предидущего изменения записи: " + (new Date(noteObject.editionTime)).toLocaleString("ru-RU") + "<br/>";
 
     let objs = [];
     for (const id of noteObject.associatedNotesIds) {

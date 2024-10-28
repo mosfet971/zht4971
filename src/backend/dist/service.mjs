@@ -8,10 +8,10 @@ let f = async () => {
     let zhtToolkit;
     let { action, password, params } = workerData;
     if (__dirname.includes(".asar")) {
-        zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../"), password);
+        zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../../"), password);
     }
     else {
-        zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../"), password);
+        zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../"), password);
     }
     switch (action) {
         case "getPrimaryList":

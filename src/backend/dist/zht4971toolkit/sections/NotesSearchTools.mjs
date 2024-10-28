@@ -153,7 +153,7 @@ class NotesSearchTools {
             }
             else {
                 dateObj = new Date(parseInt(noteObject[filterObject.paramName]));
-                let str = dateObj.toLocaleDateString();
+                let str = dateObj.toLocaleDateString("ru-RU");
                 noteDateStruct = {
                     y: parseInt(str.split(".")[2]),
                     m: parseInt(str.split(".")[1]),
