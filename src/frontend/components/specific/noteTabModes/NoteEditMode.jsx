@@ -90,7 +90,7 @@ let NoteEditMode = observer(() => {
 
                 <br />
                 <Text>Количество ассоциаций у этой записи: {noteTabStore.noteObject.associatedNotesIds.length}</Text>
-                <Button intent="primary" onClick={() => { modalWindowsManagerStore.open("WindowAssocEditor"); }}>Открыть редактор ассоциаций</Button>
+                {/* <Button intent="primary" onClick={() => { modalWindowsManagerStore.open("WindowAssocEditor"); }}>Открыть редактор ассоциаций</Button> */}
 
                 <br />
                 <Text>Добавление файлов (видео желательно в формате webm или mp4): (для каждого файла в текст записи будет добавлен свой код)</Text>

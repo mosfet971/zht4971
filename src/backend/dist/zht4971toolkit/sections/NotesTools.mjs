@@ -6,9 +6,9 @@ class NotesTools {
         this.mk = mk;
         this.entityTypeForNotes = database.generateEntityTypeObject("note", (o) => true);
     }
-    createBlankNoteObjectAndSave = () => {
+    _getBlankNoteObject = () => {
         let id = database.newId();
-        let blankNoteObject = ({
+        return ({
             id: id,
             name: "Новая запись " + id,
             aliasesList: [],
@@ -23,12 +23,17 @@ class NotesTools {
             historicalDateAccuracyLevel_1_2_3: 3,
             sourceText: "Текст новой записи",
             taggedNotesIds: [],
-            associatedNotesIds: []
+            associatedNotesIds: [],
+            linksSourcesIds: []
         });
+    };
+    createBlankNoteObjectAndSave = () => {
+        let blankNoteObject = this._getBlankNoteObject();
         database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, blankNoteObject.id, blankNoteObject);
         return (blankNoteObject);
     };
     save = (noteObject) => {
+        let noteObjectBeforeChanges = this.get(noteObject.id, false);
         if (noteObject.name.includes("|")) {
             throw new Error('Ошибка: указанное название записи содержит недопустимый символ ("|")');
         }
@@ -115,16 +120,28 @@ class NotesTools {
             }
         }
         noteObject.editionTime = Date.now();
+        noteObject.associatedNotesIds = [];
+        /*
         this._unsetupAllTagsFromNote(noteObject.id, false);
+
         for (const i of noteObject.tagsNotesListIds) {
-            this._addTagToNote(noteObject.id, i);
+            this._addTagToNote(noteObject.id, i)
         }
+
         this._unsetupAllAssociationsFromNote(noteObject.id);
+
         //console.log(noteObject);
         for (const i of noteObject.associatedNotesIds) {
             this._addAssociation(noteObject.id, i);
         }
+        */
         database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, noteObject.id, noteObject);
+        //this._cleanupLinksSourcesIdsList(noteObjectBeforeChanges, noteObject);
+        // TODO: добавить в список id записей с сылками, которые стали подходить
+        // после переименования или создания или еще чего-то (обратный cleanup)
+        // не только при изменении текста
+        this._findLinks(noteObject);
+        this._updateOutLinksFromNote(noteObjectBeforeChanges, noteObject);
     };
     /**
     {
@@ -152,6 +169,13 @@ class NotesTools {
     };
     get = (id, isUserCall) => {
         let noteObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
+        noteObject.associatedNotesIds = [];
+        for (const i of noteObject.linksSourcesIds) {
+            noteObject.associatedNotesIds = this._addToSet(noteObject.associatedNotesIds, i);
+        }
+        for (const i of this._getLinksTargetsIdsListByNoteObject(noteObject)) {
+            noteObject.associatedNotesIds = this._addToSet(noteObject.associatedNotesIds, i);
+        }
         //console.log(isUserCall);
         if (isUserCall == true) {
             let noteObject2 = { ...noteObject };
@@ -185,6 +209,7 @@ class NotesTools {
     delete = (id) => {
         this._unsetupAllTagsFromNote(id, true);
         this._unsetupAllAssociationsFromNote(id);
+        this._updateOutLinksFromNote(this.get(id, false), this._getBlankNoteObject());
         database.rmEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
     };
     _unsetupAllTagsFromNote = (noteId, isUntagFromThisNoteAllTagedByThisNoteNotesNeeded) => {
@@ -265,6 +290,116 @@ class NotesTools {
         else {
             return false;
         }
+    };
+    _addToSet = (set, value) => {
+        let s = [...set];
+        if (!s.includes(value)) {
+            s.push(value);
+        }
+        return (s);
+    };
+    _rmFromSet = (set, value) => {
+        let s = [...set];
+        s = s.filter((v) => !(v == value));
+        return (s);
+    };
+    _getLinksTargetsIdsListByNoteObject = (noteObject) => {
+        let linksTargetsIds = [];
+        for (const j of noteObject.sourceText.matchAll(/\[\[(.*?)\]\]/g)) {
+            let i = j[0];
+            let noteName = i.replaceAll(/\[|\]|/g, "");
+            if (noteName.includes("|")) {
+                let parts = noteName.split("|");
+                noteName = parts[0];
+            }
+            try {
+                let noteId = this.getNoteIdByNameOrAlias(noteName);
+                linksTargetsIds.push(noteId);
+                continue;
+            }
+            catch (error) {
+                continue;
+            }
+        }
+        return linksTargetsIds;
+    };
+    /*
+    _cleanupLinksSourcesIdsList = (oldNoteObject, newNoteObject) => {
+        //очитска от битых ссылок
+        let noteObject = JSON.parse(JSON.stringify(newNoteObject));
+        let noteObjectsOfSources = [];
+        let listOfWrongIds = [];
+
+        for (const i of noteObject.linksSourcesIds) {
+            try {
+                noteObjectsOfSources = this._addToSet(noteObjectsOfSources, this.get(i, false));
+            } catch (error) {
+                console.log(error);
+                listOfWrongIds = this._addToSet(listOfWrongIds, i);
+            }
+        }
+
+        for (const i of noteObjectsOfSources) {
+            let linksTargetsIds = this._getLinksTargetsIdsListByNoteObject(i);
+            if (!(linksTargetsIds.includes(noteObject.id))) {
+                listOfWrongIds.push(i.id);
+                //console.log(i);
+            } else {
+                //console.log("no");
+            }
+        }
+
+        console.log(noteObject, listOfWrongIds);
+        for (const i of listOfWrongIds) {
+            noteObject.linksSourcesIds = this._rmFromSet(noteObject.linksSourcesIds, i);
+        }
+        console.log(noteObject);
+
+        database.setEntity(
+            this.dbDirPath,
+            this.mk,
+            this.entityTypeForNotes,
+            noteObject.id,
+            noteObject
+        );
+    };
+    */
+    _updateOutLinksFromNote = (oldNoteObject, newNoteObject) => {
+        //добавление новых ссылок и удаление убранных из текста ссылок
+        let noteObject1 = JSON.parse(JSON.stringify(oldNoteObject));
+        let noteObject2 = JSON.parse(JSON.stringify(newNoteObject));
+        let noteId = noteObject1.id;
+        let oldLinksList = this._getLinksTargetsIdsListByNoteObject(noteObject1);
+        let newLinksList = this._getLinksTargetsIdsListByNoteObject(noteObject2);
+        //console.log(oldLinksList, newLinksList);
+        //удаляем все старые
+        for (const i of oldLinksList) {
+            let targetNoteObject = this.get(i, false);
+            targetNoteObject.linksSourcesIds = this._rmFromSet(targetNoteObject.linksSourcesIds, noteId);
+            database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, targetNoteObject.id, targetNoteObject);
+        }
+        //добавляем отсавшиеся старые и новые
+        for (const i of newLinksList) {
+            let targetNoteObject = this.get(i, false);
+            targetNoteObject.linksSourcesIds = this._addToSet(targetNoteObject.linksSourcesIds, noteId);
+            database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, targetNoteObject.id, targetNoteObject);
+        }
+    };
+    _findLinks = (noteObjectIn) => {
+        let noteObject = JSON.parse(JSON.stringify(noteObjectIn));
+        let noteObjects = [];
+        for (const i of this.getListOfIds()) {
+            noteObjects.push(this.get(i, false));
+        }
+        let idsOfLinksSources = [];
+        for (const i of noteObjects) {
+            let linksTargetsIds = this._getLinksTargetsIdsListByNoteObject(i);
+            if (linksTargetsIds.includes(noteObject.id)) {
+                idsOfLinksSources = this._addToSet(idsOfLinksSources, i.id);
+            }
+        }
+        noteObject.linksSourcesIds = idsOfLinksSources;
+        database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, noteObject.id, noteObject);
     };
 }
 export default NotesTools;
