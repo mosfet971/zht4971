@@ -473,7 +473,7 @@ class NotesTools {
                 resultItem = (newerNotes.sort((a, b) => a.item.historicalDateNumber - b.item.historicalDateNumber)[0]).item;
             }
             else {
-                return name;
+                resultItem = (result.sort((a, b) => b.item.historicalDateNumber - a.item.historicalDateNumber)[0]).item;
             }
         }
         let concretizedName = (this.getInfo(resultItem.id)).name;
