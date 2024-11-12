@@ -20,9 +20,16 @@ class WindowTemplatesStore {
         let selectedTemplate;
         for (const i of this.templates) {
             if(i.id == templateId) {
-                selectedTemplate = i;
+                selectedTemplate = JSON.parse(JSON.stringify(i));
             }
         }
+        
+        let noteObject = JSON.parse(selectedTemplate.text);
+        noteObject.id = noteTabStore.noteObject;
+        noteObject.name = noteTabStore.name;
+        noteObject.aliasesList = noteObject.aliasesList;
+        selectedTemplate.text = JSON.stringify(noteObject)
+
         await noteTabStore.setNoteObject(JSON.parse(selectedTemplate.text));
         runInAction(()=>{this.status = "finished";});
     };

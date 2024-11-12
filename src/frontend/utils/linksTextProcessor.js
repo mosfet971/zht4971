@@ -1,6 +1,6 @@
 
 
-export let processText = async (textToProcess) => {
+export let processText = async (textToProcess, semanticDateNumber) => {
   let inpText = textToProcess;
   let outText = inpText;
   let linkHtml;
@@ -17,7 +17,9 @@ export let processText = async (textToProcess) => {
       displayText = noteName;
     }
 
-    linkHtml = `<a onclick="window.openNoteByName('` + noteName + `')">` + displayText + "</a>";
+    displayText = displayText.replaceAll("->", "");
+
+    linkHtml = `<a onclick="window.openNoteByName('` + noteName + `',` + semanticDateNumber + `)">` + displayText + "</a>";
 
     outText = outText.replace(i, linkHtml);
   }

@@ -55,7 +55,7 @@ function createWindow() {
 
   mainWindow.maximize();
 
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   mainWindow.show();
 
@@ -183,8 +183,8 @@ function createWindow() {
     await zhtToolkit.templatesTools.delete(id);
   });
 
-  ipcMain.handle("getNoteIdByNameOrAlias", async (e, name) => {
-    const result = await runService({action: "getNoteIdByNameOrAlias", password: zhtPassword, params: {name}});
+  ipcMain.handle("getNoteIdByNameOrAlias", async (e, params) => {
+    const result = await runService({action: "getNoteIdByNameOrAlias", password: zhtPassword, params: {name: params.name, semanticDateNumber: params.semanticDateNumber}});
     return result;
   });
 

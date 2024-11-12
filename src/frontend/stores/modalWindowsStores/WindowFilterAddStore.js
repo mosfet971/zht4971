@@ -71,9 +71,9 @@ class WindowFilterAddStore {
         "lastGetTime": "Время предыдущего открытия ",
         "creationTime": "Время создания",
         "editionTime": "Время изменения",
-        "hasHistoricalDate": "Наличие дополнительной даты",
-        "historicalDateNumber": "Дополнительная дата",
-        "historicalDateAccuracyLevel_1_2_3": "Уровень точности дополнительной даты (1, 2, 3)",
+        "hasHistoricalDate": "Наличие семантической даты",
+        "historicalDateNumber": "Семантическая дата",
+        "historicalDateAccuracyLevel_1_2_3": "Уровень точности семантической даты (1, 2, 3)",
         "sourceText": "Исходный текст записи",
         "taggedNotesIds": "",
         "associatedNotesIds": "Список ассоциированных записей (названия и псевдонимы)"
@@ -140,7 +140,7 @@ class WindowFilterAddStore {
         if (filterObjectFinal.hasOwnProperty("paramName")) {
             if (filterObjectFinal.paramName == "associatedNotesIds" && filterObjectFinal.hasOwnProperty("value")) {
                 //console.log(this.filterObject)
-                let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", filterObjectFinal.value);
+                let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", {name: filterObjectFinal.value, semanticDateNumber: parseInt((new Date()).getFullYear().toString() + ((new Date()).getMonth() + 1).toString().padStart(2, "0") + (new Date()).getDate().toString().padStart(2, "0"))});
                 if (resolvedId) {
                     filterObjectFinal.value = resolvedId;
                 } else {

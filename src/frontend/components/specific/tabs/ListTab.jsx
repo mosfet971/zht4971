@@ -113,7 +113,7 @@ let ListTab = observer(() => {
                                 <option value="byCreationTime" >По времени создания</option>
                                 <option value="byGetTime">По времени просмотра</option>
                                 <option value="byEditionTime">По времени изменения</option>
-                                <option value="byHistDate">По дополнительной дате</option>
+                                <option value="byHistDate">По семантической дате</option>
                             </select>
                             <Text>Порядок сортировки: </Text>
                             <select style={{ width: "100%" }} value={listTabStore.sortOrder} name="select" onChange={listTabStore.sortOrderChangeHandler}>

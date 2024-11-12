@@ -1,7 +1,7 @@
 import { renderNoteObjectTextToHtml } from "./noteObjectRenderer";
 
 
-export let processText = async (textToProcess) => {
+export let processText = async (textToProcess, semanticDateNumber) => {
     let inpText = textToProcess;
     let outText = inpText;
     let inclHtml;
@@ -10,7 +10,7 @@ export let processText = async (textToProcess) => {
         let i = j[0];
         let noteName = i.replaceAll(/\[|\]|\!/g, "");
 
-        let noteId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", noteName);
+        let noteId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", {name: noteName, semanticDateNumber: semanticDateNumber});
         
         if(noteId == false) {
             inclHtml = "[Ошибка: запись не найдена]";

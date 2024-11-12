@@ -10,7 +10,7 @@ class NotesTools {
         let id = database.newId();
         return ({
             id: id,
-            name: "Новая запись " + id,
+            name: "Новая запись r" + Math.floor((Math.random() * 1000)).toString() + " (" + (new Date()).getDate().toString().padStart(2, "0") + "." + ((new Date()).getMonth() + 1).toString().padStart(2, "0") + "." + (new Date()).getFullYear().toString() + ")",
             aliasesList: [],
             isPrimary: false,
             noteTypeNumber: 0,
@@ -18,8 +18,8 @@ class NotesTools {
             lastGetTime: Date.now(),
             creationTime: Date.now(),
             editionTime: Date.now(),
-            hasHistoricalDate: false,
-            historicalDateNumber: 19700101, // 1970 01 01
+            hasHistoricalDate: true,
+            historicalDateNumber: parseInt((new Date()).getFullYear().toString() + ((new Date()).getMonth() + 1).toString().padStart(2, "0") + (new Date()).getDate().toString().padStart(2, "0")), // 19700101, // 1970 01 01
             historicalDateAccuracyLevel_1_2_3: 3,
             sourceText: "Текст новой записи",
             taggedNotesIds: [],
@@ -43,6 +43,9 @@ class NotesTools {
         if (noteObject.name.includes("]")) {
             throw new Error('Ошибка: указанное название записи содержит недопустимый символ ("]")');
         }
+        if (noteObject.name.includes("->")) {
+            throw new Error('Ошибка: указанное название записи содержит недопустимый набор символов ("->")');
+        }
         if (!this.isNameFreeForNoteWithId(noteObject.name, noteObject.id)) {
             throw new Error("Ошибка: указанное название уже занято другой записью");
         }
@@ -59,6 +62,9 @@ class NotesTools {
             if (i.includes("]")) {
                 throw new Error('Ошибка: недопустимый символ ("]") в одном из псевдонимов записи');
             }
+            if (i.includes("->")) {
+                throw new Error('Ошибка: недопустимый набор символов ("->") в одном из псевдонимов записи');
+            }
         }
         if (noteObject.tagsNotesListIds.includes(noteObject.id)) {
             throw new Error("Ошибка: указан недопустимый тег (самоссылка)");
@@ -68,12 +74,17 @@ class NotesTools {
             if (!(historicalDateAccuracyLevels.includes(noteObject.historicalDateAccuracyLevel_1_2_3))) {
                 throw new Error("Ошибка: недопустимый уровень точности даты (должен быть равен 1, 2 или 3)");
             }
+            for (const i of noteObject.aliasesList) {
+                if (!(i
+                    .replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "date_marker")
+                    .includes("date_marker"))) {
+                    throw new Error('Ошибка: один из псевдонимов не включает указанную дату в формате "(дд.мм.гггг)"');
+                }
+            }
             if (!(noteObject.name
                 .replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "date_marker")
-                .replaceAll(/\([0-9]{2}\.[0-9]{4}\)/g, "date_marker")
-                .replaceAll(/\([0-9]{4}\)/g, "date_marker")
                 .includes("date_marker"))) {
-                throw new Error("Ошибка: название записи не включает указанную дату в формате (дд.мм.гггг), (мм.гггг) или (гггг)");
+                throw new Error('Ошибка: название записи не включает указанную дату в формате "(дд.мм.гггг)"');
             }
             let historicalDateNumberCheckPas = false;
             try {
@@ -89,34 +100,25 @@ class NotesTools {
             }
             catch (error) {
             }
-            try {
-                if ((noteObject
-                    .name
-                    .match(/\([0-9]{2}\.[0-9]{4}\)/g))[0]
-                    .replaceAll("(", "").replaceAll(")", "")
-                    .split(".").reverse().join(".")
-                    .replaceAll(".", "")
-                    == noteObject.historicalDateNumber.toString().split("").slice(0, 6).join("")) {
-                    historicalDateNumberCheckPas = true;
+            for (const i of noteObject.aliasesList) {
+                try {
+                    if ((i.match(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g))[0]
+                        .replaceAll("(", "").replaceAll(")", "")
+                        .split(".").reverse().join(".")
+                        .replaceAll(".", "")
+                        == noteObject.historicalDateNumber.toString().split("").slice(0, 8).join("")) {
+                        historicalDateNumberCheckPas = true;
+                    }
+                    else {
+                        historicalDateNumberCheckPas = false;
+                        break;
+                    }
                 }
-            }
-            catch (error) {
-            }
-            try {
-                if ((noteObject
-                    .name
-                    .match(/\([0-9]{4}\)/g))[0]
-                    .replaceAll("(", "").replaceAll(")", "")
-                    .split(".").reverse().join(".")
-                    .replaceAll(".", "")
-                    == noteObject.historicalDateNumber.toString().split("").slice(0, 4).join("")) {
-                    historicalDateNumberCheckPas = true;
+                catch (error) {
                 }
-            }
-            catch (error) {
             }
             if (!historicalDateNumberCheckPas) {
-                throw new Error("Ошибка: даты в названии и данных не совпадают");
+                throw new Error("Ошибка: даты в названии (или в одном из псевдонимов) и в данных не совпадают");
             }
         }
         noteObject.editionTime = Date.now();
@@ -136,12 +138,8 @@ class NotesTools {
         }
         */
         database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, noteObject.id, noteObject);
-        //this._cleanupLinksSourcesIdsList(noteObjectBeforeChanges, noteObject);
-        // TODO: добавить в список id записей с сылками, которые стали подходить
-        // после переименования или создания или еще чего-то (обратный cleanup)
-        // не только при изменении текста
-        this._findLinks(noteObject);
-        this._updateOutLinksFromNote(noteObjectBeforeChanges, noteObject);
+        //this._findLinks(noteObject);
+        //this._updateOutLinksFromNote(noteObjectBeforeChanges, noteObject);
     };
     /**
     {
@@ -164,13 +162,17 @@ class NotesTools {
     */
     getInfo = (id) => {
         let noteObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
-        noteObject["sourceText"] = "";
         return noteObject;
     };
     get = (id, isUserCall) => {
         let noteObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
         noteObject.associatedNotesIds = [];
+        /*
         for (const i of noteObject.linksSourcesIds) {
+            noteObject.associatedNotesIds = this._addToSet(noteObject.associatedNotesIds, i);
+        }
+        */
+        for (const i of this._getLinksToNote(noteObject)) {
             noteObject.associatedNotesIds = this._addToSet(noteObject.associatedNotesIds, i);
         }
         for (const i of this._getLinksTargetsIdsListByNoteObject(noteObject)) {
@@ -185,7 +187,9 @@ class NotesTools {
         }
         return noteObject;
     };
-    getNoteIdByNameOrAlias = (name) => {
+    getNoteIdByNameOrAlias = (inptName, semanticDateNumber) => {
+        let name = this._concretizeName(inptName, semanticDateNumber);
+        console.log(name);
         let listOfNotesIds = this.getListOfIds();
         let listOfNotNotesInfo = [];
         for (const i of listOfNotesIds) {
@@ -196,8 +200,10 @@ class NotesTools {
             keys: ['name', 'aliasesList']
         };
         const fuse = new Fuse(listOfNotNotesInfo, options);
-        let result = fuse.search(name)[0];
-        if (result.score > 0.3) {
+        let results = fuse.search(name);
+        //console.log(result);
+        let result = results[0];
+        if (results.length == 0 || result.score > 0.2) {
             throw (new Error("Error: note not founded"));
         }
         let noteId = result.item.id;
@@ -207,9 +213,9 @@ class NotesTools {
         return database.getEntitiesIdsByType(this.dbDirPath, this.mk, this.entityTypeForNotes);
     };
     delete = (id) => {
-        this._unsetupAllTagsFromNote(id, true);
-        this._unsetupAllAssociationsFromNote(id);
-        this._updateOutLinksFromNote(this.get(id, false), this._getBlankNoteObject());
+        //this._unsetupAllTagsFromNote(id, true);
+        //this._unsetupAllAssociationsFromNote(id);
+        //this._updateOutLinksFromNote(this.get(id, false), this._getBlankNoteObject());
         database.rmEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
     };
     _unsetupAllTagsFromNote = (noteId, isUntagFromThisNoteAllTagedByThisNoteNotesNeeded) => {
@@ -313,7 +319,7 @@ class NotesTools {
                 noteName = parts[0];
             }
             try {
-                let noteId = this.getNoteIdByNameOrAlias(noteName);
+                let noteId = this.getNoteIdByNameOrAlias(noteName, noteObject.historicalDateNumber);
                 linksTargetsIds.push(noteId);
                 continue;
             }
@@ -374,7 +380,7 @@ class NotesTools {
         //console.log(oldLinksList, newLinksList);
         //удаляем все старые
         for (const i of oldLinksList) {
-            let targetNoteObject = this.get(i, false);
+            let targetNoteObject = this.getInfo(i, false);
             targetNoteObject.linksSourcesIds = this._rmFromSet(targetNoteObject.linksSourcesIds, noteId);
             database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, targetNoteObject.id, targetNoteObject);
         }
@@ -389,7 +395,7 @@ class NotesTools {
         let noteObject = JSON.parse(JSON.stringify(noteObjectIn));
         let noteObjects = [];
         for (const i of this.getListOfIds()) {
-            noteObjects.push(this.get(i, false));
+            noteObjects.push(this.getInfo(i, false));
         }
         let idsOfLinksSources = [];
         for (const i of noteObjects) {
@@ -400,6 +406,78 @@ class NotesTools {
         }
         noteObject.linksSourcesIds = idsOfLinksSources;
         database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, noteObject.id, noteObject);
+    };
+    _getLinksToNote = (noteObjectIn) => {
+        let noteObject = JSON.parse(JSON.stringify(noteObjectIn));
+        let noteObjects = [];
+        for (const i of this.getListOfIds()) {
+            noteObjects.push(this.getInfo(i, false));
+        }
+        let idsOfLinksSources = [];
+        for (const i of noteObjects) {
+            let linksTargetsIds = this._getLinksTargetsIdsListByNoteObject(i);
+            if (linksTargetsIds.includes(noteObject.id)) {
+                idsOfLinksSources = this._addToSet(idsOfLinksSources, i.id);
+            }
+        }
+        return idsOfLinksSources;
+    };
+    _concretizeName = (inName, semanticDateNumber) => {
+        if (inName.replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "date_marker")
+            .includes("date_marker")) {
+            return inName;
+        }
+        let name;
+        let toNewNote = false;
+        if (inName.includes("->")) {
+            toNewNote = true;
+            name = inName.replaceAll("->", "").trim();
+        }
+        else {
+            name = inName.trim();
+        }
+        let listOfNotesIds = this.getListOfIds();
+        let listOfNotNotesInfo = [];
+        for (const i of listOfNotesIds) {
+            listOfNotNotesInfo.push(this.getInfo(i));
+        }
+        listOfNotNotesInfo = listOfNotNotesInfo.map((v) => {
+            v.name = v.name.replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "").trim();
+            v.aliasesList = v.aliasesList.map((v2) => {
+                return v2.replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "").trim();
+            });
+            return v;
+        });
+        const options = {
+            includeScore: true,
+            keys: ['name', 'aliasesList']
+        };
+        const fuse = new Fuse(listOfNotNotesInfo, options);
+        let result = fuse.search(name);
+        result = result.filter((v) => v.score < 0.2);
+        if (result.length == 0) {
+            //throw new Error("Error: empty list of filtred search results");
+            return name;
+        }
+        let olderNotes = result.filter((v) => v.item.historicalDateNumber <= semanticDateNumber);
+        let resultItem = {};
+        if (olderNotes.length > 0) {
+            resultItem = (olderNotes.sort((a, b) => b.item.historicalDateNumber - a.item.historicalDateNumber)[0]).item;
+        }
+        else {
+            resultItem = (result.sort((a, b) => a.item.historicalDateNumber - b.item.historicalDateNumber)[0]).item;
+        }
+        if (toNewNote) {
+            let newerNotes = result.filter((v) => v.item.historicalDateNumber >= semanticDateNumber);
+            if (newerNotes.length > 0) {
+                resultItem = (newerNotes.sort((a, b) => a.item.historicalDateNumber - b.item.historicalDateNumber)[0]).item;
+            }
+            else {
+                return name;
+            }
+        }
+        let concretizedName = (this.getInfo(resultItem.id)).name;
+        return concretizedName;
     };
 }
 export default NotesTools;

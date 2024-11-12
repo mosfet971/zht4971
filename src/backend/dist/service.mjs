@@ -38,7 +38,7 @@ let f = async () => {
         case "getNoteIdByNameOrAlias":
             {
                 try {
-                    result = await zhtToolkit.notesTools.getNoteIdByNameOrAlias(params.name);
+                    result = await zhtToolkit.notesTools.getNoteIdByNameOrAlias(params.name, params.semanticDateNumber);
                 }
                 catch (error) {
                     result = false;

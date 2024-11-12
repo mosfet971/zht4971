@@ -46,7 +46,7 @@ function createWindow() {
         }
     });
     mainWindow.maximize();
-    //mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
     mainWindow.show();
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, '../../frontend/dist/index.html'),
@@ -153,8 +153,8 @@ function createWindow() {
     ipcMain.handle("deleteTemplate", async (e, id) => {
         await zhtToolkit.templatesTools.delete(id);
     });
-    ipcMain.handle("getNoteIdByNameOrAlias", async (e, name) => {
-        const result = await runService({ action: "getNoteIdByNameOrAlias", password: zhtPassword, params: { name } });
+    ipcMain.handle("getNoteIdByNameOrAlias", async (e, params) => {
+        const result = await runService({ action: "getNoteIdByNameOrAlias", password: zhtPassword, params: { name: params.name, semanticDateNumber: params.semanticDateNumber } });
         return result;
     });
     ipcMain.handle("saveFile", async (e, params) => {

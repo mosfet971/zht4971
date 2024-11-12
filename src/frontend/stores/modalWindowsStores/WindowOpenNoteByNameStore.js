@@ -19,7 +19,7 @@ class WindowOpenNoteByNameStore {
     submit = async () => {
         runInAction(() => { this.status = "loading"; });
 
-        await noteTabStore.openNoteByName(this.noteName);
+        await noteTabStore.openNoteByName(this.noteName, parseInt((new Date()).getFullYear().toString() + ((new Date()).getMonth() + 1).toString().padStart(2, "0") + (new Date()).getDate().toString().padStart(2, "0")));
     };
 
     reset = async () => {

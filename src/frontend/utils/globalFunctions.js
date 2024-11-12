@@ -6,8 +6,8 @@ let setupGlobalFunctions = () => {
         modalWindowsManagerStore.open("WindowError", v);
     };
 
-    window.openNoteByName = async (name) => {
-        await noteTabStore.openNoteByName(name);
+    window.openNoteByName = async (name, semanticDateNumber) => {
+        await noteTabStore.openNoteByName(name, semanticDateNumber);
     };
 
     window.openNoteById = async (id) => {

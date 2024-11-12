@@ -23,11 +23,11 @@ class WindowSaveTemplateStore {
         runInAction(()=>{this.status = "loading";});
         let obj = JSON.parse(JSON.stringify(noteTabStore.noteObject));
 
-        obj.id = "";
+        let templateText = JSON.stringify(obj);
 
         if(await ipcRenderer.invoke("saveTemplate", {
             templateName: this.templateName,
-            templateText: obj
+            templateText: templateText
         })) {
             runInAction(()=>{this.status = "finished";});
         } else {

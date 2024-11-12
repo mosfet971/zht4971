@@ -57,7 +57,7 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
     out += "Псевдонимы: " + noteObject.aliasesList.map((v) => '"' + v + '"').join(", ") + "<br/>";
     out += "Идентификатор: " + noteObject.id + "<br/>";
     if (noteObject.hasHistoricalDate) {
-        out += "Точность дополнительной даты: " + mapHistoricalDateAccuracyLevelNumberToInfoString[noteObject.historicalDateAccuracyLevel_1_2_3] + "<br/>";
+        out += "Точность семантической даты: " + mapHistoricalDateAccuracyLevelNumberToInfoString[noteObject.historicalDateAccuracyLevel_1_2_3] + "<br/>";
     }
     out += "Избранная запись: " + (noteObject.isPrimary ? "Да" : "Нет") + "<br/>";
     out += "Время создания записи: " + (new Date(noteObject.creationTime)).toLocaleString("ru-RU") + "<br/>";
@@ -85,9 +85,9 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
 export let renderNoteObjectTextToHtml = async (noteObject) => {
     let out = noteObject.sourceText;
 
-    out = await filesFrontendUtils.processText(out);
-    out = await includesTextProcessor.processText(out);
-    out = await linksTextProcessor.processText(out);
+    out = await filesFrontendUtils.processText(out, noteObject.historicalDateNumber);
+    out = await includesTextProcessor.processText(out, noteObject.historicalDateNumber);
+    out = await linksTextProcessor.processText(out, noteObject.historicalDateNumber);
     out = md.render(out);
 
     console.log(out);

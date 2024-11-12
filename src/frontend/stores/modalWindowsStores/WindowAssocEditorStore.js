@@ -61,7 +61,7 @@ class WindowAssocEditorStore {
     add = async () => {
         runInAction(() => { this.isOpLoading = true; });
 
-        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", this.nameOfTargetNote);
+        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", {name: this.nameOfTargetNote, semanticDateNumber: noteTabStore.noteObject.historicalDateNumber});
 
         let list = noteTabStore.noteObject.associatedNotesIds;
         if (resolvedId !== false) {
@@ -82,7 +82,7 @@ class WindowAssocEditorStore {
     remove = async () => {
         runInAction(() => { this.isOpLoading = true; });
 
-        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", this.nameOfTargetNote);
+        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", {name: this.nameOfTargetNote, semanticDateNumber: noteTabStore.noteObject.historicalDateNumber});
 
         if (resolvedId !== false) {
             await noteTabStore.setNoteObjectAssocsList(noteTabStore.noteObject.associatedNotesIds.filter((v) => v !== resolvedId));

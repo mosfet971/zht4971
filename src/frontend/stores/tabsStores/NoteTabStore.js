@@ -64,10 +64,10 @@ class NoteTabStore {
         //console.log(this.historyStack);
     };
 
-    openNoteByName = async (noteName) => {
+    openNoteByName = async (noteName, semanticDateNumber) => {
         let prevStatus = this.status;
         await runInAction(() => { this.status = "loading"; });
-        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", noteName);
+        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", {name: noteName, semanticDateNumber: semanticDateNumber});
         if (resolvedId) {
             await modalWindowsManagerStore.close();
             await this.openNote(resolvedId);
@@ -222,5 +222,5 @@ class NoteTabStore {
         this.noteObject.noteTypeNumber = parseInt(newLevel);
     };
 }
-//86b1f541-c454-4478-a185-a25031a8a1d2-1915d40dedf
+
 export const noteTabStore = new NoteTabStore();
