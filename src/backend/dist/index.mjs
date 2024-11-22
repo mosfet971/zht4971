@@ -180,6 +180,10 @@ function createWindow() {
         const result = await runService({ action: "getNotesList", password: zhtPassword, params });
         return result;
     });
+    ipcMain.handle("search", async (e, params) => {
+        const result = await runService({ action: "search", password: zhtPassword, params });
+        return result;
+    });
 }
 ;
 app.on('ready', createWindow);

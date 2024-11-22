@@ -222,13 +222,14 @@ class NotesTools {
             noteObject.associatedNotesIds = this._addToSet(noteObject.associatedNotesIds, i);
         }
         */
+        /*
         for (const i of this._getLinksToNote(noteObject)) {
             noteObject.associatedNotesIds = this._addToSet(noteObject.associatedNotesIds, i);
         }
         for (const i of this._getLinksTargetsIdsListByNoteObject(noteObject)) {
             noteObject.associatedNotesIds = this._addToSet(noteObject.associatedNotesIds, i);
         }
-
+        */
         //console.log(isUserCall);
         if (isUserCall == true) {
             let noteObject2 = { ...noteObject };

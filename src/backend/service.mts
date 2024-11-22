@@ -81,6 +81,19 @@ let f = async () => {
     }
       break;
 
+    case "search": {
+      let ids = await zhtToolkit.notesSearchTools.getListOfNotesIdsBySearchRequest(params.request); 
+
+      let objs = [];
+      for (const id of ids) {
+        let obj = await zhtToolkit.notesTools.get(id, false);
+        objs.push({ name: obj.name, id: obj.id });
+      }
+
+      result = objs;
+    }
+      break;
+
     default:
       break;
   }

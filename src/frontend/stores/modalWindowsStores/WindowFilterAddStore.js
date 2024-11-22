@@ -42,11 +42,11 @@ class WindowFilterAddStore {
     filterTypeToActualNoteParamsMap = {
         "nameOrAliasFilterFuse": [],
         "range": ["historicalDateAccuracyLevel_1_2_3", "noteTypeNumber"],
-        "rangeLength": ["name", "aliasesList", "sourceText", "associatedNotesIds"],
+        "rangeLength": ["name", "aliasesList", "sourceText"],
         "stringStrict": ["name", "sourceText", "id", "aliasesList"],
-        "stringFuse": ["name", "sourceText", "id", "aliasesList", "associatedNotesIds"],
+        "stringFuse": ["name", "sourceText", "id", "aliasesList"],
         "bool": ["isPrimary", "hasHistoricalDate"],
-        "stringInList": ["aliasesList", "associatedNotesIds"],
+        "stringInList": ["aliasesList"],
         "ddmmggggFilter": ["historicalDateNumber", "lastGetTime", "creationTime", "editionTime"],
         "noteTypeNumberRangeFilter": []
     };
@@ -76,7 +76,6 @@ class WindowFilterAddStore {
         "historicalDateAccuracyLevel_1_2_3": "Уровень точности семантической даты (1, 2, 3)",
         "sourceText": "Исходный текст записи",
         "taggedNotesIds": "",
-        "associatedNotesIds": "Список ассоциированных записей (названия и псевдонимы)"
     };
 
     filterParamsToDefaultVals = {
@@ -89,7 +88,7 @@ class WindowFilterAddStore {
         "minDateValue": "",
         "maxDateValue": "",
         "minNoteTypeNumberValue": 0,
-        "maxNoteTypeNumberValue": 3
+        "maxNoteTypeNumberValue": 2
     };
 
     reset = async () => {

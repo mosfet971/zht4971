@@ -100,10 +100,9 @@ let WindowAssocEditor = observer(() => {
             filterParamsInputs.push(<>
               <p>Минимальное включительное значение типа записи:</p>
               <select style={{ width: "100%" }} defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, parseInt(e.target.value))}>
-                <option value="0">0. Обычная запись</option>
-                <option value="1">1. Запись-тег локального уровня</option>
-                <option value="2">2. Запись-тег среднего уровня</option>
-                <option value="3">3. Запись-тег глобального уровня</option>
+                <option value="0">0. Описание события</option>
+                <option value="1">1. Описание объекта</option>
+                <option value="2">2. Ресурс</option>
               </select>
             </>);
             break;
@@ -113,10 +112,9 @@ let WindowAssocEditor = observer(() => {
             filterParamsInputs.push(<>
               <p>Максимальное включительное значение типа записи:</p>
               <select style={{ width: "100%" }} defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, parseInt(e.target.value))}>
-                <option value="0">0. Обычная запись</option>
-                <option value="1">1. Запись-тег локального уровня</option>
-                <option value="2">2. Запись-тег среднего уровня</option>
-                <option value="3">3. Запись-тег глобального уровня</option>
+                <option value="0">0. Описание события</option>
+                <option value="1">1. Описание объекта</option>
+                <option value="2">2. Ресурс</option>
               </select>
             </>);
             break;

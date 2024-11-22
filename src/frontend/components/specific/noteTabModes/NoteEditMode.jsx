@@ -68,18 +68,9 @@ let NoteEditMode = observer(() => {
 
                 <Text>Тип записи: (влияет на отображение записи в ассоциациях)</Text>
                 <select style={{ width: "100%" }} name="select" onChange={(e) => { noteTabStore.setNoteTypeNumber(e.target.value); }}>
-                    <option value="0" selected={noteTabStore.noteObject.noteTypeNumber == 0}>0. Обычная запись (описание события)</option>
-                    <option value="1" selected={noteTabStore.noteObject.noteTypeNumber == 1}>1. Запись-тег локального уровня (описание события)</option>
-                    <option value="2" selected={noteTabStore.noteObject.noteTypeNumber == 2}>2. Запись-тег среднего уровня (описание события)</option>
-                    <option value="3" selected={noteTabStore.noteObject.noteTypeNumber == 3}>3. Запись-тег глобального уровня (описание события)</option>
-                    <option value="4" selected={noteTabStore.noteObject.noteTypeNumber == 4}>4. Обычная запись (описание объекта)</option>
-                    <option value="5" selected={noteTabStore.noteObject.noteTypeNumber == 5}>5. Запись-тег локального уровня (описание объекта)</option>
-                    <option value="6" selected={noteTabStore.noteObject.noteTypeNumber == 6}>6. Запись-тег среднего уровня (описание объекта)</option>
-                    <option value="7" selected={noteTabStore.noteObject.noteTypeNumber == 7}>7. Запись-тег глобального уровня (описание объекта)</option>
-                    <option value="8" selected={noteTabStore.noteObject.noteTypeNumber == 8}>8. Обычная запись (ресурс)</option>
-                    <option value="9" selected={noteTabStore.noteObject.noteTypeNumber == 9}>9. Запись-тег локального уровня (ресурс)</option>
-                    <option value="10" selected={noteTabStore.noteObject.noteTypeNumber == 10}>10. Запись-тег среднего уровня (ресурс)</option>
-                    <option value="11" selected={noteTabStore.noteObject.noteTypeNumber == 11}>11. Запись-тег глобального уровня (ресурс)</option>
+                    <option value="0" selected={noteTabStore.noteObject.noteTypeNumber == 0}>0. Описание события</option>
+                    <option value="1" selected={noteTabStore.noteObject.noteTypeNumber == 1}>1. Описание объекта</option>
+                    <option value="2" selected={noteTabStore.noteObject.noteTypeNumber == 2}>2. Ресурс</option>
                 </select>
 
                 {/*<Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату (указанная дата также должна быть включенна в название записи в скобках, в формате (дд.мм.гггг), (мм.гггг) или (гггг))" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} /> */}
@@ -97,11 +88,10 @@ let NoteEditMode = observer(() => {
                 <Text>День:</Text>
                 <NumericInput min={1} max={31} intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.currentNoteHistoricalDate.day} onValueChange={(v) => { noteTabStore.setNoteHistoricalDatePart(v, "day") }} />
 
-                <br />
+                {/*<br />
                 <Text>Количество ассоциаций у этой записи: {noteTabStore.noteObject.associatedNotesIds.length}</Text>
-                {/* <Button intent="primary" onClick={() => { modalWindowsManagerStore.open("WindowAssocEditor"); }}>Открыть редактор ассоциаций</Button> */}
+                <Button intent="primary" onClick={() => { modalWindowsManagerStore.open("WindowAssocEditor"); }}>Открыть редактор ассоциаций</Button> */}
 
-                <br />
                 <Text>Добавление файлов (видео желательно в формате webm или mp4): (для каждого файла в текст записи будет добавлен свой код)</Text>
                 <FileInput buttonText="Выбрать" disabled={noteTabStore.isFileUploadLoading} text={noteTabStore.isFileUploadLoading ? "Загрузка..." : "Выберите файл"} onInputChange={noteTabStore.selectFileEventHandler} />
             </ContainerForInputs>

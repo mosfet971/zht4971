@@ -13,13 +13,14 @@ import TabButton from "../../universal/TabButton.jsx";
 import TabPanel from "../../universal/TabPanel.jsx";
 import ListTab from "../tabs/ListTab.jsx";
 import InfoTab from "../tabs/InfoTab.jsx";
-
+import SearchTab from "../tabs/SearchTab.jsx";
 
 let MainPage = observer(() => {
   return (<>
     <TabSection id="mainTabs">
       <TabMenu>
         <TabButton target="menu" isDefaultSelected={true}>Меню</TabButton>
+        <TabButton target="search" isDefaultSelected={false}>Поиск</TabButton>
         <TabButton target="list" isDefaultSelected={false}>Список записей</TabButton>
         <TabButton target="primary" isDefaultSelected={false}>Избранное</TabButton>
         <TabButton target="info" isDefaultSelected={false}>Справка</TabButton>
@@ -27,6 +28,7 @@ let MainPage = observer(() => {
       </TabMenu>
       <hr style={{margin: 0}}/>
       <TabPanel isDefaultHidden={false} id="menu"><MenuTab/></TabPanel>
+      <TabPanel isDefaultHidden={true} id="search"><SearchTab/></TabPanel>
       <TabPanel isDefaultHidden={true} id="list"><ListTab/></TabPanel>
       <TabPanel isDefaultHidden={true} id="primary"><PrimaryTab/></TabPanel>
       <TabPanel isDefaultHidden={true} id="info"><InfoTab/></TabPanel>

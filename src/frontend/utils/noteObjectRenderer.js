@@ -46,18 +46,9 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
     };
 
     let mapNoteTypeNumberToInfoString = {
-        0: "0. Обычная запись (описание события)",
-        1: "1. Запись-тег локального уровня (описание события)",
-        2: "2. Запись-тег среднего уровня (описание события)",
-        3: "3. Запись-тег глобального уровня (описание события)",
-        4: "4. Обычная запись (описание объекта)",
-        5: "5. Запись-тег локального уровня (описание объекта)",
-        6: "6. Запись-тег среднего уровня (описание объекта)",
-        7: "7. Запись-тег глобального уровня (описание объекта)",
-        8: "8. Обычная запись (ресурс)",
-        9: "9. Запись-тег локального уровня (ресурс)",
-        10: "10. Запись-тег среднего уровня (ресурс)",
-        11: "11. Запись-тег глобального уровня (ресурс)"
+        0: "0. Описание события",
+        1: "1. Описание объекта",
+        2: "2. Ресурс"
     };
 
     let mapHistoricalDateAccuracyLevelNumberToInfoString = {
@@ -79,6 +70,7 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
     out += "Время создания записи: " + (new Date(noteObject.creationTime)).toLocaleString("ru-RU") + "<br/>";
     out += "Время предидущего изменения записи: " + (new Date(noteObject.editionTime)).toLocaleString("ru-RU") + "<br/>";
 
+    /*
     let objs = [];
     for (const id of noteObject.associatedNotesIds) {
         let obj = (await ipcRenderer.invoke("getNoteObject", id));
@@ -94,6 +86,7 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
         let noteTypeNumberCssClassString = mapNoteTypeNumberToCssClassString[obj.noteTypeNumber];
         out += `<span style='margin-right: 0.6em; margin-bottom: 0.3em; margin-top: 0.3em;' onclick="window.openNoteById('` + obj.id + `')" class='` + noteTypeNumberCssClassString + ` bp5-tag bp5-interactive'>` + obj.name + `</span>`;
     }
+    */
 
     return "<div style='width: fit-content; margin-left: -2em;' class='bp5-card'>" + out + "</div>";
 };

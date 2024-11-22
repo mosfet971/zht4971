@@ -1,4 +1,5 @@
 import Fuse from 'fuse.js';
+import MiniSearch from 'minisearch';
 class NotesSearchTools {
     constructor(notesTools) {
         this.notesTools = notesTools;
@@ -14,6 +15,34 @@ class NotesSearchTools {
             "noteTypeNumberRangeFilter": this._checkNoteTypeNumberRangeFilter
         };
     }
+    getListOfNotesIdsBySearchRequest = (request) => {
+        let notesIds = this.notesTools.getListOfIds();
+        //console.log(notesIds);
+        let notes = [];
+        for (const i of notesIds) {
+            notes.push(this.notesTools.get(i));
+        }
+        let miniSearch = new MiniSearch({
+            fields: ["id", "name", "aliasesList", "sourceText"],
+            storeFields: ["id"],
+            searchOptions: {
+                boost: { id: 2, name: 2, aliasesList: 2, sourceText: 1 },
+                fuzzy: true
+            },
+            extractField: (document, fieldName) => {
+                if (Array.isArray(document[fieldName])) {
+                    return document[fieldName].join(' ');
+                }
+                else {
+                    return document[fieldName].replaceAll("![[", " ").replaceAll("![[", " ").replaceAll("]]", " ").replaceAll("  ", " ");
+                }
+            }
+        });
+        miniSearch.addAll(notes);
+        let results = miniSearch.search(request);
+        let ids = results.map((v) => v.id);
+        return ids;
+    };
     getListOfNotesIdsSortedByParamWithFilters = (paramName, filtersList, isNeedInvertedOrderList) => {
         let notesIds = this.notesTools.getListOfIds();
         //console.log(notesIds);
