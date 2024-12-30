@@ -46,7 +46,9 @@ function createWindow() {
         }
     });
     mainWindow.maximize();
-    //mainWindow.webContents.openDevTools();
+    if (!(__dirname.includes(".asar"))) {
+        mainWindow.webContents.openDevTools();
+    }
     mainWindow.show();
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, '../../frontend/dist/index.html'),

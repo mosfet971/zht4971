@@ -55,7 +55,9 @@ function createWindow() {
 
   mainWindow.maximize();
 
-  //mainWindow.webContents.openDevTools();
+  if (!(__dirname.includes(".asar"))) {
+    mainWindow.webContents.openDevTools();
+  }
 
   mainWindow.show();
 
