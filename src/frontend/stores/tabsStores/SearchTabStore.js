@@ -12,11 +12,13 @@ class SearchTabStore {
     status = "loading"; // loading, ready 
     listOfNoteCardsHtml = "";
     request = "";
+    isPrefix = false;
 
     reset = async () => {
         this.status = "loading";
         this.listOfNoteCardsHtml = "";
         this.request = "";
+        this.isPrefix = false;
         await this.fetch();
     };
 
@@ -24,7 +26,7 @@ class SearchTabStore {
         await runInAction(()=>{this.status="loading"});
 
 
-        let objs = await ipcRenderer.invoke("search", {request: this.request});
+        let objs = await ipcRenderer.invoke("search", {request: this.request, isPrefix: this.isPrefix});
 
         this.listOfNoteCardsHtml = "";
         for (const i of objs) {
@@ -40,6 +42,10 @@ class SearchTabStore {
 
     requestOnChangeHandler = async (e) => {
         this.request = e.target.value;
+    };
+
+    isPrefixChangeHandler = async (e) => {
+        this.isPrefix = !this.isPrefix;
     };
 
 }

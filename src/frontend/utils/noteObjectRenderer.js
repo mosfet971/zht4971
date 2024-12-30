@@ -45,12 +45,6 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
         11: "bp5-intent-danger"
     };
 
-    let mapNoteTypeNumberToInfoString = {
-        0: "0. Описание события",
-        1: "1. Описание объекта",
-        2: "2. Ресурс"
-    };
-
     let mapHistoricalDateAccuracyLevelNumberToInfoString = {
         0: "Нет",
         1: "Низкая",
@@ -60,7 +54,6 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
 
 
     out += "<h3>Название: " + noteObject.name + "</h3><hr/>";
-    out += "Тип: " + mapNoteTypeNumberToInfoString[noteObject.noteTypeNumber] + "<br/>";
     out += "Псевдонимы: " + noteObject.aliasesList.map((v) => '"' + v + '"').join(", ") + "<br/>";
     out += "Идентификатор: " + noteObject.id + "<br/>";
     if (noteObject.hasHistoricalDate) {
@@ -68,7 +61,10 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
     }
     out += "Избранная запись: " + (noteObject.isPrimary ? "Да" : "Нет") + "<br/>";
     out += "Время создания записи: " + (new Date(noteObject.creationTime)).toLocaleString("ru-RU") + "<br/>";
-    out += "Время предидущего изменения записи: " + (new Date(noteObject.editionTime)).toLocaleString("ru-RU") + "<br/>";
+
+    out += "<span style='display: inline-flex; justify-items: center; flex-direction: row; margin: 0;'>Время предыдущего изменения записи:&nbsp;<p style='margin: 0;'>" + (new Date(noteObject.editionTime)).toLocaleString("ru-RU") + "</p></span><br/>";
+    out += "<span style='display: inline-flex; justify-items: center; flex-direction: row; margin: 0;'>Предыдущее изменение было, дней назад:&nbsp;<p style='margin: 0; color: red;'>" + Math.floor(((Date.now() / 1000) - (noteObject.editionTime / 1000)) / 60 / 60 / 24).toString() + "</p></span><br/>";
+    out += "<p style='margin: 0; color: red;'>Запись могла утратить актуальность</p>";
 
     /*
     let objs = [];

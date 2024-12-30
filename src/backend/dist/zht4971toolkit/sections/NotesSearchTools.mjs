@@ -15,7 +15,7 @@ class NotesSearchTools {
             "noteTypeNumberRangeFilter": this._checkNoteTypeNumberRangeFilter
         };
     }
-    getListOfNotesIdsBySearchRequest = (request) => {
+    getListOfNotesIdsBySearchRequest = (request, isPrefix) => {
         let notesIds = this.notesTools.getListOfIds();
         //console.log(notesIds);
         let notes = [];
@@ -27,7 +27,8 @@ class NotesSearchTools {
             storeFields: ["id"],
             searchOptions: {
                 boost: { id: 2, name: 2, aliasesList: 2, sourceText: 1 },
-                fuzzy: true
+                fuzzy: !isPrefix,
+                prefix: isPrefix
             },
             extractField: (document, fieldName) => {
                 if (Array.isArray(document[fieldName])) {

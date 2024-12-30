@@ -96,30 +96,6 @@ let WindowAssocEditor = observer(() => {
             break;
           }
 
-          case "minNoteTypeNumberValue": {
-            filterParamsInputs.push(<>
-              <p>Минимальное включительное значение типа записи:</p>
-              <select style={{ width: "100%" }} defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, parseInt(e.target.value))}>
-                <option value="0">0. Описание события</option>
-                <option value="1">1. Описание объекта</option>
-                <option value="2">2. Ресурс</option>
-              </select>
-            </>);
-            break;
-          }
-
-          case "maxNoteTypeNumberValue": {
-            filterParamsInputs.push(<>
-              <p>Максимальное включительное значение типа записи:</p>
-              <select style={{ width: "100%" }} defaultValue={windowFilterAddStore.filterParamsToDefaultVals[i]} onChange={(e) => windowFilterAddStore.setFilterObjectParam(i, parseInt(e.target.value))}>
-                <option value="0">0. Описание события</option>
-                <option value="1">1. Описание объекта</option>
-                <option value="2">2. Ресурс</option>
-              </select>
-            </>);
-            break;
-          }
-
           case "isInverted": {
             filterParamsInputs.push(<>
               <p>Пропускать только не прошедшие фильтр записи (инвертированный фильтр):</p>

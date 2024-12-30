@@ -66,13 +66,6 @@ let NoteEditMode = observer(() => {
                 <Text>Псевдонимы записи: (нажимайте клавишу "ввод" для сохранения каждого псведонима)</Text>
                 <TagInput placeholder="Псевдонимы записи" intent="primary" fill={true} values={noteTabStore.noteObject.aliasesList} onChange={noteTabStore.noteAliasesListChangeEventHandler} />
 
-                <Text>Тип записи: (влияет на отображение записи в ассоциациях)</Text>
-                <select style={{ width: "100%" }} name="select" onChange={(e) => { noteTabStore.setNoteTypeNumber(e.target.value); }}>
-                    <option value="0" selected={noteTabStore.noteObject.noteTypeNumber == 0}>0. Описание события</option>
-                    <option value="1" selected={noteTabStore.noteObject.noteTypeNumber == 1}>1. Описание объекта</option>
-                    <option value="2" selected={noteTabStore.noteObject.noteTypeNumber == 2}>2. Ресурс</option>
-                </select>
-
                 {/*<Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату (указанная дата также должна быть включенна в название записи в скобках, в формате (дд.мм.гггг), (мм.гггг) или (гггг))" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} /> */}
                 <Text>Семантическая дата (дата, начиная с которой запись будет считаться актуальной):</Text>
                 <Text>Уровень точности даты:</Text>

@@ -36,8 +36,7 @@ class WindowFilterAddStore {
         "stringFuse": ["type", "paramName", "value", "isInverted"],
         "bool": ["type", "paramName", "valueBool", "isInverted"],
         "stringInList": ["type", "paramName", "value", "isInverted"],
-        "ddmmggggFilter": ["type", "paramName", "minDateValue", "maxDateValue", "isInverted"],
-        "noteTypeNumberRangeFilter": ["type", "minNoteTypeNumberValue", "maxNoteTypeNumberValue", "isInverted"]
+        "ddmmggggFilter": ["type", "paramName", "minDateValue", "maxDateValue", "isInverted"]
     };
     filterTypeToActualNoteParamsMap = {
         "nameOrAliasFilterFuse": [],
@@ -48,7 +47,6 @@ class WindowFilterAddStore {
         "bool": ["isPrimary", "hasHistoricalDate"],
         "stringInList": ["aliasesList"],
         "ddmmggggFilter": ["historicalDateNumber", "lastGetTime", "creationTime", "editionTime"],
-        "noteTypeNumberRangeFilter": []
     };
     filterTypeToDisplayTextMap = {
         "nameOrAliasFilterFuse": "Нечеткое влючение текста в названии или псевдонимах",
@@ -59,7 +57,6 @@ class WindowFilterAddStore {
         "rangeLength": "Диапазон длинны текстового значения или списка",
         "bool": "Логическое значение",
         "ddmmggggFilter": "Диапозон даты в формате дд.мм.гггг",
-        "noteTypeNumberRangeFilter": "Диапазон типов"
     };
     noteParamToDisplayTextMap = {
         "id": "Идентификатор",
@@ -85,10 +82,9 @@ class WindowFilterAddStore {
         "maxValue": "1",
         "isInverted": false,
         "value": "",
+        "valueBool": false,
         "minDateValue": "",
         "maxDateValue": "",
-        "minNoteTypeNumberValue": 0,
-        "maxNoteTypeNumberValue": 2
     };
 
     reset = async () => {

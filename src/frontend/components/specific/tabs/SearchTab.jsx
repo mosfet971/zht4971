@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import styled from "styled-components";
-import { ButtonGroup, Button, Spinner, InputGroup } from "@blueprintjs/core";
+import { ButtonGroup, Button, Spinner, InputGroup, Checkbox } from "@blueprintjs/core";
 import { renderToStaticMarkup } from "react-dom/server"
 
 import NoteEditMode from "../noteTabModes/NoteEditMode.jsx";
@@ -83,6 +83,7 @@ let SearchTab = observer(() => {
                         <ContainerForInputs>
                             <Text>Введите текст запроса: </Text>
                             <InputGroup type="text" intent="primary" placeholder="Текст запроса" onChange={searchTabStore.requestOnChangeHandler} value={searchTabStore.request} />
+                            <Checkbox intent="primary" checked={searchTabStore.isPrefix} onChange={searchTabStore.isPrefixChangeHandler}>Префиксный поиск</Checkbox>
                             <Button onClick={searchTabStore.fetch} intent="primary" icon="refresh">Обновить список</Button>
                         </ContainerForInputs>
                     </ButtonGroupContainer>

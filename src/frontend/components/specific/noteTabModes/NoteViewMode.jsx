@@ -10,16 +10,31 @@ let NoteContainerDiv = styled.div`
 
     overflow-x: hidden;
 
-    & > div > p {
+    & > div > * {
         max-width: 40em;
     }
-    & > div > p:has(table) {
+    & > div > *:has(hr) {
         max-width: unset;
     }
-    & > div > p:has(img) {
+    & > div > *:has(table) {
         max-width: unset;
     }
-    & > div > p:has(video) {
+    & > div > *:has(img) {
+        max-width: unset;
+    }
+    & > div > *:has(video) {
+        max-width: unset;
+    }
+    & > div > hr {
+        max-width: unset;
+    }
+    & > div > table {
+        max-width: unset;
+    }
+    & > div > img {
+        max-width: unset;
+    }
+    & > div > video {
         max-width: unset;
     }
 `;
