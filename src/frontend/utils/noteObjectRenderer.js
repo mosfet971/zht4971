@@ -2,6 +2,7 @@ import markdownit from "markdown-it";
 import * as filesFrontendUtils from "./filesFrontendUtils";
 import * as includesTextProcessor from "./includesTextProcessor";
 import * as linksTextProcessor from "./linksTextProcessor";
+import * as hubsTextProcessor from "./hubsTextProcessor";
 
 const md = markdownit({ html: true, linkify: false, typographer: true });
 
@@ -93,6 +94,7 @@ export let renderNoteObjectTextToHtml = async (noteObject) => {
     out = await filesFrontendUtils.processText(out, noteObject.historicalDateNumber);
     out = await includesTextProcessor.processText(out, noteObject.historicalDateNumber);
     out = await linksTextProcessor.processText(out, noteObject.historicalDateNumber);
+    out = await hubsTextProcessor.processText(out, noteObject.historicalDateNumber)
     out = md.render(out);
 
     console.log(out);
