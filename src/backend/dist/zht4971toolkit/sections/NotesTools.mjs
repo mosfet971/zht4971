@@ -5,6 +5,7 @@ class NotesTools {
         this.dbDirPath = dbDirPath;
         this.mk = mk;
         this.entityTypeForNotes = database.generateEntityTypeObject("note", (o) => true);
+        this.entityTypeForHubsStructure = database.generateEntityTypeObject("hubsStructure", (o) => true);
     }
     _getBlankNoteObject = () => {
         let id = database.newId();
@@ -166,6 +167,7 @@ class NotesTools {
     };
     get = (id, isUserCall) => {
         let noteObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
+        console.log(this._getHubsInfoObjectsByNoteObject(noteObject));
         noteObject.associatedNotesIds = [];
         /*
         for (const i of noteObject.linksSourcesIds) {
@@ -480,6 +482,33 @@ class NotesTools {
         }
         let concretizedName = (this.getInfo(resultItem.id)).name;
         return concretizedName;
+    };
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    // hubs
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    _getHubsInfoObjectsByNoteObject = (noteObject) => {
+        let inpText = noteObject.sourceText;
+        let hubsInfoObjects = [];
+        for (const j of inpText.matchAll(/\{\{(.*?)\}\}/g)) {
+            let i = j[0];
+            let hubName = i.replaceAll(/\{|\}|/g, "").trim();
+            let displayText;
+            let subsectionName = "";
+            if (!hubName.includes("/")) {
+                displayText = hubName.trim();
+            }
+            else {
+                displayText = hubName.split("/")[0].trim();
+                subsectionName = hubName.split("/")[1].trim();
+            }
+            if (subsectionName == "") {
+                hubsInfoObjects.push({ hasSection: false, hubName: displayText, sectionName: "" });
+            }
+            else {
+                hubsInfoObjects.push({ hasSection: true, hubName: displayText, sectionName: subsectionName });
+            }
+        }
+        return hubsInfoObjects;
     };
 }
 export default NotesTools;

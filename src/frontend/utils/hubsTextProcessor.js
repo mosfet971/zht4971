@@ -6,24 +6,22 @@ export let processText = async (textToProcess, semanticDateNumber) => {
   let hubHtml;
   for (const j of inpText.matchAll(/\{\{(.*?)\}\}/g)) {
     let i = j[0];
-    let noteName = i.replaceAll(/\{|\}|/g, "").trim();
+    let hubName = i.replaceAll(/\{|\}|/g, "").trim();
     let displayText;
     let subsectionName = "";
 
-    if (!noteName.includes("/")) {
-      displayText = noteName.trim();
+    if (!hubName.includes("/")) {
+      displayText = hubName.trim();
     } else {
-      displayText = noteName.split("/")[0].trim();
-      subsectionName = noteName.split("/")[1].trim();
-      noteName = displayText;
+      displayText = hubName.split("/")[0].trim();
+      subsectionName = hubName.split("/")[1].trim();
+      hubName = displayText;
     }
 
-    displayText = displayText.replaceAll("->", "");
-
     if (!(subsectionName == "")) {
-      hubHtml = `<a onclick="window.openNoteByName('` + noteName + `',` + semanticDateNumber + `)">Хаб: ` + displayText + " Подсекция: " + subsectionName + "</a>";
+      hubHtml = `<a onclick="window.openNoteByName('` + displayText + `',` + semanticDateNumber + `)">Хаб: ` + displayText + " Подсекция: " + subsectionName + "</a><br/>";
     } else {
-      hubHtml = `<a onclick="window.openNoteByName('` + noteName + `',` + semanticDateNumber + `)">Хаб: ` + displayText + "</a>";
+      hubHtml = `<a onclick="window.openNoteByName('` + displayText + `',` + semanticDateNumber + `)">Хаб: ` + displayText + "</a><br/>";
     }
 
     outText = outText.replace(i, hubHtml);
