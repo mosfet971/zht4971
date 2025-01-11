@@ -176,6 +176,8 @@ class NotesTools {
         }
         */
 
+        this._markHubsOfNote(noteObject);
+        //console.log(this._getHubsStructure());
 
         database.setEntity(
             this.dbDirPath,
@@ -217,8 +219,6 @@ class NotesTools {
 
         let noteObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
 
-        console.log(this._getHubsInfoObjectsByNoteObject(noteObject));
-
         noteObject.associatedNotesIds = [];
         /*
         for (const i of noteObject.linksSourcesIds) {
@@ -252,7 +252,7 @@ class NotesTools {
 
     getNoteIdByNameOrAlias = (inptName, semanticDateNumber) => {
         let name = this._concretizeName(inptName, semanticDateNumber);
-        console.log(name);
+        //console.log(name);
         let listOfNotesIds = this.getListOfIds();
         let listOfNotNotesInfo = [];
         for (const i of listOfNotesIds) {
@@ -665,25 +665,101 @@ class NotesTools {
         let hubsInfoObjects = [];
 
         for (const j of inpText.matchAll(/\{\{(.*?)\}\}/g)) {
-          let i = j[0];
-          let hubName = i.replaceAll(/\{|\}|/g, "").trim();
-          let displayText;
-          let subsectionName = "";
-      
-          if (!hubName.includes("/")) {
-            displayText = hubName.trim();
-          } else {
-            displayText = hubName.split("/")[0].trim();
-            subsectionName = hubName.split("/")[1].trim();
-          }
-      
-          if (subsectionName == "") {
-            hubsInfoObjects.push({hasSection: false, hubName: displayText, sectionName: ""});
-          } else {
-            hubsInfoObjects.push({hasSection: true, hubName: displayText, sectionName: subsectionName});
-          }
+            let i = j[0];
+            let hubName = i.replaceAll(/\{|\}|/g, "").trim();
+            let displayText;
+            let subsectionName = "";
+
+            if (!hubName.includes("/")) {
+                displayText = hubName.trim();
+            } else {
+                displayText = hubName.split("/")[0].trim();
+                subsectionName = hubName.split("/")[1].trim();
+            }
+
+            if (subsectionName == "") {
+                hubsInfoObjects.push({ hasSection: false, hubName: displayText, sectionName: "" });
+            } else {
+                hubsInfoObjects.push({ hasSection: true, hubName: displayText, sectionName: subsectionName });
+            }
         }
         return hubsInfoObjects;
+    };
+
+    _getHubsStructure = () => {
+        let s = undefined;
+        try {
+            s = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForHubsStructure, "45644604-1e3a-414f-a57f-81931505c551");
+        } catch (error) {
+            s = undefined;
+        }
+
+        if (s) {
+            return s;
+        } else {
+            this._setHubStructure({});
+            return ({});
+        }
+    };
+
+    _setHubStructure = (newHubsStructure) => {
+        database.setEntity(this.dbDirPath, this.mk, this.entityTypeForHubsStructure, "45644604-1e3a-414f-a57f-81931505c551", newHubsStructure);
+        return;
+    };
+
+    _removeWrongNotesFromHub = (hubName) => {
+        let oldHubsStructure = this._getHubsStructure();
+        let newHubsStructure = JSON.parse(JSON.stringify(oldHubsStructure));
+
+        for (const i in oldHubsStructure) {
+            if (i == hubName) {
+                for (const j in oldHubsStructure[i]) {
+                    for (const k of oldHubsStructure[i][j]) {
+                        try {
+                            let noteObject = this.get(k, false);
+                            let noteHabs = []
+                            for (const t of this._getHubsInfoObjectsByNoteObject(noteObject)) {
+                                noteHabs.push(t.hubName+"/"+t.sectionName);
+                            }
+                            if (!(noteHabs.includes(i+"/"+j))) {
+                                newHubsStructure[i][j] = oldHubsStructure[i][j].filter((v)=>!(v==k));
+                            }
+                        } catch (error) {
+                            //console.log(error);
+                            newHubsStructure[i][j] = oldHubsStructure[i][j].filter((v)=>!(v==k));
+                        }
+                    }
+                }
+            }
+        }
+
+        this._setHubStructure(newHubsStructure);
+    };
+
+    _markHubsOfNote = (noteObject) => {
+        let hubsInNote = this._getHubsInfoObjectsByNoteObject(noteObject);
+        let oldHubsStructure = this._getHubsStructure();
+        let newHubsStructure = JSON.parse(JSON.stringify(oldHubsStructure));
+
+        for (const i of hubsInNote) {
+            if (!(newHubsStructure.hasOwnProperty(i.hubName))) {
+                newHubsStructure[i.hubName] = {};
+            }
+            if (!(newHubsStructure[i.hubName].hasOwnProperty(i.sectionName))) {
+                newHubsStructure[i.hubName][i.sectionName] = [];
+            }
+
+            if (!(newHubsStructure[i.hubName][i.sectionName].includes(noteObject.id))) {
+                newHubsStructure[i.hubName][i.sectionName].push(noteObject.id);
+            }
+        }
+
+        this._setHubStructure(newHubsStructure);
+    };
+
+    getHub = (hubName) => {
+        this._removeWrongNotesFromHub(hubName);
+        return((this._getHubsStructure())[hubName]);
     };
 
 }

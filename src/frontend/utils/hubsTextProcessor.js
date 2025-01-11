@@ -18,10 +18,12 @@ export let processText = async (textToProcess, semanticDateNumber) => {
       hubName = displayText;
     }
 
+    let hubObject = await ipcRenderer.invoke("getHubByName", displayText);
+
     if (!(subsectionName == "")) {
-      hubHtml = `<a onclick="window.openNoteByName('` + displayText + `',` + semanticDateNumber + `)">Хаб: ` + displayText + " Подсекция: " + subsectionName + "</a><br/>";
+      hubHtml = `<a onclick="window.openNoteByName('` + displayText + `',` + semanticDateNumber + `)">Хаб: ` + displayText + " Подсекция: " + subsectionName + "</a><br/>" + JSON.stringify(hubObject) + "<br/>";
     } else {
-      hubHtml = `<a onclick="window.openNoteByName('` + displayText + `',` + semanticDateNumber + `)">Хаб: ` + displayText + "</a><br/>";
+      hubHtml = `<a onclick="window.openNoteByName('` + displayText + `',` + semanticDateNumber + `)">Хаб: ` + displayText + "</a><br/>" + JSON.stringify(hubObject) + "<br/>";
     }
 
     outText = outText.replace(i, hubHtml);

@@ -225,6 +225,10 @@ function createWindow() {
     return result;
   });
 
+  ipcMain.handle("getHubByName", async (e, hubName) => {
+    let hubObject = await zhtToolkit.notesTools.getHub(hubName);
+    return hubObject;
+  });
 
 };
 
