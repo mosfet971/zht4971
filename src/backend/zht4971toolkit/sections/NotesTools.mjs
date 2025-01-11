@@ -157,6 +157,9 @@ class NotesTools {
             }
         }
 
+        this._markHubsOfNote(noteObject);
+        //console.log(this._getHubsStructure());
+
         noteObject.editionTime = Date.now();
 
         noteObject.associatedNotesIds = [];
@@ -176,8 +179,7 @@ class NotesTools {
         }
         */
 
-        this._markHubsOfNote(noteObject);
-        //console.log(this._getHubsStructure());
+
 
         database.setEntity(
             this.dbDirPath,
@@ -697,12 +699,12 @@ class NotesTools {
         if (s) {
             return s;
         } else {
-            this._setHubStructure({});
+            this._setHubsStructure({});
             return ({});
         }
     };
 
-    _setHubStructure = (newHubsStructure) => {
+    _setHubsStructure = (newHubsStructure) => {
         database.setEntity(this.dbDirPath, this.mk, this.entityTypeForHubsStructure, "45644604-1e3a-414f-a57f-81931505c551", newHubsStructure);
         return;
     };
@@ -719,25 +721,53 @@ class NotesTools {
                             let noteObject = this.get(k, false);
                             let noteHabs = []
                             for (const t of this._getHubsInfoObjectsByNoteObject(noteObject)) {
-                                noteHabs.push(t.hubName+"/"+t.sectionName);
+                                noteHabs.push(t.hubName + "/" + t.sectionName);
                             }
-                            if (!(noteHabs.includes(i+"/"+j))) {
-                                newHubsStructure[i][j] = oldHubsStructure[i][j].filter((v)=>!(v==k));
+                            if (!(noteHabs.includes(i + "/" + j))) {
+                                newHubsStructure[i][j] = oldHubsStructure[i][j].filter((v) => !(v == k));
                             }
                         } catch (error) {
                             //console.log(error);
-                            newHubsStructure[i][j] = oldHubsStructure[i][j].filter((v)=>!(v==k));
+                            newHubsStructure[i][j] = oldHubsStructure[i][j].filter((v) => !(v == k));
                         }
                     }
                 }
             }
         }
 
-        this._setHubStructure(newHubsStructure);
+        this._setHubsStructure(newHubsStructure);
+    };
+
+
+    _removeEmptyHubs = () => {
+        let oldHubsStructure = this._getHubsStructure();
+        let newHubsStructure = JSON.parse(JSON.stringify(oldHubsStructure));
+
+        for (const i in oldHubsStructure) {
+            let u = 0;
+            for (const key in oldHubsStructure[i]) {
+                u+=oldHubsStructure[i][key].length;
+            }
+            if (u == 0) {
+                delete newHubsStructure[i];
+            }
+        }
+
+        this._setHubsStructure(newHubsStructure);
     };
 
     _markHubsOfNote = (noteObject) => {
         let hubsInNote = this._getHubsInfoObjectsByNoteObject(noteObject);
+
+        for (const i of hubsInNote) {
+            if (!(i.hubName
+                .replaceAll(/\([0-9]{2}\.[0-9]{2}\.[0-9]{4}\)/g, "date_marker")
+                .includes("date_marker")
+            )) {
+                throw new Error('Ошибка: один из указанных в тексте хабов не включает свою семантическую дату в формате "(дд.мм.гггг)"');
+            }
+        }
+
         let oldHubsStructure = this._getHubsStructure();
         let newHubsStructure = JSON.parse(JSON.stringify(oldHubsStructure));
 
@@ -754,12 +784,17 @@ class NotesTools {
             }
         }
 
-        this._setHubStructure(newHubsStructure);
+        this._setHubsStructure(newHubsStructure);
     };
 
     getHub = (hubName) => {
-        this._removeWrongNotesFromHub(hubName);
-        return((this._getHubsStructure())[hubName]);
+        if ((this._getHubsStructure()).hasOwnProperty(hubName)) {
+            this._removeWrongNotesFromHub(hubName);
+            this._removeEmptyHubs();
+            return ((this._getHubsStructure())[hubName]);
+        } else {
+            return ("err");
+        }
     };
 
 }

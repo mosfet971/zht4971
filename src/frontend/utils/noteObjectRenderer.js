@@ -91,6 +91,24 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
 export let renderNoteObjectTextToHtml = async (noteObject) => {
     let out = noteObject.sourceText;
 
+    let isHubNote = false;
+    let hubName = "";
+
+    isHubNote = !(await ipcRenderer.invoke("getHubByName", noteObject.name) == "err");
+    hubName = isHubNote ? noteObject.name : "";
+
+    for (const i of noteObject.aliasesList) {
+        isHubNote = !(await ipcRenderer.invoke("getHubByName", i) == "err");
+        if(isHubNote) {
+            hubName = i;
+            break;
+        }
+    }
+
+    if(isHubNote) {
+        out += "<br/>{{" + hubName + "}}";
+    }
+
     out = await filesFrontendUtils.processText(out, noteObject.historicalDateNumber);
     out = await includesTextProcessor.processText(out, noteObject.historicalDateNumber);
     out = await linksTextProcessor.processText(out, noteObject.historicalDateNumber);
