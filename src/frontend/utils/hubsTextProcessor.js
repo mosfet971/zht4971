@@ -20,7 +20,7 @@ export let processText = async (textToProcess, semanticDateNumber) => {
 
     let hubObject = await ipcRenderer.invoke("getHubByName", displayText);
 
-    if(hubObject == "err") {
+    if (hubObject == "err") {
       outText = outText.replace(i, hubHtml);
       continue;
     }
@@ -34,7 +34,16 @@ export let processText = async (textToProcess, semanticDateNumber) => {
     hubHtml += "<table style='width: 50em;'><tbody>";
     hubHtml += `<th colspan="2"><a onclick="window.openNoteByName('` + displayText + `',` + semanticDateNumber + `)">` + displayText + "</a></th>";
 
-    for (const k in hubObject) {
+    let keys = [];
+    for (const i in hubObject) {
+      if (i == "") {
+        keys.unshift(i);
+      } else {
+        keys.push(i);
+      }
+    }
+
+    for (const k of keys) {
       if (hubObject[k].length > 0) {
         if (k == "") {
           hubHtml += `<tr><td colspan="2">\n<ul>`;

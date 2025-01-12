@@ -94,13 +94,13 @@ export let renderNoteObjectTextToHtml = async (noteObject) => {
     let isHubNote = false;
     let hubName = "";
 
-    isHubNote = !(await ipcRenderer.invoke("getHubByName", noteObject.name) == "err");
-    hubName = isHubNote ? noteObject.name : "";
+    isHubNote = !(await ipcRenderer.invoke("getHubByName", noteObject.name.trim()) == "err");
+    hubName = isHubNote ? noteObject.name.trim() : "";
 
     for (const i of noteObject.aliasesList) {
-        isHubNote = !(await ipcRenderer.invoke("getHubByName", i) == "err");
+        isHubNote = !(await ipcRenderer.invoke("getHubByName", i.trim()) == "err");
         if(isHubNote) {
-            hubName = i;
+            hubName = i.trim();
             break;
         }
     }
