@@ -19,11 +19,19 @@ class Utils {
             database.generateEntityTypeObject("note", (o) => true)
         ).length;
 
+        /*
         let templatesNumber = database.getEntitiesIdsByType(
             this.dbDirPath,
             this.mk,
             database.generateEntityTypeObject("template", (o) => true)
         ).length;
+        */
+
+        let tagsNumber = (database.getEntitiesIdsByType(
+            this.dbDirPath,
+            this.mk,
+            database.generateEntityTypeObject("tssi", (o) => true)
+        ).length)-1;
 
         let filesNumber = database.getEntitiesIdsByType(
             this.dbDirPath,
@@ -31,7 +39,7 @@ class Utils {
             database.generateEntityTypeObject("file", (o) => true)
         ).length;
 
-        return ({notesNumber, templatesNumber, filesNumber});
+        return ({notesNumber, tagsNumber, filesNumber});
     };
 
     collectGarbage = () => {

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { noteTabStore } from "../../../stores/tabsStores/NoteTabStore.js";
 import {
+    Intent,
     Button,
     ButtonGroup,
     TextArea,
@@ -15,6 +16,9 @@ import {
     NumericInput
 } from "@blueprintjs/core";
 import { modalWindowsManagerStore } from "../../../stores/ModalWindowsManagerStore.js";
+
+const INTENTS = [Intent.NONE, Intent.PRIMARY, Intent.SUCCESS, Intent.DANGER, Intent.WARNING];
+
 
 let SourceTextEditorContainer = styled.div`
     width: 100%;
@@ -49,15 +53,26 @@ let ContainerForInputs = styled.div`
 `;
 
 let NoteEditMode = observer(() => {
+
+    const getTagProps = React.useCallback(
+        (_v, index) => ({
+            intent: INTENTS[index % INTENTS.length],
+        }),
+        [],
+    );
+
+
     return (<>
         <SourceTextEditorContainer>
             <br />
             <ContainerForInputs>
+                {/*
                 <ButtonGroup large={true} alignText="center">
                     <Button icon="document-share" onClick={() => { modalWindowsManagerStore.open("WindowSaveTemplate") }}>Сохранить как шаблон</Button>
                     <Button icon="document" onClick={() => { modalWindowsManagerStore.open("WindowTemplates") }}>Шаблоны</Button>
                 </ButtonGroup>
-                
+                */}
+
                 <Text>Название записи:</Text>
                 <InputGroup placeholder="Название записи" intent="primary" value={noteTabStore.noteObject.name} onInput={noteTabStore.noteNameInputEventHandler}></InputGroup>
 
@@ -67,13 +82,13 @@ let NoteEditMode = observer(() => {
                 <TagInput placeholder="Псевдонимы записи" intent="primary" fill={true} values={noteTabStore.noteObject.aliasesList} onChange={noteTabStore.noteAliasesListChangeEventHandler} />
 
                 {/*<Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату (указанная дата также должна быть включенна в название записи в скобках, в формате (дд.мм.гггг), (мм.гггг) или (гггг))" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} /> */}
-                <Text>Семантическая дата (дата, начиная с которой запись будет считаться актуальной):</Text>
-                <Text>Уровень точности даты:</Text>
+                <Text>Семантическая дата (не забудьте изменить в названии записи):</Text>
+                {/*<Text>Уровень точности даты:</Text>
                 <select style={{ width: "100%" }} disabled={!noteTabStore.noteObject.hasHistoricalDate} onChange={noteTabStore.noteHistoricalDateAccuracyLevelChangeEventHandler} >
                     <option value="1" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 1}>1. Низкий</option>
                     <option value="2" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 2}>2. Средний</option>
                     <option value="3" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 3}>3. Высокий</option>
-                </select>
+                </select>*/}
                 <Text>Год:</Text>
                 <NumericInput intent="primary" disabled={!noteTabStore.noteObject.hasHistoricalDate} value={noteTabStore.currentNoteHistoricalDate.year} onValueChange={(v) => { noteTabStore.setNoteHistoricalDatePart(v, "year") }} />
                 <Text>Месяц:</Text>
@@ -85,7 +100,16 @@ let NoteEditMode = observer(() => {
                 <Text>Количество ассоциаций у этой записи: {noteTabStore.noteObject.associatedNotesIds.length}</Text>
                 <Button intent="primary" onClick={() => { modalWindowsManagerStore.open("WindowAssocEditor"); }}>Открыть редактор ассоциаций</Button> */}
 
-                <Text>Добавление файлов (видео желательно в формате webm или mp4): (для каждого файла в текст записи будет добавлен свой код)</Text>
+                <Text>Предустановленные теги: </Text>
+                <TagInput placeholder="Предустановленные теги записи" intent="primary" fill={true} values={noteTabStore.defaultTags} disabled={true} />
+
+
+                <Text>Свободные теги: (нажимайте клавишу "ввод" для сохранения каждого тега)</Text>
+                <TagInput tagProps={getTagProps} placeholder="Теги записи" intent="primary" fill={true} values={noteTabStore.userTags} onChange={noteTabStore.noteTagsStringsChangeEventHandler} />
+
+
+
+                <Text>Добавление файлов: (для каждого файла в текст записи будет добавлен свой специальный код)</Text>
                 <FileInput buttonText="Выбрать" disabled={noteTabStore.isFileUploadLoading} text={noteTabStore.isFileUploadLoading ? "Загрузка..." : "Выберите файл"} onInputChange={noteTabStore.selectFileEventHandler} />
             </ContainerForInputs>
             <br />

@@ -6,27 +6,6 @@ import * as hubsTextProcessor from "./hubsTextProcessor";
 
 const md = markdownit({ html: true, linkify: false, typographer: true });
 
-/*
-    {
-        id: id,
-        name: "Новая запись " + id,
-        aliasesList: [],
-        isPrimary: false,
-        noteTypeNumber: 0,
-        tagsNotesListIds: [],
-        lastGetTime: Date.now(),
-        creationTime: Date.now(),
-        editionTime: Date.now(),
-        hasHistoricalDate: false,
-        historicalDateNumber: 19700101, // 1970 01 01
-        historicalDateAccuracyLevel_1_2_3: 3,
-        sourceText: "Текст новой записи",
-        taggedNotesIds: [],
-        associatedNotesIds: []
-    }
-    */
-
-
 
 export let renderNoteObjectParamsToHtml = async (noteObject) => {
     let out = "";
@@ -57,15 +36,15 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
     out += "<h3>Название: " + noteObject.name + "</h3><hr/>";
     out += "Псевдонимы: " + noteObject.aliasesList.map((v) => '"' + v + '"').join(", ") + "<br/>";
     out += "Идентификатор: " + noteObject.id + "<br/>";
-    if (noteObject.hasHistoricalDate) {
-        out += "Точность семантической даты: " + mapHistoricalDateAccuracyLevelNumberToInfoString[noteObject.historicalDateAccuracyLevel_1_2_3] + "<br/>";
-    }
+    //if (noteObject.hasHistoricalDate) {
+    //    out += "Точность семантической даты: " + mapHistoricalDateAccuracyLevelNumberToInfoString[noteObject.historicalDateAccuracyLevel_1_2_3] + "<br/>";
+    //}
     out += "Избранная запись: " + (noteObject.isPrimary ? "Да" : "Нет") + "<br/>";
     out += "Время создания записи: " + (new Date(noteObject.creationTime)).toLocaleString("ru-RU") + "<br/>";
+    out += "Теги: " + noteObject.tagsStrings.map((v) => '"' + v + '"').join(", ") + "<br/>";
 
     out += "<span style='display: inline-flex; justify-items: center; flex-direction: row; margin: 0;'>Время предыдущего изменения записи:&nbsp;<p style='margin: 0;'>" + (new Date(noteObject.editionTime)).toLocaleString("ru-RU") + "</p></span><br/>";
-    out += "<span style='display: inline-flex; justify-items: center; flex-direction: row; margin: 0;'>Предыдущее изменение было, дней назад:&nbsp;<p style='margin: 0; color: red;'>" + Math.floor(((Date.now() / 1000) - (noteObject.editionTime / 1000)) / 60 / 60 / 24).toString() + "</p></span><br/>";
-    out += "<p style='margin: 0; color: red;'>Запись могла утратить актуальность</p>";
+    out += "<span style='display: inline-flex; justify-items: center; flex-direction: row; margin: 0;'>Предыдущее изменение было, дней назад:&nbsp;<p style='margin: 0;'>" + Math.floor(((Date.now() / 1000) - (noteObject.editionTime / 1000)) / 60 / 60 / 24).toString() + "</p></span><br/>";
 
     /*
     let objs = [];
@@ -85,7 +64,7 @@ export let renderNoteObjectParamsToHtml = async (noteObject) => {
     }
     */
 
-    return "<div style='width: fit-content; margin-left: -2em;' class='bp5-card'>" + out + "</div>";
+    return "<div style='width: fit-content; max-width: 60vw; margin-left: -2em;' class='bp5-card'>" + out + "</div>";
 };
 
 export let renderNoteObjectTextToHtml = async (noteObject) => {

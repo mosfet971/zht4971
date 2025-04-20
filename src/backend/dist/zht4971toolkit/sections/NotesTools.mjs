@@ -1,9 +1,12 @@
 import database from "../lowlevel/database.mjs";
 import Fuse from 'fuse.js';
+import ZhtTagSearchTools from "./ZhtTagSearchTools.mjs";
 class NotesTools {
-    constructor(dbDirPath, mk) {
+    constructor(zhtTagSearchTools, dbDirPath, mk) {
         this.dbDirPath = dbDirPath;
         this.mk = mk;
+        //this.zhtTagSearchTools = new ZhtTagSearchTools();
+        this.zhtTagSearchTools = zhtTagSearchTools;
         this.entityTypeForNotes = database.generateEntityTypeObject("note", (o) => true);
         this.entityTypeForHubsStructure = database.generateEntityTypeObject("hubsStructure", (o) => true);
     }
@@ -25,7 +28,8 @@ class NotesTools {
             sourceText: "Текст новой записи",
             taggedNotesIds: [],
             associatedNotesIds: [],
-            linksSourcesIds: []
+            linksSourcesIds: [],
+            tagsStrings: []
         });
     };
     createBlankNoteObjectAndSave = () => {
@@ -141,28 +145,13 @@ class NotesTools {
         }
         */
         database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, noteObject.id, noteObject);
+        this.zhtTagSearchTools.removeAllTagsFromDocument(noteObject.id);
+        for (const tagString of noteObject.tagsStrings) {
+            this.zhtTagSearchTools.setTagOfDocument(noteObject.id, tagString);
+        }
         //this._findLinks(noteObject);
         //this._updateOutLinksFromNote(noteObjectBeforeChanges, noteObject);
     };
-    /**
-    {
-        id: id,
-        name: "Новая запись " + id,
-        aliasesList: [],
-        isPrimary: false,
-        noteTypeNumber: 0,
-        tagsNotesListIds: [],
-        lastGetTime: Date.now(),
-        creationTime: Date.now(),
-        editionTime: Date.now(),
-        hasHistoricalDate: false,
-        historicalDateNumber: 19700101, // 1970 01 01
-        historicalDateAccuracyLevel_1_2_3: 3,
-        sourceText: "Текст новой записи",
-        taggedNotesIds: [],
-        associatedNotesIds: []
-    }
-    */
     getInfo = (id) => {
         let noteObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
         return noteObject;
@@ -220,7 +209,8 @@ class NotesTools {
     delete = (id) => {
         //this._unsetupAllTagsFromNote(id, true);
         //this._unsetupAllAssociationsFromNote(id);
-        //this._updateOutLinksFromNote(this.get(id, false), this._getBlankNoteObject());
+        //this._updateOutLinksFromNote(this.get(id, false), this._getBlankNoteObject())
+        this.zhtTagSearchTools.removeAllTagsFromDocument(id);
         database.rmEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, id);
     };
     _unsetupAllTagsFromNote = (noteId, isUntagFromThisNoteAllTagedByThisNoteNotesNeeded) => {

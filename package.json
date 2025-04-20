@@ -5,11 +5,9 @@
   "main": "./src/backend/dist/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron .",
-    "build": "webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/",
-    "packageWindows": "webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package",
-    "packageLinux": "webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package --platform linux",
-    "make": "electron-forge make"
+    "buildAndStart": "node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron .",
+    "packageWindows": "node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package && node copyScript.mjs",
+    "packageLinux": "node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package --platform linux && node copyScript.mjs"
   },
   "repository": {
     "type": "git",
@@ -38,6 +36,7 @@
     "@blueprintjs/core": "^5.11.0",
     "@tabler/icons-react": "^2.44.0",
     "7.css": "^0.16.0",
+    "adm-zip": "^0.5.16",
     "babel-loader": "^9.1.3",
     "babel-plugin-styled-components": "^2.1.4",
     "css-loader": "^6.8.1",

@@ -4,8 +4,8 @@ import ZhtToolkit from './zht4971toolkit/index.mjs';
 import { fileURLToPath } from 'url';
 import contextMenu from 'electron-context-menu';
 import * as url from 'url';
-import { Worker } from 'worker_threads';
-
+//import { Worker } from 'worker_threads';
+/*
 function runService(workerData) {
   return new Promise((resolve, reject) => {
     const worker = new Worker(path.join(__dirname, './service.mjs'), { workerData });
@@ -17,7 +17,7 @@ function runService(workerData) {
     })
   })
 }
-
+*/
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -80,9 +80,9 @@ function createWindow() {
       zhtPassword = password;
 
       if (__dirname.includes(".asar")) {
-        zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../../"), password);
+        zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../../"), path.join(__dirname, "../../../../../model.json"), password);
       } else {
-        zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../"), password);
+        zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../"), path.join(__dirname, "../../../model.json"), password);
       }
 
       /*
@@ -186,7 +186,8 @@ function createWindow() {
   });
 
   ipcMain.handle("getNoteIdByNameOrAlias", async (e, params) => {
-    const result = await runService({action: "getNoteIdByNameOrAlias", password: zhtPassword, params: {name: params.name, semanticDateNumber: params.semanticDateNumber}});
+    //const result = await runService({action: "getNoteIdByNameOrAlias", password: zhtPassword, zhtToolkit: zhtToolkit, params: {name: params.name, semanticDateNumber: params.semanticDateNumber}});
+    const result = await zhtToolkit.notesTools.getNoteIdByNameOrAlias(params.name, params.semanticDateNumber);
     return result;
   });
 
@@ -210,24 +211,64 @@ function createWindow() {
     }
   });
 
+  
   ipcMain.handle("getPrimaryList", async (e, params) => {
-    const result = await runService({action: "getPrimaryList", password: zhtPassword, params});
+    //const result = await runService({action: "getPrimaryList", zhtToolkit: zhtToolkit, password: zhtPassword, params});
+    let sortModeToParamNameMap = {
+      "byCreationTime": "creationTime",
+      "byGetTime": "lastGetTime",
+      "byEditionTime": "editionTime",
+      "byHistDate": "historicalDateNumber"
+    };
+
+    let paramName = sortModeToParamNameMap[params.sortMode];
+
+    let isNeedInvertedOrderList = params.sortOrder == "bToA";
+
+    let filters = await zhtToolkit.notesSearchTools.creteBlankFiltersList();
+    filters = await zhtToolkit.notesSearchTools.addPramBoolFilter(filters, "isPrimary", true, false);
+    let ids = await zhtToolkit.notesSearchTools.getListOfNotesIdsSortedByParamWithFilters(paramName, filters, isNeedInvertedOrderList);
+
+    let objs = [];
+    for (const id of ids) {
+      let obj = await zhtToolkit.notesTools.get(id, false);
+      objs.push({ name: obj.name, id: obj.id });
+    }
+    let result = objs;
     return result;
   });
 
   ipcMain.handle("getNotesList", async (e, params) => {
-    const result = await runService({action: "getNotesList", password: zhtPassword, params});
-    return result;
+    //const result = await runService({action: "getNotesList", zhtToolkit: zhtToolkit, password: zhtPassword, params});
+    return [];
   });
 
   ipcMain.handle("search", async (e, params) => {
-    const result = await runService({action: "search", password: zhtPassword, params});
-    return result;
+    //const result = await runService({action: "search", zhtToolkit: zhtToolkit, password: zhtPassword, params});
+    return [];
   });
+  
 
   ipcMain.handle("getHubByName", async (e, hubName) => {
     let hubObject = await zhtToolkit.notesTools.getHub(hubName);
     return hubObject;
+  });
+
+  ipcMain.handle("getNotesIdsListByTagsStringsList", async (e, params) => {
+    params = JSON.parse(params);
+    let ids = (await zhtToolkit.zhtTagSearchTools.search(params.tagsStringsList)).map(v=>v.docId);
+    //console.log(ids);
+    let objs = [];
+    for (const id of ids) {
+      let obj = await zhtToolkit.notesTools.get(id, false);
+      objs.push({ name: obj.name, id: obj.id });
+    }
+    return objs;
+  });
+
+  ipcMain.handle("recalculateTags", async (e, params) => {
+    await zhtToolkit.zhtTagSearchTools.recalculateAllTagsEmbeddings();
+    return;
   });
 
 };

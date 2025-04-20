@@ -23,8 +23,9 @@ let WindowDBStatus = observer(() => {
         return (
             <ModalWindowWithFooter title="Статаус базы данных" onClose={modalWindowsManagerStore.close}>
                 <p>Количество записей: { windowDBStatusStore.dbStatus.notesNumber }</p>
-                <p>Количество шаблонов: { windowDBStatusStore.dbStatus.templatesNumber }</p>
+                {/*<p>Количество шаблонов: { windowDBStatusStore.dbStatus.templatesNumber }</p>*/}
                 <p>Количество файлов: { windowDBStatusStore.dbStatus.filesNumber }</p>
+                <p>Количество тегов: { windowDBStatusStore.dbStatus.tagsNumber }</p>
             </ModalWindowWithFooter>
         );
     }

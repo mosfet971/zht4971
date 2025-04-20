@@ -13,7 +13,9 @@ import {
     IconLock,
     IconReportAnalytics,
     IconFileSymlink,
-    IconRecycle
+    IconRecycle,
+    IconTag,
+    IconTextRecognition
 } from '@tabler/icons-react';
 
 
@@ -57,6 +59,10 @@ let MenuTab = observer(() => {
             <MenuCard handler={() => { modalWindowsManagerStore.open("WindowGC") }}>
                 <IconRecycle />
                 Cборка мусора
+            </MenuCard>
+            <MenuCard handler={() => { modalWindowsManagerStore.open("WindowRecalculateTags") }}>
+                <IconTextRecognition />
+                Обновить данные тегов
             </MenuCard>
         </MenuCardsContainer>
     );

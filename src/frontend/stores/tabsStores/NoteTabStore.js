@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { autorun, makeAutoObservable, reaction, runInAction } from "mobx";
 import { modalWindowsManagerStore } from "../ModalWindowsManagerStore";
 import { tabsManagerStore } from "../TabsManagerStore";
 import * as filesFrontendUtils from "../../utils/filesFrontendUtils";
@@ -7,32 +7,49 @@ import * as noteObjectRenderer from "../../utils/noteObjectRenderer";
 class NoteTabStore {
     constructor() {
         makeAutoObservable(this);
+
+        autorun(() => {
+            console.log("default");
+            let newDefaultTags = [];
+
+            let str = this.noteObject.historicalDateNumber.toString();
+            let date = {
+                year: parseInt(str.substring(0, str.length - 4)),
+                month: parseInt(str.substring(str.length - 4, str.length - 2)),
+                day: parseInt(str.substring(str.length - 2, str.length)),
+            };
+
+            let defaultTagsMap = [
+                "Год: " + date.year,
+                "Месяц: " + date.month,
+                "День: " + date.day,
+                "Идентификатор: " + this.noteObject.id,
+                "Название: " + this.noteObject.name,
+                this.noteObject.isPrimary ? "Избранное" : "Обычная запись"
+            ];
+
+            //add base
+            for (const tag of defaultTagsMap) {
+                newDefaultTags.push(tag);
+            }
+
+            //add aliases
+            for (const tag of this.noteObject.aliasesList) {
+                newDefaultTags.push("Псевдоним: " + tag);
+            }
+
+            this.defaultTags = JSON.parse(JSON.stringify(newDefaultTags));
+        });
     }
 
     status = "no"; // "no", "view", "edit", "loading"
-    noteObject = {}; /*
-    {
-        id: id,
-        name: "Новая запись " + id,
-        aliasesList: [],
-        isPrimary: false,
-        noteTypeNumber: 0,
-        tagsNotesListIds: [],
-        lastGetTime: Date.now(),
-        creationTime: Date.now(),
-        editionTime: Date.now(),
-        hasHistoricalDate: false,
-        historicalDateNumber: 19700101, // 1970 01 01
-        historicalDateAccuracyLevel_1_2_3: 3,
-        sourceText: "Текст новой записи",
-        taggedNotesIds: [],
-        associatedNotesIds: []
-    }
-    */
+    noteObject = {};
     tabScrollPos = { left: 0, top: 0 };
     historyStack = [];
     isFileUploadLoading = false;
     htmlOfCurrentNote = "";
+    defaultTags = [];
+    userTags = [];
 
     closeNote = async () => {
         this.noteObject = {};
@@ -47,7 +64,41 @@ class NoteTabStore {
         runInAction(() => { this.status = "loading"; });
         if (await ipcRenderer.invoke("checkNoteExist", noteId)) {
             await tabsManagerStore.openTab("mainTabs", "readAndWrite");
+
+            //this.defaultTags============================================================
             this.noteObject = await ipcRenderer.invoke("getNoteObjectByUser", noteId);
+            let newDefaultTags = [];
+
+            let str = this.noteObject.historicalDateNumber.toString();
+            let date = {
+                year: parseInt(str.substring(0, str.length - 4)),
+                month: parseInt(str.substring(str.length - 4, str.length - 2)),
+                day: parseInt(str.substring(str.length - 2, str.length)),
+            };
+
+            let defaultTagsMap = [
+                "Год: " + date.year,
+                "Месяц: " + date.month,
+                "День: " + date.day,
+                "Идентификатор: " + this.noteObject.id,
+                "Название: " + this.noteObject.name,
+                this.noteObject.isPrimary ? "Избранное" : "Обычная запись"
+            ];
+
+            //add base
+            for (const tag of defaultTagsMap) {
+                newDefaultTags.push(tag);
+            }
+
+            //add aliases
+            for (const tag of this.noteObject.aliasesList) {
+                newDefaultTags.push("Псевдоним: " + tag);
+            }
+
+            this.defaultTags = JSON.parse(JSON.stringify(newDefaultTags));
+            //this.defaultTags=======================================================================
+
+            this.userTags = JSON.parse(JSON.stringify(this.noteObject.tagsStrings)).filter((v) => !(JSON.parse(JSON.stringify(this.defaultTags)).includes(v)));
 
             if (this.historyStack[this.historyStack.length - 1] !== noteId) {
                 this.historyStack.push(noteId);
@@ -67,7 +118,7 @@ class NoteTabStore {
     openNoteByName = async (noteName, semanticDateNumber) => {
         let prevStatus = this.status;
         await runInAction(() => { this.status = "loading"; });
-        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", {name: noteName, semanticDateNumber: semanticDateNumber});
+        let resolvedId = await ipcRenderer.invoke("getNoteIdByNameOrAlias", { name: noteName, semanticDateNumber: semanticDateNumber });
         if (resolvedId) {
             await modalWindowsManagerStore.close();
             await this.openNote(resolvedId);
@@ -112,6 +163,10 @@ class NoteTabStore {
 
     saveOpenedNote = async () => {
         runInAction(() => { this.status = "loading"; });
+        this.noteObject.tagsStrings = JSON.parse(JSON.stringify(this.defaultTags));
+        for (const i of JSON.parse(JSON.stringify(this.userTags))) {
+            this.noteObject.tagsStrings.push(i);
+        }
 
         let saveTryResult = await ipcRenderer.invoke("saveNoteObject", JSON.parse(JSON.stringify(this.noteObject)));
         if (saveTryResult.isOk == true) {
@@ -220,6 +275,10 @@ class NoteTabStore {
 
     setNoteTypeNumber = async (newLevel) => {
         this.noteObject.noteTypeNumber = parseInt(newLevel);
+    };
+
+    noteTagsStringsChangeEventHandler = async (newList) => {
+        this.userTags = newList;
     };
 }
 

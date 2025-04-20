@@ -76,31 +76,46 @@ let LoginPage = observer(() => {
     loginStore.reset();
   }, []);
 
-  return (
-    <Container>
-      <LoginForm className="bp5-card bp5-elevation-4">
-        <div>
-          <h2><b>
-            Введите пароль
-          </b>
-          </h2>
-          <p>
-          Если база данных ещё не создана, она будет инициализирована с указанным паролем. Рекомендуется использовать данную программу только в безопасном окружении, чтобы исключить утечку информации.
-          </p>
 
-          <div className="line"></div>
-          <input
-            id="passwordInput"
-            className="bp5-input"
-            type="password"
-            onInput={(e) => loginStore.updatePassword(e.target.value)}
-            placeholder="Пароль"
-            onKeyDown={(e) => { e.key == "Enter" ? loginStore.login() : false }}
-          />
-          <button className="bp5-button bp5-intent-warning" onClick={() => loginStore.login()}>Войти</button>
-        </div>
-      </LoginForm>
-    </Container>);
+  if (loginStore.status == "loading") {
+    return (
+      <Container>
+        <LoginForm className="bp5-card bp5-elevation-4">
+          <div>
+            <h2><b>
+              Загрузка...
+            </b>
+            </h2>
+          </div>
+        </LoginForm>
+      </Container>);
+  } else {
+    return (
+      <Container>
+        <LoginForm className="bp5-card bp5-elevation-4">
+          <div>
+            <h2><b>
+              Введите пароль
+            </b>
+            </h2>
+            <p>
+              Если база данных ещё не создана, она будет инициализирована с указанным паролем. База данных хранится в директории, в которой содержиться директория программы.
+            </p>
+
+            <div className="line"></div>
+            <input
+              id="passwordInput"
+              className="bp5-input"
+              type="password"
+              onInput={(e) => loginStore.updatePassword(e.target.value)}
+              placeholder="Пароль"
+              onKeyDown={(e) => { e.key == "Enter" ? loginStore.login() : false }}
+            />
+            <button className="bp5-button bp5-intent-warning" onClick={() => loginStore.login()}>Войти</button>
+          </div>
+        </LoginForm>
+      </Container>);
+  }
 });
 
 export default LoginPage;
