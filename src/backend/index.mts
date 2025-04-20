@@ -73,12 +73,9 @@ function createWindow() {
   });
 
   let zhtToolkit: ZhtToolkit;
-  let zhtPassword = "";
 
   ipcMain.handle("login", async (e, password) => {
     try {
-      zhtPassword = password;
-
       if (__dirname.includes(".asar")) {
         zhtToolkit = new ZhtToolkit(path.join(__dirname, "../../../../../../"), path.join(__dirname, "../../../../../model.json"), password);
       } else {
