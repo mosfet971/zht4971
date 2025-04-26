@@ -27,8 +27,8 @@ function dicesim(a, b) {
         return bigrams;
     };
 
-    const bigramsA = getBigrams(a);
-    const bigramsB = getBigrams(b);
+    const bigramsA = getBigrams(transliterateLatToCyr(a));
+    const bigramsB = getBigrams(transliterateLatToCyr(b));
     //console.log(bigramsA, bigramsB);
     const setB = new Set(bigramsB);
     let intersection = [];
@@ -105,7 +105,7 @@ class TagSearchToolkit {
     }
 
     getEmbedding = (inputString) => {
-        let string1 = transliterateLatToCyr(inputString.toLowerCase().trim());
+        let string1 = inputString.toLowerCase().trim();
         let strings = [];
         if (string1.includes(" ")) {
             strings = string1.split(" ");

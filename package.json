@@ -1,6 +1,6 @@
 {
   "name": "zht4971",
-  "version": "1.9",
+  "version": "1.10",
   "description": "",
   "main": "./src/backend/dist/index.mjs",
   "scripts": {
