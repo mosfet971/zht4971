@@ -35,6 +35,38 @@ function dicesim(a, b) {
     let out = (2 * intersection.length) / (bigramsA.length + bigramsB.length);
     return out ? (out > 1 ? 1 : out) : 0;
 }
+function transliterateLatToCyr(text) {
+    const translitMap = {
+        // Латинские символы (только базовый английский)
+        'A': 'А', 'a': 'а',
+        'B': 'Б', 'b': 'б',
+        'C': 'К', 'c': 'к',
+        'D': 'Д', 'd': 'д',
+        'E': 'Е', 'e': 'е',
+        'F': 'Ф', 'f': 'ф',
+        'G': 'Г', 'g': 'г',
+        'H': 'Х', 'h': 'х',
+        'I': 'И', 'i': 'и',
+        'J': 'Дж', 'j': 'дж',
+        'K': 'К', 'k': 'к',
+        'L': 'Л', 'l': 'л',
+        'M': 'М', 'm': 'м',
+        'N': 'Н', 'n': 'н',
+        'O': 'О', 'o': 'о',
+        'P': 'П', 'p': 'п',
+        'Q': 'К', 'q': 'к',
+        'R': 'Р', 'r': 'р',
+        'S': 'С', 's': 'с',
+        'T': 'Т', 't': 'т',
+        'U': 'У', 'u': 'у',
+        'V': 'В', 'v': 'в',
+        'W': 'В', 'w': 'в',
+        'X': 'Кс', 'x': 'кс',
+        'Y': 'И', 'y': 'и',
+        'Z': 'З', 'z': 'з',
+    };
+    return text.split('').map(char => translitMap[char] || char).join('');
+}
 class TagSearchToolkit {
     modelBigramsArrays = [];
     modelBigramsLengths = [];
@@ -59,7 +91,7 @@ class TagSearchToolkit {
         this.setIndexListForTagStringFunction = setIndexListForTagStringFunction;
     }
     getEmbedding = (inputString) => {
-        let string1 = inputString.toLowerCase().trim();
+        let string1 = transliterateLatToCyr(inputString.toLowerCase().trim());
         let strings = [];
         if (string1.includes(" ")) {
             strings = string1.split(" ");
@@ -263,8 +295,10 @@ class TagSearchToolkit {
         let allTagsEmbeddings = this.getAllTagsEmbeddingsFunction();
         let newAllTagsEmbeddings = [];
         for (const tagEmbedding of allTagsEmbeddings) {
+            let oldDocsList = this.getIndexListByTagStringFunction(tagEmbedding.string);
             let newTagEmbedding = this.getEmbedding(tagEmbedding.string);
             newAllTagsEmbeddings.push(newTagEmbedding);
+            this.setIndexListForTagStringFunction(newTagEmbedding.string, oldDocsList);
         }
         this.setAllTagsEmbeddingsFunction(newAllTagsEmbeddings);
     };

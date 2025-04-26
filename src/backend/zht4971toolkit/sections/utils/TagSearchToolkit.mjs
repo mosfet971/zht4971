@@ -44,6 +44,40 @@ function dicesim(a, b) {
     return out ? (out > 1 ? 1 : out) : 0;
 }
 
+function transliterateLatToCyr(text) {
+    const translitMap = {
+        // Латинские символы (только базовый английский)
+        'A': 'А', 'a': 'а',
+        'B': 'Б', 'b': 'б',
+        'C': 'К', 'c': 'к',
+        'D': 'Д', 'd': 'д',
+        'E': 'Е', 'e': 'е',
+        'F': 'Ф', 'f': 'ф',
+        'G': 'Г', 'g': 'г',
+        'H': 'Х', 'h': 'х',
+        'I': 'И', 'i': 'и',
+        'J': 'Дж', 'j': 'дж',
+        'K': 'К', 'k': 'к',
+        'L': 'Л', 'l': 'л',
+        'M': 'М', 'm': 'м',
+        'N': 'Н', 'n': 'н',
+        'O': 'О', 'o': 'о',
+        'P': 'П', 'p': 'п',
+        'Q': 'К', 'q': 'к',
+        'R': 'Р', 'r': 'р',
+        'S': 'С', 's': 'с',
+        'T': 'Т', 't': 'т',
+        'U': 'У', 'u': 'у',
+        'V': 'В', 'v': 'в',
+        'W': 'В', 'w': 'в',
+        'X': 'Кс', 'x': 'кс',
+        'Y': 'И', 'y': 'и',
+        'Z': 'З', 'z': 'з',
+    };
+
+    return text.split('').map(char => translitMap[char] || char).join('');
+}
+
 
 class TagSearchToolkit {
     modelBigramsArrays = [];
@@ -53,7 +87,6 @@ class TagSearchToolkit {
     setAllTagsEmbeddingsFunction = () => { };
     getIndexListByTagStringFunction = () => { };
     setIndexListForTagStringFunction = () => { };
-
 
     constructor(fullJsonModelPath, getAllTagsEmbeddingsFunction, setAllTagsEmbeddingsFunction, getIndexListByTagStringFunction, setIndexListForTagStringFunction) {
         this.model = JSON.parse(fs.readFileSync(fullJsonModelPath, { encoding: "utf-8" }));
@@ -71,9 +104,8 @@ class TagSearchToolkit {
         this.setIndexListForTagStringFunction = setIndexListForTagStringFunction;
     }
 
-
     getEmbedding = (inputString) => {
-        let string1 = inputString.toLowerCase().trim();
+        let string1 = transliterateLatToCyr(inputString.toLowerCase().trim());
         let strings = [];
         if (string1.includes(" ")) {
             strings = string1.split(" ");
@@ -213,10 +245,10 @@ class TagSearchToolkit {
             for (let j = 0; j < extendedListOfTops[i].length; j++) {
                 let docIdsList = extendedListOfTops[i][j].docIdsList;
                 for (let k = 0; k < docIdsList.length; k++) {
-                    if (!(setOfDocIds.indexOf(docIdsList[k])>-1)) {
+                    if (!(setOfDocIds.indexOf(docIdsList[k]) > -1)) {
                         setOfDocIds.push(docIdsList[k]);
                     }
-                    
+
                 }
             }
         }
@@ -334,8 +366,10 @@ class TagSearchToolkit {
         let newAllTagsEmbeddings = [];
 
         for (const tagEmbedding of allTagsEmbeddings) {
+            let oldDocsList = this.getIndexListByTagStringFunction(tagEmbedding.string);
             let newTagEmbedding = this.getEmbedding(tagEmbedding.string);
             newAllTagsEmbeddings.push(newTagEmbedding);
+            this.setIndexListForTagStringFunction(newTagEmbedding.string, oldDocsList);
         }
 
         this.setAllTagsEmbeddingsFunction(newAllTagsEmbeddings);

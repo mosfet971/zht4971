@@ -163,6 +163,7 @@ class NoteTabStore {
 
     saveOpenedNote = async () => {
         runInAction(() => { this.status = "loading"; });
+        
         this.noteObject.tagsStrings = JSON.parse(JSON.stringify(this.defaultTags));
         for (const i of JSON.parse(JSON.stringify(this.userTags))) {
             this.noteObject.tagsStrings.push(i);

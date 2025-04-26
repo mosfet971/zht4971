@@ -17,7 +17,7 @@ let WindowRecalculateTags = observer(() => {
     if (windowRecalculateTagsStore.status == "ready") {
         return (
             <ModalWindowWithFooter title="Обновление данных тегов" onClose={modalWindowsManagerStore.close}>
-                <Text>После изменения файла "model.json" необходимо обновить данные тегов для обеспечения нормального функционирования поиска.</Text>
+                <Text>После изменения файла "model.json" (а также некоторых обновлений программы) необходимо обновить данные тегов для обеспечения нормального функционирования тегового поиска.</Text>
                 <br/>
                 <Button onClick={windowRecalculateTagsStore.start}>Запустить обновление данных</Button>
             </ModalWindowWithFooter>

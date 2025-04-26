@@ -1,13 +1,13 @@
 {
   "name": "zht4971",
-  "version": "0.0.1",
+  "version": "1.9",
   "description": "",
   "main": "./src/backend/dist/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "buildAndStart": "node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron .",
-    "packageWindows": "node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package && node copyScript.mjs",
-    "packageLinux": "node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package --platform linux && node copyScript.mjs"
+    "buildAndStart": "npm i && node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron .",
+    "packageWindows": "npm i && node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package && node copyScript.mjs",
+    "packageLinux": "npm i && node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package --platform linux && node copyScript.mjs"
   },
   "repository": {
     "type": "git",

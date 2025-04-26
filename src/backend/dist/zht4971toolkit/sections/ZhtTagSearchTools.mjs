@@ -2,6 +2,9 @@ import TagSearchToolkit from "./utils/TagSearchToolkit.mjs";
 import database from "../lowlevel/database.mjs";
 import crypto from "crypto";
 function stringToHash(string, mk) {
+    return crypto.createHash("sha256", { encoding: "utf-8" }).update(string).update("2a00f8a3-131e-428f-b5fc-0832fe50965d").digest("hex");
+}
+function stringToHashOld(string, mk) {
     return crypto.createHash("sha256", { encoding: "utf-8" }).update(string).update("2a00f8a3-131e-428f-b5fc-0832fe50965d").digest("base64url");
 }
 class ZhtTagSearchTools extends TagSearchToolkit {
@@ -32,6 +35,19 @@ class ZhtTagSearchTools extends TagSearchToolkit {
             }
             catch (error) {
                 value = [];
+            }
+            let listIdOld = stringToHashOld(key, mk);
+            let valueOld = [];
+            try {
+                valueOld = (database.getEntity(dbDirPath, mk, entityTypeForTagSearchSystemItem, listIdOld)).value;
+            }
+            catch (error) {
+                valueOld = [];
+            }
+            for (const i of valueOld) {
+                if (!(value.includes(i))) {
+                    value.push(i);
+                }
             }
             return value;
         };
