@@ -46,7 +46,6 @@ function dicesim(a, b) {
 
 function transliterateLatToCyr(text) {
     const translitMap = {
-        // Латинские символы (только базовый английский)
         'A': 'А', 'a': 'а',
         'B': 'Б', 'b': 'б',
         'C': 'К', 'c': 'к',
@@ -203,7 +202,7 @@ class TagSearchToolkit {
         return similarity;
     };
 
-    getTop20Similar = (embeddingObject, embeddingObjectsList) => {
+    getTop100Similar = (embeddingObject, embeddingObjectsList) => {
         let similarityList = [];
 
         for (const obj of embeddingObjectsList) {
@@ -213,15 +212,17 @@ class TagSearchToolkit {
 
         similarityList.sort((a, b) => b.similarity - a.similarity);
 
-        let top20 = [];
+        let top100 = [];
 
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 100; i++) {
             if (similarityList[i] !== undefined) {
-                top20.push({ string: similarityList[i].string, similarity: similarityList[i].similarity });
+                top100.push({ string: similarityList[i].string, similarity: similarityList[i].similarity });
+            } else {
+                break;
             }
         }
 
-        return top20;
+        return top100;
     }
 
     getSortedDocIdsAndRatingsByListOfTops = (listOfTops) => {
@@ -290,14 +291,14 @@ class TagSearchToolkit {
             inputTagsEmbeddings.push(embeddingObject);
         }
 
-        let top20SimilarToInputTags = [];
+        let top100SimilarToInputTags = [];
 
         for (const embeddingObject of inputTagsEmbeddings) {
-            let top20Similar = this.getTop20Similar(embeddingObject, this.getAllTagsEmbeddingsFunction());
-            top20SimilarToInputTags.push(top20Similar);
+            let top100Similar = this.getTop100Similar(embeddingObject, this.getAllTagsEmbeddingsFunction());
+            top100SimilarToInputTags.push(top100Similar);
         }
 
-        let docIdsWithRatings = this.getSortedDocIdsAndRatingsByListOfTops(top20SimilarToInputTags);
+        let docIdsWithRatings = this.getSortedDocIdsAndRatingsByListOfTops(top100SimilarToInputTags);
 
         return docIdsWithRatings;
     }

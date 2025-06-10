@@ -145,9 +145,11 @@ class NotesTools {
         }
         */
         database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, noteObject.id, noteObject);
-        this.zhtTagSearchTools.removeAllTagsFromDocument(noteObject.id);
-        for (const tagString of noteObject.tagsStrings) {
-            this.zhtTagSearchTools.setTagOfDocument(noteObject.id, tagString);
+        if (!(JSON.stringify(noteObjectBeforeChanges.tagsStrings) === JSON.stringify(noteObject.tagsStrings))) {
+            this.zhtTagSearchTools.removeAllTagsFromDocument(noteObject.id);
+            for (const tagString of noteObject.tagsStrings) {
+                this.zhtTagSearchTools.setTagOfDocument(noteObject.id, tagString);
+            }
         }
         //this._findLinks(noteObject);
         //this._updateOutLinksFromNote(noteObjectBeforeChanges, noteObject);

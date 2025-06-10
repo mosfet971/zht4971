@@ -4,6 +4,44 @@ import { tabsManagerStore } from "../TabsManagerStore";
 import * as filesFrontendUtils from "../../utils/filesFrontendUtils";
 import * as noteObjectRenderer from "../../utils/noteObjectRenderer";
 
+function readEntryContentAsync(entry) {
+    return new Promise((resolve, reject) => {
+        let reading = 0;
+        const contents = [];
+
+        readEntry(entry);
+
+        function readEntry(entry) {
+            if (entry.isFile) {
+                reading++;
+                entry.file(file => {
+                    reading--;
+                    contents.push(file);
+
+                    if (reading === 0) {
+                        resolve(contents);
+                    }
+                });
+            } else if (entry.isDirectory) {
+                readReaderContent(entry.createReader());
+            }
+        };
+
+        function readReaderContent(reader) {
+            reading++;
+            reader.readEntries(function (entries) {
+                reading--;
+                for (const entry of entries) {
+                    readEntry(entry);
+                }
+                if (reading === 0) {
+                    resolve(contents);
+                }
+            });
+        };
+    });
+};
+
 class NoteTabStore {
     constructor() {
         makeAutoObservable(this);
@@ -40,6 +78,14 @@ class NoteTabStore {
 
             this.defaultTags = JSON.parse(JSON.stringify(newDefaultTags));
         });
+
+        reaction(()=>this.status, ()=>{
+            if(this.status=="edit") {
+                this.addWriteModeEventHandlers();
+            } else {
+                this.removeWriteModeEventHandlers();
+            }
+        });
     }
 
     status = "no"; // "no", "view", "edit", "loading"
@@ -50,6 +96,63 @@ class NoteTabStore {
     htmlOfCurrentNote = "";
     defaultTags = [];
     userTags = [];
+
+    pasteHandler = async (event) => {
+        const items = event.clipboardData.items
+        for (const item of items) {
+            if (item.kind === 'file') {
+                const file = item.getAsFile()
+
+                runInAction(() => { this.isFileUploadLoading = true; });
+                let fileId = await filesFrontendUtils.saveNewFile(file);
+                this.noteObject.sourceText += "\n!![[" + fileId + "]]";
+                runInAction(() => { this.isFileUploadLoading = false; });
+            }
+        }
+    };
+
+    dropHandler = async (e) => {
+        e.preventDefault();
+
+        let dataTransfer = e.dataTransfer;
+        console.log(dataTransfer);
+        const files = [];
+        for (var i = 0; i < dataTransfer.items.length; i++) {
+            const item = dataTransfer.items[i];
+            if (item.kind === 'file') {
+                if (typeof item.webkitGetAsEntry === 'function') {
+                    const entry = item.webkitGetAsEntry();
+                    const entryContent = await readEntryContentAsync(entry);
+                    files.push(...entryContent);
+                    continue;
+                }
+
+                const file = item.getAsFile();
+                if (file) { files.push(file); }
+            }
+        }
+
+        runInAction(() => { this.isFileUploadLoading = true; });
+        for (const file of files) {
+            let fileId = await filesFrontendUtils.saveNewFile(file);
+            this.noteObject.sourceText += "\n!![[" + fileId + "]]";
+        }
+        //e.target.files = [];
+        runInAction(() => { this.isFileUploadLoading = false; });
+
+    }
+
+    removeWriteModeEventHandlers = () => {
+        let readAndWrite = document.getElementById("readAndWrite");
+        readAndWrite.removeEventListener('paste', this.pasteHandler);
+        readAndWrite.removeEventListener('drop', this.dropHandler);
+    };
+
+    addWriteModeEventHandlers = () => {
+        let readAndWrite = document.getElementById("readAndWrite");
+        readAndWrite.addEventListener('paste', this.pasteHandler);
+        readAndWrite.addEventListener('drop', this.dropHandler);
+    };
 
     closeNote = async () => {
         this.noteObject = {};
@@ -163,7 +266,7 @@ class NoteTabStore {
 
     saveOpenedNote = async () => {
         runInAction(() => { this.status = "loading"; });
-        
+
         this.noteObject.tagsStrings = JSON.parse(JSON.stringify(this.defaultTags));
         for (const i of JSON.parse(JSON.stringify(this.userTags))) {
             this.noteObject.tagsStrings.push(i);

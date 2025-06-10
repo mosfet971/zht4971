@@ -1,11 +1,12 @@
 {
   "name": "zht4971",
-  "version": "1.10",
+  "version": "1.10.5",
   "description": "",
   "main": "./src/backend/dist/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "buildAndStart": "npm i && node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron .",
+    "devStart": "webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron .",
     "packageWindows": "npm i && node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package && node copyScript.mjs",
     "packageLinux": "npm i && node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package --platform linux && node copyScript.mjs"
   },

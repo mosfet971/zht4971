@@ -37,7 +37,6 @@ function dicesim(a, b) {
 }
 function transliterateLatToCyr(text) {
     const translitMap = {
-        // Латинские символы (только базовый английский)
         'A': 'А', 'a': 'а',
         'B': 'Б', 'b': 'б',
         'C': 'К', 'c': 'к',
@@ -171,20 +170,23 @@ class TagSearchToolkit {
             similarity = 0;
         return similarity;
     };
-    getTop20Similar = (embeddingObject, embeddingObjectsList) => {
+    getTop100Similar = (embeddingObject, embeddingObjectsList) => {
         let similarityList = [];
         for (const obj of embeddingObjectsList) {
             let similarity = this.getSimilarity(embeddingObject, obj);
             similarityList.push({ string: obj.string, similarity: similarity });
         }
         similarityList.sort((a, b) => b.similarity - a.similarity);
-        let top20 = [];
-        for (let i = 0; i < 20; i++) {
+        let top100 = [];
+        for (let i = 0; i < 100; i++) {
             if (similarityList[i] !== undefined) {
-                top20.push({ string: similarityList[i].string, similarity: similarityList[i].similarity });
+                top100.push({ string: similarityList[i].string, similarity: similarityList[i].similarity });
+            }
+            else {
+                break;
             }
         }
-        return top20;
+        return top100;
     };
     getSortedDocIdsAndRatingsByListOfTops = (listOfTops) => {
         let extendedListOfTops = [];
@@ -236,12 +238,12 @@ class TagSearchToolkit {
             let embeddingObject = this.getEmbedding(tag);
             inputTagsEmbeddings.push(embeddingObject);
         }
-        let top20SimilarToInputTags = [];
+        let top100SimilarToInputTags = [];
         for (const embeddingObject of inputTagsEmbeddings) {
-            let top20Similar = this.getTop20Similar(embeddingObject, this.getAllTagsEmbeddingsFunction());
-            top20SimilarToInputTags.push(top20Similar);
+            let top100Similar = this.getTop100Similar(embeddingObject, this.getAllTagsEmbeddingsFunction());
+            top100SimilarToInputTags.push(top100Similar);
         }
-        let docIdsWithRatings = this.getSortedDocIdsAndRatingsByListOfTops(top20SimilarToInputTags);
+        let docIdsWithRatings = this.getSortedDocIdsAndRatingsByListOfTops(top100SimilarToInputTags);
         return docIdsWithRatings;
     };
     setTagOfDocument = (documentId, tagString) => {
