@@ -42,7 +42,8 @@ function createWindow() {
         show: false,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
+            allowRunningInsecureContent: true
             //s enableRemoteModule: true, // turn off remote
             // preload: path.join(__dirname, 'preload.js')
         }
@@ -157,8 +158,13 @@ function createWindow() {
     });
     ipcMain.handle("getNoteIdByNameOrAlias", async (e, params) => {
         //const result = await runService({action: "getNoteIdByNameOrAlias", password: zhtPassword, zhtToolkit: zhtToolkit, params: {name: params.name, semanticDateNumber: params.semanticDateNumber}});
-        const result = await zhtToolkit.notesTools.getNoteIdByNameOrAlias(params.name, params.semanticDateNumber);
-        return result;
+        try {
+            const result = await zhtToolkit.notesTools.getNoteIdByNameOrAlias(params.name, params.semanticDateNumber);
+            return result;
+        }
+        catch (err) {
+            return false;
+        }
     });
     ipcMain.handle("saveFile", async (e, params) => {
         let fileBuffer = params.fileBuffer;

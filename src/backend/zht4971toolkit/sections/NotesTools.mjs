@@ -658,6 +658,13 @@ class NotesTools {
         let inpText = noteObject.sourceText;
         let hubsInfoObjects = [];
 
+        let outText = inpText;
+        for (const j of inpText.matchAll(/```((.|\n)*)```/g)) {
+            let i = j[0];
+            outText = outText.replace(i, "");
+        }
+        inpText = outText;
+
         for (const j of inpText.matchAll(/\{\{(.*?)\}\}/g)) {
             let i = j[0];
             let hubName = i.replaceAll(/\{|\}|/g, "").trim();

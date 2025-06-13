@@ -78,7 +78,7 @@ let NoteEditMode = observer(() => {
 
                 <Checkbox checked={noteTabStore.noteObject.isPrimary} label="Добавить в избранные записи" onChange={noteTabStore.noteIsPrimaryChangeEventHandler} />
 
-                <Text>Псевдонимы записи: (нажимайте клавишу "ввод" для сохранения каждого псведонима)</Text>
+                <Text>Псевдонимы записи: (нажимайте клавишу "ввод" для сохранения каждого псевдонима)</Text>
                 <TagInput placeholder="Псевдонимы записи" intent="primary" fill={true} values={noteTabStore.noteObject.aliasesList} onChange={noteTabStore.noteAliasesListChangeEventHandler} />
 
                 {/*<Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату (указанная дата также должна быть включенна в название записи в скобках, в формате (дд.мм.гггг), (мм.гггг) или (гггг))" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} /> */}
