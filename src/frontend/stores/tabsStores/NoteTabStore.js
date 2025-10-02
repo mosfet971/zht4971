@@ -105,7 +105,7 @@ class NoteTabStore {
 
                 runInAction(() => { this.isFileUploadLoading = true; });
                 let fileId = await filesFrontendUtils.saveNewFile(file);
-                this.noteObject.sourceText += "\n!![[" + fileId + "]]";
+                this.noteObject.sourceText += "\n!![[" + fileId + "]] <!-- " + file.name + " -->";
                 runInAction(() => { this.isFileUploadLoading = false; });
             }
         }
@@ -135,7 +135,7 @@ class NoteTabStore {
         runInAction(() => { this.isFileUploadLoading = true; });
         for (const file of files) {
             let fileId = await filesFrontendUtils.saveNewFile(file);
-            this.noteObject.sourceText += "\n!![[" + fileId + "]]";
+            this.noteObject.sourceText += "\n!![[" + fileId + "]] <!-- " + file.name + " -->";
         }
         //e.target.files = [];
         runInAction(() => { this.isFileUploadLoading = false; });
@@ -367,7 +367,7 @@ class NoteTabStore {
         runInAction(() => { this.isFileUploadLoading = true; });
         for (const file of e.target.files) {
             let fileId = await filesFrontendUtils.saveNewFile(file);
-            this.noteObject.sourceText += "\n!![[" + fileId + "]]";
+            this.noteObject.sourceText += "\n!![[" + fileId + "]] <!-- " + file.name + " -->";
         }
         //e.target.files = [];
         runInAction(() => { this.isFileUploadLoading = false; });

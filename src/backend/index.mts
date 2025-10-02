@@ -197,10 +197,12 @@ function createWindow() {
     let fileBuffer: any = params.fileBuffer;
     let fileType: any = params.fileType;
     let fileName: any = params.fileName;
+    let fileLastModified: any = params.fileLastModified;
     let fileId = await zhtToolkit.filesTools.createFileObjectAndSave(
       fileName,
       fileBuffer,
-      fileType
+      fileType,
+      fileLastModified
     );
     return fileId;
   });

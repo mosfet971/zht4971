@@ -5,29 +5,25 @@ class FilesTools {
         this.mk = mk;
         this.entityTypeForFiles = database.generateEntityTypeObject("file", (o) => true);
     }
-    createFileObjectAndSave = (fileName, fileBuffer, fileMimeType) => {
+    createFileObjectAndSave = (fileName, fileBuffer, fileMimeType, fileLastModified) => {
         let fileBufferId = database.newId();
         let fileId = database.newId();
-        let fileObject = { id: fileId, name: fileName, fileBufferId: fileBufferId, mimeType: fileMimeType };
+        let fileObject = { id: fileId, name: fileName, fileBufferId: fileBufferId, mimeType: fileMimeType, lastModified: fileLastModified };
+        //console.log("createFileObjectAndSave", fileObject);
         database.setEntity(this.dbDirPath, this.mk, this.entityTypeForFiles, fileObject.id, fileObject);
         database.setBuffer(this.dbDirPath, this.mk, fileBufferId, fileBuffer);
         return fileId;
     };
-    /**
-     * { id: fileId, name: fileName, mimeType: fileMimeType }
-     */
     getInfo = (fileId) => {
         let infoObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForFiles, fileId);
         infoObject["fileBufferId"] = "";
         return infoObject;
     };
-    /**
-     * { id: fileObject.id, name: fileObject.name, fileBuffer: buffer, mimeType: fileObject.mimeType }
-     */
     get = (fileId) => {
         let fileObject = database.getEntity(this.dbDirPath, this.mk, this.entityTypeForFiles, fileId);
         let buffer = database.getBuffer(this.dbDirPath, this.mk, fileObject.fileBufferId);
-        return { id: fileObject.id, name: fileObject.name, fileBuffer: buffer, mimeType: fileObject.mimeType };
+        //console.log("get", fileObject.lastModified);
+        return { id: fileObject.id, name: fileObject.name, fileBuffer: buffer, mimeType: fileObject.mimeType, lastModified: fileObject.lastModified };
     };
     getListOfIds = () => {
         return database.getEntitiesIdsByType(this.dbDirPath, this.mk, this.entityTypeForFiles);

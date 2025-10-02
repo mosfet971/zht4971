@@ -197,7 +197,7 @@ class TagSearchToolkit {
         let string1 = embeddingObject1.string;
         let string2 = embeddingObject2.string;
 
-        let similarity = (cosinesim(embedding1, embedding2) * Math.min(quality1, quality2) + dicesim(string1, string2) * (1 - Math.min(quality1, quality2))) / 2;
+        let similarity = (/*cosinesim(embedding1, embedding2) * Math.min(quality1, quality2) + */dicesim(string1, string2) /** (1 - Math.min(quality1, quality2))*/) / /*2*/1;
 
         if (similarity > 1) similarity = 1;
         if (similarity < 0) similarity = 0;

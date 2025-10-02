@@ -69,7 +69,8 @@ export let processText = async (textToProcess) => {
       continue;
     }
 
-    let file = new File([new Blob([Buffer.from(fileZhtObject.fileBuffer)])], fileZhtObject.name, { type: fileZhtObject.mimeType });
+    console.log(fileZhtObject);
+    let file = new File([new Blob([Buffer.from(fileZhtObject.fileBuffer)])], fileZhtObject.name, { type: fileZhtObject.mimeType, lastModified: fileZhtObject.lastModified });
     let objUrl = URL.createObjectURL(file);
     
     window.objUrls.push(objUrl);
@@ -97,6 +98,7 @@ export let saveNewFile = async (file) => {
   let fileName = file.name;
   let fileType = file.type;
   let fileBuffer = Buffer.from(await file.arrayBuffer());
-  let fileId = await ipcRenderer.invoke("saveFile", { fileName: fileName, fileType: fileType, fileBuffer: fileBuffer });
+  console.log(file.lastModified);
+  let fileId = await ipcRenderer.invoke("saveFile", { fileName: fileName, fileType: fileType, fileBuffer: fileBuffer, fileLastModified: file.lastModified });
   return fileId;
 };

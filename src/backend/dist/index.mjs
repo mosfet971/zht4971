@@ -170,7 +170,8 @@ function createWindow() {
         let fileBuffer = params.fileBuffer;
         let fileType = params.fileType;
         let fileName = params.fileName;
-        let fileId = await zhtToolkit.filesTools.createFileObjectAndSave(fileName, fileBuffer, fileType);
+        let fileLastModified = params.fileLastModified;
+        let fileId = await zhtToolkit.filesTools.createFileObjectAndSave(fileName, fileBuffer, fileType, fileLastModified);
         return fileId;
     });
     ipcMain.handle("getFileZhtObject", async (e, params) => {
