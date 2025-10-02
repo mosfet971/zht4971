@@ -47,7 +47,8 @@ function createWindow() {
     show: false,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      allowRunningInsecureContent: true
       //s enableRemoteModule: true, // turn off remote
       // preload: path.join(__dirname, 'preload.js')
     }
@@ -184,8 +185,12 @@ function createWindow() {
 
   ipcMain.handle("getNoteIdByNameOrAlias", async (e, params) => {
     //const result = await runService({action: "getNoteIdByNameOrAlias", password: zhtPassword, zhtToolkit: zhtToolkit, params: {name: params.name, semanticDateNumber: params.semanticDateNumber}});
-    const result = await zhtToolkit.notesTools.getNoteIdByNameOrAlias(params.name, params.semanticDateNumber);
-    return result;
+    try {
+      const result = await zhtToolkit.notesTools.getNoteIdByNameOrAlias(params.name, params.semanticDateNumber);
+      return result;
+    } catch (err) {
+      return false;
+    }
   });
 
   ipcMain.handle("saveFile", async (e, params) => {
@@ -208,7 +213,7 @@ function createWindow() {
     }
   });
 
-  
+
   ipcMain.handle("getPrimaryList", async (e, params) => {
     //const result = await runService({action: "getPrimaryList", zhtToolkit: zhtToolkit, password: zhtPassword, params});
     let sortModeToParamNameMap = {
@@ -244,7 +249,7 @@ function createWindow() {
     //const result = await runService({action: "search", zhtToolkit: zhtToolkit, password: zhtPassword, params});
     return [];
   });
-  
+
 
   ipcMain.handle("getHubByName", async (e, hubName) => {
     let hubObject = await zhtToolkit.notesTools.getHub(hubName);
@@ -253,7 +258,7 @@ function createWindow() {
 
   ipcMain.handle("getNotesIdsListByTagsStringsList", async (e, params) => {
     params = JSON.parse(params);
-    let ids = (await zhtToolkit.zhtTagSearchTools.search(params.tagsStringsList)).map(v=>v.docId);
+    let ids = (await zhtToolkit.zhtTagSearchTools.search(params.tagsStringsList)).map(v => v.docId);
     //console.log(ids);
     let objs = [];
     for (const id of ids) {

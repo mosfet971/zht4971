@@ -145,9 +145,11 @@ class NotesTools {
         }
         */
         database.setEntity(this.dbDirPath, this.mk, this.entityTypeForNotes, noteObject.id, noteObject);
-        this.zhtTagSearchTools.removeAllTagsFromDocument(noteObject.id);
-        for (const tagString of noteObject.tagsStrings) {
-            this.zhtTagSearchTools.setTagOfDocument(noteObject.id, tagString);
+        if (!(JSON.stringify(noteObjectBeforeChanges.tagsStrings) === JSON.stringify(noteObject.tagsStrings))) {
+            this.zhtTagSearchTools.removeAllTagsFromDocument(noteObject.id);
+            for (const tagString of noteObject.tagsStrings) {
+                this.zhtTagSearchTools.setTagOfDocument(noteObject.id, tagString);
+            }
         }
         //this._findLinks(noteObject);
         //this._updateOutLinksFromNote(noteObjectBeforeChanges, noteObject);
@@ -480,6 +482,12 @@ class NotesTools {
     _getHubsInfoObjectsByNoteObject = (noteObject) => {
         let inpText = noteObject.sourceText;
         let hubsInfoObjects = [];
+        let outText = inpText;
+        for (const j of inpText.matchAll(/```((.|\n)*)```/g)) {
+            let i = j[0];
+            outText = outText.replace(i, "");
+        }
+        inpText = outText;
         for (const j of inpText.matchAll(/\{\{(.*?)\}\}/g)) {
             let i = j[0];
             let hubName = i.replaceAll(/\{|\}|/g, "").trim();

@@ -193,9 +193,11 @@ class NotesTools {
             noteObject
         );
 
-        this.zhtTagSearchTools.removeAllTagsFromDocument(noteObject.id);
-        for (const tagString of noteObject.tagsStrings) {
-            this.zhtTagSearchTools.setTagOfDocument(noteObject.id, tagString);
+        if (!(JSON.stringify(noteObjectBeforeChanges.tagsStrings) === JSON.stringify(noteObject.tagsStrings))) {
+            this.zhtTagSearchTools.removeAllTagsFromDocument(noteObject.id);
+            for (const tagString of noteObject.tagsStrings) {
+                this.zhtTagSearchTools.setTagOfDocument(noteObject.id, tagString);
+            }
         }
 
         //this._findLinks(noteObject);
@@ -656,6 +658,13 @@ class NotesTools {
         let inpText = noteObject.sourceText;
         let hubsInfoObjects = [];
 
+        let outText = inpText;
+        for (const j of inpText.matchAll(/```((.|\n)*)```/g)) {
+            let i = j[0];
+            outText = outText.replace(i, "");
+        }
+        inpText = outText;
+
         for (const j of inpText.matchAll(/\{\{(.*?)\}\}/g)) {
             let i = j[0];
             let hubName = i.replaceAll(/\{|\}|/g, "").trim();
@@ -736,7 +745,7 @@ class NotesTools {
         for (const i in oldHubsStructure) {
             let u = 0;
             for (const key in oldHubsStructure[i]) {
-                u+=oldHubsStructure[i][key].length;
+                u += oldHubsStructure[i][key].length;
             }
             if (u == 0) {
                 delete newHubsStructure[i];

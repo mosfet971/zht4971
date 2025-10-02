@@ -78,11 +78,11 @@ let NoteEditMode = observer(() => {
 
                 <Checkbox checked={noteTabStore.noteObject.isPrimary} label="Добавить в избранные записи" onChange={noteTabStore.noteIsPrimaryChangeEventHandler} />
 
-                <Text>Псевдонимы записи: (нажимайте клавишу "ввод" для сохранения каждого псведонима)</Text>
+                <Text>Псевдонимы записи: (нажимайте клавишу "ввод" для сохранения каждого псевдонима)</Text>
                 <TagInput placeholder="Псевдонимы записи" intent="primary" fill={true} values={noteTabStore.noteObject.aliasesList} onChange={noteTabStore.noteAliasesListChangeEventHandler} />
 
                 {/*<Checkbox checked={noteTabStore.noteObject.hasHistoricalDate} label="Добавить дату (указанная дата также должна быть включенна в название записи в скобках, в формате (дд.мм.гггг), (мм.гггг) или (гггг))" onChange={noteTabStore.noteHasHistoricalDateChangeEventHandler} /> */}
-                <Text>Семантическая дата (не забудьте изменить в названии записи):</Text>
+                <Text>Семантическая дата (при изменении её необходимо изменить и в названии записи):</Text>
                 {/*<Text>Уровень точности даты:</Text>
                 <select style={{ width: "100%" }} disabled={!noteTabStore.noteObject.hasHistoricalDate} onChange={noteTabStore.noteHistoricalDateAccuracyLevelChangeEventHandler} >
                     <option value="1" selected={noteTabStore.noteObject.historicalDateAccuracyLevel_1_2_3 == 1}>1. Низкий</option>
@@ -110,11 +110,18 @@ let NoteEditMode = observer(() => {
 
 
                 <Text>Добавление файлов: (для каждого файла в текст записи будет добавлен свой специальный код)</Text>
-                <FileInput buttonText="Выбрать" disabled={noteTabStore.isFileUploadLoading} text={noteTabStore.isFileUploadLoading ? "Загрузка..." : "Выберите файл"} onInputChange={noteTabStore.selectFileEventHandler} />
+                {/*<FileInput buttonText="Выбрать" disabled={noteTabStore.isFileUploadLoading} text={noteTabStore.isFileUploadLoading ? "Загрузка..." : "Выберите файл"} onInputChange={noteTabStore.selectFileEventHandler} multiple />*/}
+                <label class="bp5-file-input">
+                    <input placeholde="Выбрать" disabled={noteTabStore.isFileUploadLoading} onChange={noteTabStore.selectFileEventHandler} type="file" multiple/>
+                    <span class="bp5-file-upload-input" dangerouslySetInnerHTML={{__html: noteTabStore.isFileUploadLoading ? "Загрузка..." : "Выберите файл"}}></span>
+                </label>
+                <Text>Также поддерживается добавление файлов через буфер обмена и перетаскиванием.</Text>
+                <Text>Для добавления множества файлов перетаскиванием, перетащите папку, содержащую их.</Text>
             </ContainerForInputs>
             <br />
 
             <TextArea
+                id="noteTextarea"
                 intent="primary"
                 autoResize={false}
                 large={true}

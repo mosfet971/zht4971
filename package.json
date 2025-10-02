@@ -1,11 +1,12 @@
 {
   "name": "zht4971",
-  "version": "1.10",
+  "version": "1.11.0",
   "description": "",
   "main": "./src/backend/dist/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "buildAndStart": "npm i && node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron .",
+    "devStart": "webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron .",
     "packageWindows": "npm i && node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package && node copyScript.mjs",
     "packageLinux": "npm i && node unzip.mjs && webpack --config ./src/frontend/webpack.config.js && tsc -p ./src/backend/ && electron-forge package --platform linux && node copyScript.mjs"
   },
@@ -30,11 +31,13 @@
     "esbuild-loader": "^4.2.2"
   },
   "dependencies": {
+    "@apacheli/web-workers": "^2.0.0",
     "@babel/plugin-syntax-jsx": "^7.23.3",
     "@babel/preset-env": "^7.23.6",
     "@babel/preset-react": "^7.23.3",
     "@blueprintjs/core": "^5.11.0",
     "@tabler/icons-react": "^2.44.0",
+    "@terrastruct/d2": "^0.1.23",
     "7.css": "^0.16.0",
     "adm-zip": "^0.5.16",
     "babel-loader": "^9.1.3",
