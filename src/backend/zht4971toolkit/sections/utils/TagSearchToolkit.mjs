@@ -88,8 +88,11 @@ class TagSearchToolkit {
     getIndexListByTagStringFunction = () => { };
     setIndexListForTagStringFunction = () => { };
 
-    constructor(fullJsonModelPath, getAllTagsEmbeddingsFunction, setAllTagsEmbeddingsFunction, getIndexListByTagStringFunction, setIndexListForTagStringFunction) {
-        this.model = JSON.parse(fs.readFileSync(fullJsonModelPath, { encoding: "utf-8" }));
+    constructor(/*fullJsonModelPath,*/ getAllTagsEmbeddingsFunction, setAllTagsEmbeddingsFunction, getIndexListByTagStringFunction, setIndexListForTagStringFunction) {
+        //this.model = JSON.parse(fs.readFileSync(fullJsonModelPath, { encoding: "utf-8" }));
+        this.model[0].push("");
+        this.model[1].push([0, 0, 0]);
+
         for (const word of this.model[0]) {
             const bigrams = [];
             for (let i = 0; i < word.length - 1; i++) {

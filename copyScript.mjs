@@ -1,3 +1,4 @@
+/*
 import { copyFileSync, readdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -9,3 +10,4 @@ const directories = (source => readdirSync(source, { withFileTypes: true }).filt
 for (const dir of directories) {
     copyFileSync(path.join(__dirname, "./model.json"), path.join(__dirname, "./out/" + dir + "/model.json"));
 }
+*/

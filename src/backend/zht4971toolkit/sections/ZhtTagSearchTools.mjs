@@ -10,7 +10,7 @@ function stringToHashOld(string, mk) {
 }
 
 class ZhtTagSearchTools extends TagSearchToolkit {
-    constructor(embeddingsJsonPath, dbDirPath, mk) {
+    constructor(/*embeddingsJsonPath,*/ dbDirPath, mk) {
 
         let entityTypeForTagSearchSystemItem = database.generateEntityTypeObject("tssi", (o) => true);
 
@@ -84,7 +84,7 @@ class ZhtTagSearchTools extends TagSearchToolkit {
         };
 
         super(
-            embeddingsJsonPath,
+            /*embeddingsJsonPath,*/
             getAllTagsEmbeddingsFunction,
             setAllTagsEmbeddingsFunction,
             getIndexListFunction,

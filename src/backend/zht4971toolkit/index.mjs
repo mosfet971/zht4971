@@ -8,7 +8,7 @@ import Utils from "./sections/Utils.mjs";
 import ZhtTagSearchTools from "./sections/ZhtTagSearchTools.mjs";
 
 class ZhtToolkit {
-    constructor(dbDirPath, embeddingsJsonPath, password) {
+    constructor(dbDirPath, /*embeddingsJsonPath,*/ password) {
         
         if(!database.checkExist(dbDirPath)) {
             database.create(dbDirPath, password);
@@ -16,7 +16,7 @@ class ZhtToolkit {
 
         let mk = database.getMasterKey(dbDirPath, password);
 
-        this.zhtTagSearchTools = new ZhtTagSearchTools(embeddingsJsonPath, dbDirPath, mk);
+        this.zhtTagSearchTools = new ZhtTagSearchTools(/*embeddingsJsonPath,*/ dbDirPath, mk);
         this.notesTools = new NotesTools(this.zhtTagSearchTools, dbDirPath, mk);
         this.filesTools = new FilesTools(dbDirPath, mk);
         this.templatesTools = new TemplatesTools(dbDirPath, mk);
